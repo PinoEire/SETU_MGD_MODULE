@@ -105,3 +105,22 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+
+# Claude Code session files (keep .mcp.json tracked)
+CLAUDE.md
+.claude/
+.remember/
+
+# Obsidian vault (MGD_MODULE_GDD): per-device state, trash and plugin caches.
+# Shared settings (app, appearance, core-plugins, graph, hotkeys) stay tracked.
+/MGD_MODULE_GDD/.obsidian/workspace.json
+/MGD_MODULE_GDD/.obsidian/workspace-mobile.json
+/MGD_MODULE_GDD/.obsidian/workspaces.json
+/MGD_MODULE_GDD/.obsidian/cache
+/MGD_MODULE_GDD/.obsidian/plugins/*/data.json
+/MGD_MODULE_GDD/.trash/
+
+# Android release keystore (never commit signing secrets)
+/Keystore/
+*.keystore
+*.jks
