@@ -48,6 +48,7 @@ Week 2 Lab A, Part E: *Release signing, touch input and safe areas*. The lab she
 - Re-checks `Screen.safeArea` every frame. The comparison is a struct equality, no allocation, so it is cheap, but a `Screen.orientation` change callback would be tidier. Kept simple on purpose for a Week 2 audience.
 - Does not handle display cut-outs on the *sides* separately from the top; the safe rect already excludes them, which is enough here.
 - The scene is built by an editor script rather than by hand. That keeps it reproducible and readable, at the cost of one more file students do not need to copy.
+- Every run of the builder gives every object a fresh file ID, so re-running it produces a full-file diff in Git even when nothing changed. Run it only when the builder itself changes, and discard the scene diff if the normalised content is the same.
 - Verified 2026-09-15: editor Game view at 1080x2400 (layout, layers, readout, no console errors) and a release build running on an Android device.
 
 ## Cuts list

@@ -47,4 +47,5 @@ Planned samples follow the lab schedule in the curriculum README (Dropbox, `SETU
 - [[Glossary#Awaitable|Awaitable]] for async work, never coroutines (see the decision above).
 - Genre-agnostic: a sample must fit any of the five student project options.
 - Everything we write lives under `Assets/_Game/`; imported content is never edited in place (see the decision above).
+- C# lives in namespace `MGD.Samples` (editor code in `MGD.Samples.Editor`). It is also the project's root namespace, so new scripts get it without typing it.
 - No third-party SDKs, no store uploads, no secrets in the repo.
