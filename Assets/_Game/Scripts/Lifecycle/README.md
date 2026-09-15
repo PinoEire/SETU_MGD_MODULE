@@ -1,0 +1,5 @@
+# Lifecycle sample
+
+Makes a game survive Home, app switching, incoming calls, screen off, the notification shade and the Android back gesture. `LifecycleGuard.cs` goes on a Bootstrap object: it saves and pauses on `OnApplicationPause(true)` and `OnApplicationFocus(false)`, sets `Time.timeScale` and `AudioListener.pause`, and raises `PausedChanged`. Resuming is only ever the player's choice. `PauseMenu.cs` goes on the Canvas: it shows the pause panel from that event, toggles pause on Android back (which the Input System delivers as Escape) and handles the Resume button. There is no Quit button.
+
+Copy those two scripts and gate your own gameplay with `if (LifecycleGuard.IsPaused) return;` at the top of `Update`, because `timeScale = 0` does not stop `Update`. `LifecycleDemoHud.cs` is demo scaffolding only: a spinner, two clocks, a tone, a saved tap counter and an on-screen callback log so the five-row lifecycle matrix from Week 2 Lab B can be ticked on the phone without Logcat. Design notes are in the `MGD_MODULE_GDD` vault, note `Samples/Lifecycle`.
