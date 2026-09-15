@@ -22,7 +22,9 @@ The vault is also a **worked example of a GDD that both people and AI tools can 
 
 | Sample | Lab | Status | One line |
 |--------|-----|--------|----------|
+| [[Launcher]] | none | done | First scene: lists every sample from Build Settings, loads with Awaitable, shows build info. |
 | [[SafeArea]] | W02 Lab A | done | Keep the HUD out of the notch and the gesture bar, on any phone, in both orientations. |
+| [[Lifecycle]] | W02 Lab B | done | Pause and save on Home, calls, screen off and focus loss; Android back toggles pause; resume is the player's choice. |
 
 Planned samples follow the lab schedule in the curriculum README (Dropbox, `SETU/2026-2027/Mobile Game Development/README.md`). A sample is added to this table only when its note exists.
 
@@ -33,6 +35,7 @@ Planned samples follow the lab schedule in the curriculum README (Dropbox, `SETU
 | 2026-09-15 | [[2026-09-15 One folder and scene per sample]] (superseded) |
 | 2026-09-15 | [[2026-09-15 Awaitable over coroutines]] |
 | 2026-09-15 | [[2026-09-15 Project-owned assets live under Assets _Game]] |
+| 2026-09-15 | [[2026-09-15 Back navigation returns to the launcher]] |
 
 ## Reference
 
