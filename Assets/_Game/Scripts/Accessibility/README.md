@@ -1,0 +1,5 @@
+# Accessibility sample
+
+Three player settings from Week 2 Lab B, Parts B to D, on one Settings card. `Haptics.cs` is a static class with an `Enabled` setting in PlayerPrefs and a `Pulse()` that vibrates once; call it from exactly one meaningful event, never from Update. `TextScale.cs` goes on every TextMeshPro text players read, with Auto Size off: each instance keeps its base size and multiplies it by the shared `Factor` (Small 0.85, Normal 1, Large 1.25). `MotionSetting.cs` stores the Reduce-motion flag that screen shake and similar effects must check. `SettingsPanel.cs` binds two toggles and three buttons to those settings and loads the saved values on Start.
+
+Copy those four scripts. `AccessibilityDemoHud.cs` is demo scaffolding: a Hit button that reports in words rather than colour, a square that shakes unless Reduce motion is on, and a reference square sized at runtime to 48 dp so you can measure your own buttons against it. The ten-check accessibility pass run on this scene is in `docs/accessibility-pass.md` at the repo root, in the format you submit for CA1. Design notes are in the `MGD_MODULE_GDD` vault, note `Samples/Accessibility`.

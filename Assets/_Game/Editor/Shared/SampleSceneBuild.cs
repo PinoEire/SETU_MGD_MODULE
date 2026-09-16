@@ -142,6 +142,58 @@ namespace MGD.Samples.Editor
             props.ApplyModifiedPropertiesWithoutUndo();
         }
 
+        /// <summary>
+        /// A TextMeshPro toggle using Unity's built-in skin, resized for touch:
+        /// the whole row is the tap target, at least 48 dp tall at the reference
+        /// resolution, with a 64 unit box and the label to its right.
+        /// </summary>
+        public static Toggle CreateToggle(Transform parent, string name, string label, float width, float fontSize = 40f)
+        {
+            const float rowHeight = 130f;
+            const float boxSize = 64f;
+
+            // TMP_DefaultControls has no toggle factory, so the control is assembled
+            // by hand: a full-row invisible Image is the tap target, a box Image is
+            // the tinted graphic, a Checkmark Image is the on-state graphic.
+            RectTransform row = CreateUiObject(name, parent);
+            row.sizeDelta = new Vector2(width, rowHeight);
+            var hitArea = row.gameObject.AddComponent<Image>();
+            hitArea.color = Color.clear;
+            hitArea.raycastTarget = true;
+
+            RectTransform box = CreateUiObject("Background", row);
+            box.anchorMin = new Vector2(0f, 0.5f);
+            box.anchorMax = new Vector2(0f, 0.5f);
+            box.pivot = new Vector2(0f, 0.5f);
+            box.anchoredPosition = new Vector2(16f, 0f);
+            box.sizeDelta = new Vector2(boxSize, boxSize);
+            var boxImage = box.gameObject.AddComponent<Image>();
+            boxImage.sprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
+            boxImage.type = Image.Type.Sliced;
+            boxImage.raycastTarget = false;
+
+            RectTransform check = CreateUiObject("Checkmark", box);
+            Stretch(check, 10f);
+            var checkImage = check.gameObject.AddComponent<Image>();
+            checkImage.sprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/Checkmark.psd");
+            checkImage.preserveAspect = true;
+            checkImage.color = new Color(0.1f, 0.1f, 0.12f);
+            checkImage.raycastTarget = false;
+
+            TextMeshProUGUI text = CreateLabel(row, "Label", label, fontSize, TextAlignmentOptions.MidlineLeft);
+            RectTransform labelRect = text.rectTransform;
+            labelRect.anchorMin = Vector2.zero;
+            labelRect.anchorMax = Vector2.one;
+            labelRect.offsetMin = new Vector2(16f + boxSize + 24f, 0f);
+            labelRect.offsetMax = Vector2.zero;
+
+            var toggle = row.gameObject.AddComponent<Toggle>();
+            toggle.targetGraphic = boxImage;
+            toggle.graphic = checkImage;
+            toggle.isOn = false;
+            return toggle;
+        }
+
         public static void SetLayerRecursively(GameObject go, int layer)
         {
             go.layer = layer;

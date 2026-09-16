@@ -25,6 +25,7 @@ The vault is also a **worked example of a GDD that both people and AI tools can 
 | [[Launcher]] | none | done | First scene: lists every sample from Build Settings, loads with Awaitable, shows build info. |
 | [[SafeArea]] | W02 Lab A | done | Keep the HUD out of the notch and the gesture bar, on any phone, in both orientations. |
 | [[Lifecycle]] | W02 Lab B | done | Pause and save on Home, calls, screen off and focus loss; Android back toggles pause; resume is the player's choice. |
+| [[Accessibility]] | W02 Lab B | done | Haptics toggle, text size and reduce motion in PlayerPrefs on one Settings card, plus the ten-check pass as a worked example. |
 
 Planned samples follow the lab schedule in the curriculum README (Dropbox, `SETU/2026-2027/Mobile Game Development/README.md`). A sample is added to this table only when its note exists.
 
