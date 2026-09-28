@@ -4,4 +4,4 @@ One row per release build made with *MGD Samples > Build Release APK*. The APK i
 
 | Version | versionCode | Date | Commit | Size | SHA-256 | Download |
 |---------|-------------|------|--------|------|---------|----------|
-| 0.2.0 | 8 | 2026-09-28 | c8c5204-dirty | 42.8 MB | 21e5bd4767a7f308f84b7ceebc142aca05863d527c38ded74f67fd8ce8452585 | |
+| 0.2.0 | 9 | 2026-09-28 | 15a8d85-dirty | 42.8 MB | 1a0f0f03228ac78f0b13a733173f05279fa4b381768fbda62ff3c3d98e7a22d9 | |

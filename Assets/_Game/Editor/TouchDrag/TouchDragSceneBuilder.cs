@@ -100,6 +100,12 @@ namespace MGD.Samples.Editor
             renderer.sharedMaterial = AssetDatabase.LoadAssetAtPath<Material>(SpriteMaterialPath);
             renderer.color = colour;
 
+            // CircleCollider2D defaults to radius 0.5 in local units, which the
+            // scale of 5 turns into a 5-unit-wide target around a 1-unit circle.
+            // Match the sprite: its local extents are 0.1, so 0.5 world units.
+            var collider = go.GetComponent<CircleCollider2D>();
+            collider.radius = renderer.sprite.bounds.extents.x;
+
             var draggable = go.GetComponent<Draggable>();
             var props = new SerializedObject(draggable);
             props.FindProperty("label").stringValue = label;
