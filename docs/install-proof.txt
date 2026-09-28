@@ -1,0 +1,10 @@
+Install proof for releases/SETU_MGD_MODULE-0.2.0-arm64.apk (Week 4 Lab A, Part C).
+Submit yours as /docs/CA1/install-proof.txt: the raw output of the two commands below, nothing edited.
+
+$ adb install -r releases/SETU_MGD_MODULE-0.2.0-arm64.apk
+(paste output; expected: Performing Streamed Install / Success)
+
+$ adb shell dumpsys package com.dftgames.mgdsamples | grep version
+(paste output; expected lines: versionCode=7 minSdk=26 targetSdk=36 and versionName=0.2.0)
+
+Screenshot taken on <model>, Android <version> (docs/device-screenshot.png, captured with adb shell screencap -p /sdcard/ca1.png and adb pull).
