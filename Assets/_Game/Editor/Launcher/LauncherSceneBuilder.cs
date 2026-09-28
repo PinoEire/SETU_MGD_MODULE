@@ -32,6 +32,9 @@ namespace MGD.Samples.Editor
             CreateCamera(new Color(0.08f, 0.09f, 0.12f));
             CreateEventSystem();
 
+            // App-wide settings live in the first scene, once. See MobileBootstrap.
+            new GameObject("Bootstrap", typeof(MobileBootstrap));
+
             Canvas canvas = CreateCanvas();
             RectTransform root = CreateUiObject("Root", canvas.transform);
             Stretch(root, Margin);

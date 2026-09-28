@@ -4,7 +4,7 @@ status: done
 lab: none
 unity: 6000.6.0f1
 scene: Assets/_Game/Scenes/Launcher/Launcher.unity
-updated: 2026-09-15
+updated: 2026-09-28
 tags: [sample, infrastructure, navigation]
 ---
 
@@ -32,12 +32,13 @@ None directly. The footer is the About / Build Info screen required for CA3; the
 | `Assets/_Game/Scripts/Launcher/LauncherMenu.cs` | On the Canvas. Builds one button per scene in Build Settings (except itself), loads on tap, fills the footer. |
 | `Assets/_Game/Scripts/Launcher/README.md` | Two-paragraph summary for students who open the folder without this vault. |
 | `Assets/_Game/Scripts/Shared/BackToLauncher.cs` | Shared. Loads build index 0 on Android back (Escape), or from a button through `Go()` with the listener off. Every sample scene carries one. |
+| `Assets/_Game/Scripts/Shared/MobileBootstrap.cs` | Shared, on the `Bootstrap` object. Sets the 60 fps target, vSync 0 and no screen sleep, logs the `[Boot]` line. Belongs to [[Performance]]. |
 | `Assets/_Game/Editor/Launcher/LauncherSceneBuilder.cs` | Menu item *MGD Samples > Build Launcher Scene*. Builds the scene and moves it to index 0 in Build Settings. |
 | `Assets/_Game/Scenes/Launcher/Launcher.unity` | Title, subtitle, a vertical list with an inactive button template, footer. Generated; not hand-edited. |
 
 ## How to test
 
-1. **Editor:** open the Launcher scene and Play. One button per other scene appears; the footer shows the version and this PC. Tap SafeArea: it loads; press Escape: the launcher returns. Tap Lifecycle, press Escape to pause, tap *Back to samples*: the launcher returns with the game unpaused (the guard resets timeScale on destroy).
+1. **Editor:** open the Launcher scene and Play. The console shows one `[Boot]` line. One button per other scene appears; the footer shows the version and this PC. Tap SafeArea: it loads; press Escape: the launcher returns. Tap Lifecycle, press Escape to pause, tap *Back to samples*: the launcher returns with the game unpaused (the guard resets timeScale on destroy).
 2. **Phone:** the same with the back gesture. Back on the launcher itself does nothing; the app never exits from back.
 3. **Adding a sample:** run its builder, then Play the launcher: the new button is there without touching the launcher.
 

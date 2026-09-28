@@ -1,0 +1,5 @@
+# Performance sample
+
+The Week 3 tools on one heavy scene. `FrameTimeSampler.cs` keeps 600 unscaled frame times in a fixed array, sorts a copy, and logs `[Baseline] avg X ms  p99 Y ms` once per window, with the same text on an optional label; `FrameStats.cs` is the maths on its own so it can be tested. `RenderScaleProbe.cs` halves the URP render scale from a button: frame time drops by a third or more, you are GPU-bound; it barely moves, you are CPU-bound. `MobileBootstrap.cs` in `Scripts/Shared/` sets the 60 fps target once in the first scene and prints the `[Boot]` line. Copy those four.
+
+`LoadGenerator.cs` is the stress test: every sprite is created once and switched on and off (Idle, Steady, Worst), which is the crude pooling that Week 5 replaces with a real pool. `PerformanceDemoHud.cs` is demo scaffolding. The worked examples of the bottleneck note and the baseline sheet are `docs/bottleneck-01.md` and `docs/baseline-sheet.md` at the repo root; design notes are in the `MGD_MODULE_GDD` vault, note `Samples/Performance`.
