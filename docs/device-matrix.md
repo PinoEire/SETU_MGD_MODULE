@@ -4,7 +4,7 @@ Worked example of the Week 4 Lab A, Part D matrix. Submit yours as `/docs/CA1/de
 
 | Device | Android | Serial (last 4) | Install result | Notes |
 |--------|---------|-----------------|----------------|-------|
-| (lecturer's phone: model) | (version) | (last 4) | Success, versionCode 7 | (safe-area, aspect, refresh rate, install prompts) |
+| (lecturer's phone: model) | (version) | (last 4) | Success, versionCode as in releases/manifest.md | (safe-area, aspect, refresh rate, install prompts) |
 | (second phone) | | | | |
 
 Fill a row from:

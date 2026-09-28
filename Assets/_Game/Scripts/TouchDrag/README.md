@@ -1,0 +1,5 @@
+# TouchDrag sample
+
+Drag sprites with fingers through the Input System's Enhanced Touch API, Week 2 Lab A Part D. `TouchDragController.cs` enables Enhanced Touch, walks `Touch.activeTouches` every frame (an untracked touch grabs what is under its `startScreenPosition`, whatever its phase, a tracked touch moves it, Ended and Canceled drop it) and then prunes any drag whose touch has vanished, which is what keeps a sprite from sticking to a finger lost while the app was in the background. `DragTracker.cs` is the logic underneath: drags keyed by `touchId` (never finger index), the grab offset kept, the centre clamped to the camera. `Draggable.cs` marks a sprite with a `Collider2D` of at least 48 dp and shows pick-up by size and brightness.
+
+Copy those three. `TouchDragHud.cs` is demo scaffolding for the finger count and held names. The tests for the tracker are in `Assets/_Game/Editor/Tests/DragTrackerTests.cs`. Design notes are in the `MGD_MODULE_GDD` vault, note `Samples/TouchDrag`.

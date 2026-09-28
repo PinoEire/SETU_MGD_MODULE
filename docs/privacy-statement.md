@@ -35,7 +35,7 @@ From `adb shell dumpsys package com.dftgames.mgdsamples | grep -A4 requested` on
 (paste the dumpsys lines here after the device run)
 ```
 
-From `aapt dump badging` on the built APK (versionCode 7): `android.permission.VIBRATE`, added by Unity because the Accessibility sample calls `Handheld.Vibrate` (the one haptic pulse behind the Haptics toggle), and `com.dftgames.mgdsamples.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`, an app-private permission Android's support library declares for its own receivers; neither reaches outside the app.
+From `aapt dump badging` on the built APK: `android.permission.VIBRATE`, added by Unity because the Accessibility sample calls `Handheld.Vibrate` (the one haptic pulse behind the Haptics toggle), and `com.dftgames.mgdsamples.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`, an app-private permission Android's support library declares for its own receivers; neither reaches outside the app.
 
 Worth knowing: the first build of 0.2.0 also requested `android.permission.INTERNET`, with Internet Access on Auto and every Unity service off, because Unity's engine adds it to every Android build. This app never opens a connection, so a build hook (`Assets/_Game/Editor/Release/StripInternetPermission.cs`, decision note *2026-09-28 Release builds strip the INTERNET permission*) deletes the line from release builds. Development builds keep it because the Profiler's Wi-Fi connection needs it, so `dumpsys` on a Development build will list `INTERNET`; this statement describes the release APK. If `INTERNET` ever appears in a release build, either the hook is gone or a sample started using the network, and this statement must change with it.
 

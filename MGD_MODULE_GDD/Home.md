@@ -26,6 +26,7 @@ The vault is also a **worked example of a GDD that both people and AI tools can 
 | [[SafeArea]] | W02 Lab A | done | Keep the HUD out of the notch and the gesture bar, on any phone, in both orientations. |
 | [[Lifecycle]] | W02 Lab B | done | Pause and save on Home, calls, screen off and focus loss; Android back toggles pause; resume is the player's choice. |
 | [[Accessibility]] | W02 Lab B | done | Haptics toggle, text size and reduce motion in PlayerPrefs on one Settings card, plus the ten-check pass as a worked example. |
+| [[TouchDrag]] | W02 Lab A | done | Drag sprites with fingers through Enhanced Touch: one finger per sprite, drags keyed by touchId, grab offset kept, pruned when a touch vanishes, clamped to the screen. |
 | [[Performance]] | W03 Lab A and B | done | A heavy scene with Idle, Steady and Worst states, the frame-target bootstrap, an allocation-free frame-time sampler and a render-scale probe, plus the bottleneck note and baseline sheet as worked examples. |
 | [[ReleasePipeline]] | W04 Lab A and B | done | One menu item that checks the Player Settings, bumps versionCode, builds the release APK and records it in a manifest; README sections and the CA1 docs as worked examples. No scene. |
 

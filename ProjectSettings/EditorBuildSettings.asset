@@ -20,6 +20,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Game/Scenes/Performance/Performance.unity
     guid: 55a36bdf22eb5214f8fbc21e1e648a7e
+  - enabled: 1
+    path: Assets/_Game/Scenes/TouchDrag/TouchDrag.unity
+    guid: 38f2753af1fad4f45814a4300494a968
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
