@@ -124,3 +124,6 @@ CLAUDE.md
 /Keystore/
 *.keystore
 *.jks
+
+# IL2CPP symbol folders written next to release APKs
+/releases/*_BackUpThisFolder_ButDontShipItWithYourGame/

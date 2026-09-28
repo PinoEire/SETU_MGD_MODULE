@@ -27,6 +27,7 @@ The vault is also a **worked example of a GDD that both people and AI tools can 
 | [[Lifecycle]] | W02 Lab B | done | Pause and save on Home, calls, screen off and focus loss; Android back toggles pause; resume is the player's choice. |
 | [[Accessibility]] | W02 Lab B | done | Haptics toggle, text size and reduce motion in PlayerPrefs on one Settings card, plus the ten-check pass as a worked example. |
 | [[Performance]] | W03 Lab A and B | done | A heavy scene with Idle, Steady and Worst states, the frame-target bootstrap, an allocation-free frame-time sampler and a render-scale probe, plus the bottleneck note and baseline sheet as worked examples. |
+| [[ReleasePipeline]] | W04 Lab A and B | done | One menu item that checks the Player Settings, bumps versionCode, builds the release APK and records it in a manifest; README sections and the CA1 docs as worked examples. No scene. |
 
 Planned samples follow the lab schedule in the curriculum README (Dropbox, `SETU/2026-2027/Mobile Game Development/README.md`). A sample is added to this table only when its note exists.
 
@@ -38,6 +39,8 @@ Planned samples follow the lab schedule in the curriculum README (Dropbox, `SETU
 | 2026-09-15 | [[2026-09-15 Awaitable over coroutines]] |
 | 2026-09-15 | [[2026-09-15 Project-owned assets live under Assets _Game]] |
 | 2026-09-15 | [[2026-09-15 Back navigation returns to the launcher]] |
+| 2026-09-28 | [[2026-09-28 Release APKs live on GitHub Releases]] |
+| 2026-09-28 | [[2026-09-28 Release builds strip the INTERNET permission]] |
 
 ## Reference
 
