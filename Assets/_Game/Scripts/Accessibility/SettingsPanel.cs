@@ -18,6 +18,7 @@ namespace MGD.Samples
         [SerializeField] Button normalButton;
         [SerializeField] Button largeButton;
 
+        // Start, not Awake: the uGUI controls may not have initialised yet.
         void Start()
         {
             // SetIsOnWithoutNotify: initialising the toggle must not write the
@@ -25,6 +26,9 @@ namespace MGD.Samples
             hapticsToggle.SetIsOnWithoutNotify(Haptics.Enabled);
             reduceMotionToggle.SetIsOnWithoutNotify(MotionSetting.ReduceMotion);
 
+            // Wired in code rather than in the scene, so the wiring travels with
+            // this script when it is copied; demo buttons use persistent
+            // listeners set by the builder, which is what the Inspector does.
             hapticsToggle.onValueChanged.AddListener(value => Haptics.Enabled = value);
             reduceMotionToggle.onValueChanged.AddListener(value => MotionSetting.ReduceMotion = value);
 

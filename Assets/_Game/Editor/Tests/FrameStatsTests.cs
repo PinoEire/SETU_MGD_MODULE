@@ -54,9 +54,56 @@ namespace MGD.Samples.Editor
         }
 
         [Test]
+        public void Compute_FiveBadFramesInSixHundred_DoNotMoveP99()
+        {
+            // The lesson of p99: a stutter has to happen in more than 1 frame in
+            // 100 before this number sees it. Five spikes in 600 sit above index 593.
+            var samples = new float[600];
+            Array.Fill(samples, 16.7f);
+            for (int i = 0; i < 5; i++)
+            {
+                samples[i * 100] = 100f;
+            }
+
+            FrameStats.Compute(samples, new float[600], out _, out float p99);
+
+            Assert.AreEqual(16.7f, p99, 0.001f);
+        }
+
+        [Test]
+        public void Compute_SevenBadFramesInSixHundred_MoveP99()
+        {
+            var samples = new float[600];
+            Array.Fill(samples, 16.7f);
+            for (int i = 0; i < 7; i++)
+            {
+                samples[i * 80] = 100f;
+            }
+
+            FrameStats.Compute(samples, new float[600], out _, out float p99);
+
+            Assert.AreEqual(100f, p99, 0.001f);
+        }
+
+        [Test]
         public void PercentileIndex_SixHundredSamples_Is593()
         {
             Assert.AreEqual(593, FrameStats.PercentileIndex(600, 0.99f));
+        }
+
+        [TestCase(1, 0)]
+        [TestCase(2, 0)]
+        [TestCase(100, 98)]
+        public void PercentileIndex_SmallBuffers_StayInRange(int count, int expected)
+        {
+            Assert.AreEqual(expected, FrameStats.PercentileIndex(count, 0.99f));
+        }
+
+        [Test]
+        public void PercentileIndex_PercentileOutsideZeroToOne_IsClamped()
+        {
+            Assert.AreEqual(0, FrameStats.PercentileIndex(600, -1f));
+            Assert.AreEqual(599, FrameStats.PercentileIndex(600, 2f));
         }
 
         [Test]

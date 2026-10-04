@@ -1,8 +1,6 @@
-using System.IO;
 using TMPro;
 using UnityEditor;
 using UnityEditor.Events;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -17,24 +15,19 @@ namespace MGD.Samples.Editor
     /// </summary>
     public static class PerformanceSceneBuilder
     {
+        const string BuilderName = "PerformanceSceneBuilder";
         const string ScenePath = "Assets/_Game/Scenes/Performance/Performance.unity";
         const string SpriteMaterialPath =
             "Packages/com.unity.render-pipelines.universal/Runtime/Materials/Sprite-Unlit-Default.mat";
-        const float Margin = 96f;
 
         [MenuItem("MGD Samples/Build Performance Scene")]
         public static void Build()
         {
-            if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+            Scene? scene = BeginScene(BuilderName);
+            if (scene == null)
             {
-                Debug.Log("[PerformanceSceneBuilder] Cancelled: current scene has unsaved changes.");
                 return;
             }
-
-            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
-
-            CreateCamera(new Color(0.08f, 0.09f, 0.12f));
-            CreateEventSystem();
 
             // The sprite field sits behind the Canvas in world space.
             var loadObject = new GameObject("Load Generator", typeof(LoadGenerator));
@@ -47,19 +40,16 @@ namespace MGD.Samples.Editor
             var probe = tools.GetComponent<RenderScaleProbe>();
 
             Canvas canvas = CreateCanvas();
-            RectTransform root = CreateUiObject("Root", canvas.transform);
-            Stretch(root, Margin);
+            RectTransform root = CreateHudRoot(canvas);
 
             CreateHudCard(root, load, sampler, probe);
 
-            // Android back returns to the launcher; this sample does not use back itself.
+            // Android back returns to the launcher; this sample does not use back itself,
+            // so the pause panel's own back toggle is off.
             canvas.gameObject.AddComponent<BackToLauncher>();
+            AddPauseMenu(canvas, backTogglesPause: false, addSamplesButton: false);
 
-            Directory.CreateDirectory(Path.GetDirectoryName(ScenePath));
-            EditorSceneManager.SaveScene(scene, ScenePath);
-            AddToBuildSettings(ScenePath);
-
-            Debug.Log($"[PerformanceSceneBuilder] Saved {ScenePath} and added it to Build Settings.");
+            FinishScene(scene.Value, ScenePath, BuilderName);
         }
 
         static void CreateHudCard(RectTransform root, LoadGenerator load, FrameTimeSampler sampler, RenderScaleProbe probe)
@@ -75,8 +65,8 @@ namespace MGD.Samples.Editor
             TextMeshProUGUI title = CreateLabel(card, "Title", "Performance sample", 56f);
             Place(title.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, 100f), stretchWidth: true);
 
-            // Two lines at 40 units: the body-text floor from the Accessibility
-            // sample (about 16 sp on a 1080-wide phone) applies to a HUD too.
+            // Two lines at 40 units, about 15 sp on a 1080-wide 420 dpi phone: above
+            // the 14 sp floor the Accessibility sample quotes, which applies to a HUD too.
             TextMeshProUGUI status = CreateLabel(card, "Status", "", 40f);
             Place(status.rectTransform, new Vector2(0.5f, 0.76f), new Vector2(0f, 110f), stretchWidth: true);
 
@@ -84,8 +74,12 @@ namespace MGD.Samples.Editor
             Place(samplerLabel.rectTransform, new Vector2(0.5f, 0.60f), new Vector2(0f, 60f), stretchWidth: true);
             SetField(sampler, "label", samplerLabel);
 
-            // Every button is 130 units tall: 48 dp on the reference phone, the minimum tap target.
-            var buttonSize = new Vector2(270f, 130f);
+            // Every button is 130 units tall: about 49 dp on the reference phone, above
+            // the 48 dp minimum tap target. Three across at 0.2, 0.5 and 0.8 of the
+            // card must fit a 20:9 phone, where the card is only about 774 units wide
+            // (Match Width Or Height at 0.5 shrinks the canvas width), so 220 wide
+            // leaves a gap there as well as on the 16:9 reference.
+            var buttonSize = new Vector2(220f, 130f);
             Button idle = CreateButton(card, "Button Idle", "Idle", buttonSize, 40f);
             Place(idle.GetComponent<RectTransform>(), new Vector2(0.2f, 0.41f), buttonSize);
             Button steady = CreateButton(card, "Button Steady", "Steady", buttonSize, 40f);
@@ -104,6 +98,7 @@ namespace MGD.Samples.Editor
             SetField(hud, "status", status);
             SetField(hud, "probeButton", probeButton.gameObject);
 
+            // Persistent listeners: what a student wires by hand in the Inspector.
             UnityEventTools.AddPersistentListener(idle.onClick, new UnityAction(hud.OnIdlePressed));
             UnityEventTools.AddPersistentListener(steady.onClick, new UnityAction(hud.OnSteadyPressed));
             UnityEventTools.AddPersistentListener(worst.onClick, new UnityAction(hud.OnWorstPressed));

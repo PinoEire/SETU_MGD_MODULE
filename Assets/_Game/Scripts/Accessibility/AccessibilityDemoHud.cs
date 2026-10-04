@@ -18,6 +18,7 @@ namespace MGD.Samples
     public sealed class AccessibilityDemoHud : MonoBehaviour
     {
         const float MinTouchTargetDp = 48f;
+        const float BaselineDpi = 160f;
         const float ShakeAmplitude = 14f;
         const float ShakeFrequency = 18f;
 
@@ -57,8 +58,9 @@ namespace MGD.Samples
 
         void Update()
         {
-            // Motion effects check the setting every frame rather than caching it,
-            // so the toggle takes effect immediately.
+            // The setting is cached, so asking every frame costs nothing and the
+            // toggle takes effect at once; effects that need to react on the
+            // change itself (resetting a position, say) subscribe to Changed.
             if (MotionSetting.ReduceMotion)
             {
                 shaker.anchoredPosition = _shakerHome;
@@ -80,13 +82,24 @@ namespace MGD.Samples
             status.SetText(Haptics.Enabled ? "HIT {0:0}  (haptic pulse sent)" : "HIT {0:0}  (haptics are off)", _hits);
         }
 
+        /// <summary><c>Screen.dpi</c> can be 0 in the editor; assume a 160 dpi screen then, so 1 dp is 1 px.</summary>
+        public static float EffectiveDpi(float dpi)
+        {
+            return dpi > 0f ? dpi : BaselineDpi;
+        }
+
+        /// <summary>1 dp is 1 px at 160 dpi.</summary>
+        public static float DpToPixels(float dp, float dpi)
+        {
+            return dp * EffectiveDpi(dpi) / BaselineDpi;
+        }
+
         void SizeDpSquare()
         {
-            // 1 dp is 1 px at 160 dpi. Screen.dpi can be 0 in the editor; assume a
-            // 160 dpi screen then. The Canvas Scaler multiplies canvas units by
-            // scaleFactor to get pixels, so divide it back out.
-            float dpi = Screen.dpi > 0f ? Screen.dpi : 160f;
-            float pixels = MinTouchTargetDp * dpi / 160f;
+            // The Canvas Scaler multiplies canvas units by scaleFactor to get
+            // pixels, so divide it back out.
+            float dpi = EffectiveDpi(Screen.dpi);
+            float pixels = DpToPixels(MinTouchTargetDp, dpi);
             float units = pixels / _canvas.scaleFactor;
             dpSquare.sizeDelta = new Vector2(units, units);
 

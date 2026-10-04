@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 using TMPro;
 using UnityEngine;
@@ -16,8 +17,19 @@ namespace MGD.Samples
         [SerializeField] TMP_Text status;
 
         readonly StringBuilder _text = new StringBuilder(64);
+        string[] _labels;
         int _lastFingers = -1;
         int _lastHeldMask = -1;
+
+        void Awake()
+        {
+            // Labels are read once; the format loop then touches no component.
+            _labels = new string[draggables.Length];
+            for (int i = 0; i < draggables.Length; i++)
+            {
+                _labels[i] = draggables[i].Label;
+            }
+        }
 
         void Update()
         {
@@ -38,30 +50,36 @@ namespace MGD.Samples
 
             _lastFingers = fingers;
             _lastHeldMask = heldMask;
+            FormatStatus(_text, fingers, heldMask, _labels);
+            status.SetText(_text);
+        }
 
-            _text.Clear();
-            _text.Append(fingers).Append(fingers == 1 ? " finger" : " fingers");
+        /// <summary>
+        /// "2 fingers, holding Red and Blue". Bit i of <paramref name="heldMask"/>
+        /// means <paramref name="labels"/>[i] is held. Pure, so it is tested.
+        /// </summary>
+        public static void FormatStatus(StringBuilder into, int fingers, int heldMask, IReadOnlyList<string> labels)
+        {
+            into.Clear();
+            into.Append(fingers).Append(fingers == 1 ? " finger" : " fingers");
             if (heldMask == 0)
             {
-                _text.Append(", nothing held");
+                into.Append(", nothing held");
+                return;
             }
-            else
+
+            into.Append(", holding");
+            bool first = true;
+            for (int i = 0; i < labels.Count; i++)
             {
-                _text.Append(", holding");
-                bool first = true;
-                for (int i = 0; i < draggables.Length; i++)
+                if ((heldMask & (1 << i)) == 0)
                 {
-                    if ((heldMask & (1 << i)) == 0)
-                    {
-                        continue;
-                    }
-
-                    _text.Append(first ? " " : " and ").Append(draggables[i].Label);
-                    first = false;
+                    continue;
                 }
-            }
 
-            status.SetText(_text);
+                into.Append(first ? " " : " and ").Append(labels[i]);
+                first = false;
+            }
         }
     }
 }

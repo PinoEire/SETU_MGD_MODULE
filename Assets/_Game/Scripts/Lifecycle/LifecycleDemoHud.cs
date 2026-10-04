@@ -2,7 +2,6 @@ using System;
 using System.Text;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace MGD.Samples
 {
@@ -56,6 +55,7 @@ namespace MGD.Samples
             LifecycleGuard.PausedChanged -= OnPausedChanged;
         }
 
+        // Start, not Awake: the TextMeshPro labels may not have initialised yet.
         void Start()
         {
             tone.Play();

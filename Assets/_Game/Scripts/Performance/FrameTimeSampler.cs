@@ -24,17 +24,16 @@ namespace MGD.Samples
         float[] _ms;
         float[] _scratch;
         int _count;
-
-        /// <summary>Last completed window's average in ms; NaN before the first window.</summary>
-        public float LastAverageMs { get; private set; } = float.NaN;
-
-        /// <summary>Last completed window's 99th percentile in ms; NaN before the first window.</summary>
-        public float LastP99Ms { get; private set; } = float.NaN;
+        bool _skipNext;
 
         void Awake()
         {
+            // The attribute only guards the Inspector; a value set from code or an
+            // old prefab reaches here unclamped, and 0 would index an empty array.
+            windowSize = Mathf.Max(windowSize, 2);
             _ms = new float[windowSize];
             _scratch = new float[windowSize];
+            Restart();
         }
 
         // Start, not Awake: the TextMeshPro label may not have initialised yet.
@@ -48,6 +47,15 @@ namespace MGD.Samples
 
         void Update()
         {
+            if (_skipNext)
+            {
+                // The first frame after a load or a restart carries the load time
+                // (or the previous state's last frame) in its delta; it would skew
+                // the window it lands in.
+                _skipNext = false;
+                return;
+            }
+
             _ms[_count++] = Time.unscaledDeltaTime * 1000f;
             if (_count < windowSize)
             {
@@ -56,8 +64,6 @@ namespace MGD.Samples
 
             _count = 0;
             FrameStats.Compute(_ms, _scratch, out float average, out float p99);
-            LastAverageMs = average;
-            LastP99Ms = p99;
 
             // The one deliberate allocation: a string every windowSize frames.
             Debug.Log($"[Baseline] avg {average:F2} ms  p99 {p99:F2} ms");
@@ -70,12 +76,13 @@ namespace MGD.Samples
         }
 
         /// <summary>
-        /// Discards the partial window, so the first line after a change of load
-        /// state measures only the new state.
+        /// Discards the partial window and the next frame's delta, so the first
+        /// line after a change of load state measures only the new state.
         /// </summary>
         public void Restart()
         {
             _count = 0;
+            _skipNext = true;
         }
     }
 }

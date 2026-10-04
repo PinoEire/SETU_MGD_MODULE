@@ -21,12 +21,37 @@ namespace MGD.Samples
         }
 
         readonly Dictionary<int, Drag> _drags = new Dictionary<int, Drag>();
+        readonly HashSet<int> _attempted = new HashSet<int>();
         readonly List<int> _gone = new List<int>();
 
         /// <summary>Optional world-space rectangle the dragged centre is clamped to.</summary>
         public Rect? Bounds { get; set; }
 
         public int ActiveCount => _drags.Count;
+
+        /// <summary>
+        /// True the first time it is asked about a touch, false after that until the
+        /// touch is forgotten or pruned. A finger gets one chance to grab, where it
+        /// landed; a finger that missed must not keep trying and snatch an object
+        /// that is dragged under it later, and a finger refused because the object
+        /// was already held must not take it the moment the other finger lets go.
+        /// </summary>
+        public bool ShouldAttempt(int touchId)
+        {
+            return _attempted.Add(touchId);
+        }
+
+        /// <summary>
+        /// Drops everything known about a touch the moment it ends. Android may give
+        /// a new contact the same id straight away, before a frame without it has
+        /// let <see cref="Prune"/> clear the attempt, so the end of a touch must
+        /// clear it itself.
+        /// </summary>
+        public void Forget(int touchId)
+        {
+            _drags.Remove(touchId);
+            _attempted.Remove(touchId);
+        }
 
         /// <summary>Starts a drag. Refused if the touch or the target is already busy.</summary>
         public bool TryBegin(int touchId, Transform target, Vector2 worldPoint)
@@ -71,11 +96,6 @@ namespace MGD.Samples
             return found;
         }
 
-        public bool End(int touchId)
-        {
-            return _drags.Remove(touchId);
-        }
-
         public bool IsHeld(Transform target)
         {
             foreach (Drag drag in _drags.Values)
@@ -90,10 +110,11 @@ namespace MGD.Samples
         }
 
         /// <summary>
-        /// Drops every drag whose touch is not in <paramref name="aliveTouchIds"/>.
-        /// A finger that vanished without an Ended phase (the app went to the
-        /// background mid-drag) must not leave its object stuck to nothing.
-        /// Released targets are added to <paramref name="released"/> when given.
+        /// Forgets every touch that is not in <paramref name="aliveTouchIds"/>: its
+        /// drag is dropped and its grab attempt cleared. A finger that vanished
+        /// without an Ended phase (the app went to the background mid-drag) must
+        /// not leave its object stuck to nothing. Released targets are added to
+        /// <paramref name="released"/> when given.
         /// </summary>
         public void Prune(IReadOnlyList<int> aliveTouchIds, List<Transform> released = null)
         {
@@ -110,6 +131,20 @@ namespace MGD.Samples
             for (int i = 0; i < _gone.Count; i++)
             {
                 _drags.Remove(_gone[i]);
+            }
+
+            _gone.Clear();
+            foreach (int touchId in _attempted)
+            {
+                if (!Contains(aliveTouchIds, touchId))
+                {
+                    _gone.Add(touchId);
+                }
+            }
+
+            for (int i = 0; i < _gone.Count; i++)
+            {
+                _attempted.Remove(_gone[i]);
             }
         }
 

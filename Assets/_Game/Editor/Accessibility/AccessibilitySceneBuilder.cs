@@ -1,8 +1,6 @@
-using System.IO;
 using TMPro;
 using UnityEditor;
 using UnityEditor.Events;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -17,51 +15,54 @@ namespace MGD.Samples.Editor
     /// </summary>
     public static class AccessibilitySceneBuilder
     {
+        const string BuilderName = "AccessibilitySceneBuilder";
         const string ScenePath = "Assets/_Game/Scenes/Accessibility/Accessibility.unity";
-        const float Margin = 96f;
 
-        // Canvas units at the 1080 x 1920 reference. On a 1080-wide 420 dpi phone
-        // one unit is one pixel and 1 sp is about 2.6 px, so 42 units is roughly
-        // 16 sp: the smallest size body text should ever render at Normal.
+        // Canvas units at the 1080 x 1920 reference, where one unit is one pixel on
+        // a 1080-wide phone; a taller 20:9 phone scales units up by about 12 per
+        // cent, so the text only gets bigger there. On a 420 dpi phone 42 px is
+        // about 16 sp, above the lab sheet's floor of 14 sp for body text at Normal.
         const float BodyFontSize = 42f;
+        const string BodyName = "Body";
 
         [MenuItem("MGD Samples/Build Accessibility Scene")]
         public static void Build()
         {
-            if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+            Scene? scene = BeginScene(BuilderName);
+            if (scene == null)
             {
-                Debug.Log("[AccessibilitySceneBuilder] Cancelled: current scene has unsaved changes.");
                 return;
             }
 
-            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
-
-            CreateCamera(new Color(0.08f, 0.09f, 0.12f));
-            CreateEventSystem();
-
             Canvas canvas = CreateCanvas();
-            RectTransform root = CreateUiObject("Root", canvas.transform);
-            Stretch(root, Margin);
+            RectTransform root = CreateHudRoot(canvas);
 
             CreateDemo(root);
             CreateSettingsCard(root);
 
+            // Android back returns to the launcher; this sample does not use back itself,
+            // so the pause panel's own back toggle is off. Added before the loop below
+            // so the panel's labels scale with the setting like every other text.
+            canvas.gameObject.AddComponent<BackToLauncher>();
+            AddPauseMenu(canvas, backTogglesPause: false, addSamplesButton: false);
+
             // Every text players read gets TextScale, with Auto Size off so the
-            // component's size is not overridden.
+            // component's size is not overridden. Labels are single-line and
+            // truncate with an ellipsis when Large pushes them past their box; the
+            // body paragraph is the one text that wraps instead (see CreateDemo).
             foreach (TMP_Text text in canvas.GetComponentsInChildren<TMP_Text>(true))
             {
                 text.enableAutoSizing = false;
+                if (text.name != BodyName)
+                {
+                    text.textWrappingMode = TextWrappingModes.NoWrap;
+                    text.overflowMode = TextOverflowModes.Ellipsis;
+                }
+
                 text.gameObject.AddComponent<TextScale>();
             }
 
-            // Android back returns to the launcher; this sample does not use back itself.
-            canvas.gameObject.AddComponent<BackToLauncher>();
-
-            Directory.CreateDirectory(Path.GetDirectoryName(ScenePath));
-            EditorSceneManager.SaveScene(scene, ScenePath);
-            AddToBuildSettings(ScenePath);
-
-            Debug.Log($"[AccessibilitySceneBuilder] Saved {ScenePath} and added it to Build Settings.");
+            FinishScene(scene.Value, ScenePath, BuilderName);
         }
 
         static void CreateDemo(RectTransform root)
@@ -96,12 +97,13 @@ namespace MGD.Samples.Editor
             TextMeshProUGUI dpLabel = CreateLabel(root, "Dp Label", "", 30f);
             Place(dpLabel.rectTransform, new Vector2(0.5f, 0.62f), new Vector2(0f, 50f), stretchWidth: true);
 
-            TextMeshProUGUI body = CreateLabel(root, "Body",
+            TextMeshProUGUI body = CreateLabel(root, BodyName,
                 "Body text at Normal is about 16 sp on a 1080-wide phone. Set Large and check that nothing overflows or is cut off. Labels use ellipsis; paragraphs wrap.",
                 BodyFontSize, TextAlignmentOptions.TopLeft);
+            // The one wrapping text: the box is tall enough for four lines at Large,
+            // because a paragraph must never be shrunk or truncated to fit.
             body.textWrappingMode = TextWrappingModes.Normal;
-            // Tall enough for four wrapped lines at Large; the paragraph must never
-            // be shrunk to fit, so the box gives it room instead.
+            body.overflowMode = TextOverflowModes.Overflow;
             Place(body.rectTransform, new Vector2(0.5f, 0.52f), new Vector2(0f, 260f), stretchWidth: true);
 
             TextMeshProUGUI sizeLabel = CreateLabel(root, "Size Label", "", 36f);
@@ -113,6 +115,9 @@ namespace MGD.Samples.Editor
             SetField(demo, "dpSquare", dpSquare);
             SetField(demo, "dpLabel", dpLabel);
             SetField(demo, "sizeLabel", sizeLabel);
+            // Persistent listener: what a student wires by hand in the Inspector.
+            // The Settings card's controls are wired in SettingsPanel's own code
+            // instead, so that wiring travels with the script when it is copied.
             UnityEventTools.AddPersistentListener(hit.onClick, new UnityAction(demo.OnHitPressed));
         }
 
@@ -133,11 +138,16 @@ namespace MGD.Samples.Editor
             Toggle reduceMotion = CreateToggle(card, "Toggle Reduce Motion", "Reduce motion", 760f);
             Place(reduceMotion.GetComponent<RectTransform>(), new Vector2(0.5f, 0.47f), new Vector2(760f, 130f));
 
+            // An Ellipsis label's box must fit the Large size (1.25 x 36 = 45 pt,
+            // about 51 units tall for this font), because TextMeshPro blanks a line
+            // that does not fit vertically rather than truncating it.
             TextMeshProUGUI sizeTitle = CreateLabel(card, "Text Size Title", "Text size", 36f, TextAlignmentOptions.MidlineLeft);
-            Place(sizeTitle.rectTransform, new Vector2(0.5f, 0.27f), new Vector2(0f, 50f), stretchWidth: true);
+            Place(sizeTitle.rectTransform, new Vector2(0.5f, 0.27f), new Vector2(0f, 60f), stretchWidth: true);
             sizeTitle.rectTransform.offsetMin = new Vector2(64f, sizeTitle.rectTransform.offsetMin.y);
 
-            var buttonSize = new Vector2(250f, 130f);
+            // Three across at 0.2, 0.5 and 0.8 of a card that is only about 774 units
+            // wide on a 20:9 phone: 220 wide keeps a gap between them there too.
+            var buttonSize = new Vector2(220f, 130f);
             Button small = CreateButton(card, "Button Small", "Small", buttonSize, 40f);
             Place(small.GetComponent<RectTransform>(), new Vector2(0.2f, 0.12f), buttonSize);
             Button normal = CreateButton(card, "Button Normal", "Normal", buttonSize, 40f);

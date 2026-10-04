@@ -43,11 +43,15 @@ namespace MGD.Samples
 
         /// <summary>
         /// Index of the given percentile in a sorted buffer of <paramref name="count"/>
-        /// values, nearest rank rounded down: 593 for 600 samples at 0.99.
+        /// values: the floor of p times (count minus 1), which is what the lab
+        /// sheet's sampler uses. 593 for 600 samples at 0.99, so a stutter has to
+        /// hit more than six frames in six hundred before p99 moves. The
+        /// percentile is clamped to 0..1 so the index is always in range.
         /// </summary>
         public static int PercentileIndex(int count, float percentile)
         {
-            return (int)Math.Floor(percentile * (count - 1));
+            float p = Math.Min(1f, Math.Max(0f, percentile));
+            return (int)Math.Floor(p * (count - 1));
         }
     }
 }

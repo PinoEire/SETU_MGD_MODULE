@@ -1,7 +1,6 @@
 using System.IO;
 using TMPro;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -17,43 +16,37 @@ namespace MGD.Samples.Editor
     /// </summary>
     public static class SafeAreaSceneBuilder
     {
+        const string BuilderName = "SafeAreaSceneBuilder";
         const string ScenePath = "Assets/_Game/Scenes/SafeArea/SafeArea.unity";
         const string TexturePath = "Assets/_Game/Textures/SafeArea/GridBackground.png";
 
-        // 200 px at the 1080-wide reference is roughly 70 dp on a typical 420 dpi
-        // phone: comfortably above the 48 dp minimum touch target.
+        // 200 units at the 1080 x 1920 reference is about 76 dp on a 420 dpi phone
+        // (85 dp on a 20:9 one): comfortably above the 48 dp minimum touch target.
         const float ButtonSize = 200f;
         const float EdgePadding = 24f;
 
         [MenuItem("MGD Samples/Build SafeArea Scene")]
         public static void Build()
         {
-            if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+            Scene? scene = BeginScene(BuilderName);
+            if (scene == null)
             {
-                Debug.Log("[SafeAreaSceneBuilder] Cancelled: current scene has unsaved changes.");
                 return;
             }
 
             Sprite grid = GetOrCreateGridSprite();
-
-            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
-
-            CreateCamera(new Color(0.08f, 0.09f, 0.12f));
-            CreateEventSystem();
 
             Canvas canvas = CreateCanvas();
             CreateBackground(canvas.transform, grid);
             RectTransform safeArea = CreateSafeAreaPanel(canvas.transform);
             CreateHud(safeArea);
 
-            // Android back returns to the launcher; this sample does not use back itself.
+            // Android back returns to the launcher; this sample does not use back itself,
+            // so the pause panel's own back toggle is off.
             canvas.gameObject.AddComponent<BackToLauncher>();
+            AddPauseMenu(canvas, backTogglesPause: false, addSamplesButton: false);
 
-            Directory.CreateDirectory(Path.GetDirectoryName(ScenePath));
-            EditorSceneManager.SaveScene(scene, ScenePath);
-            AddToBuildSettings(ScenePath);
-
-            Debug.Log($"[SafeAreaSceneBuilder] Saved {ScenePath} and added it to Build Settings.");
+            FinishScene(scene.Value, ScenePath, BuilderName);
         }
 
         /// <summary>
@@ -83,10 +76,13 @@ namespace MGD.Samples.Editor
             tint.color = new Color(0.2f, 0.8f, 0.4f, 0.12f);
             tint.raycastTarget = false;
 
-            rect.gameObject.AddComponent<MGD.Samples.SafeArea>();
+            rect.gameObject.AddComponent<SafeArea>();
             return rect;
         }
 
+        // The HUD here sets anchors, pivots and offsets by hand instead of through
+        // Place: the sample is about anchoring, and the elements hug the edges of
+        // the SafeArea panel rather than a point on it.
         static void CreateHud(RectTransform safeArea)
         {
             CreateCornerButton(safeArea, "TL", new Vector2(0f, 1f), new Vector2(EdgePadding, -EdgePadding));

@@ -42,6 +42,9 @@ namespace MGD.Samples
         Vector2[] _velocities;
         Vector2 _halfExtents;
         int _active;
+        Camera _camera;
+        int _extentsWidth;
+        int _extentsHeight;
 
         public LoadState State { get; private set; } = LoadState.Idle;
 
@@ -50,9 +53,15 @@ namespace MGD.Samples
 
         void Awake()
         {
-            Camera cam = Camera.main;
-            float halfHeight = cam.orthographicSize;
-            _halfExtents = new Vector2(halfHeight * cam.aspect, halfHeight);
+            _camera = Camera.main;
+            if (_camera == null)
+            {
+                Debug.LogError("[LoadGenerator] No camera tagged MainCamera in the scene; the sprites need one for their bounds.", this);
+                enabled = false;
+                return;
+            }
+
+            UpdateExtents();
 
             _transforms = new Transform[worstCount];
             _objects = new GameObject[worstCount];
@@ -90,6 +99,11 @@ namespace MGD.Samples
         /// <summary>Wired to the Idle, Steady and Worst buttons through the HUD.</summary>
         public void SetLoad(LoadState state)
         {
+            if (_objects == null)
+            {
+                return; // Awake found no camera and created nothing; the error is already logged.
+            }
+
             State = state;
 
             // Steady can never exceed what was created, whatever the Inspector says.
@@ -119,8 +133,29 @@ namespace MGD.Samples
             _active = count;
         }
 
+        void UpdateExtents()
+        {
+            _extentsWidth = Screen.width;
+            _extentsHeight = Screen.height;
+            float halfHeight = _camera.orthographicSize;
+            _halfExtents = new Vector2(halfHeight * _camera.aspect, halfHeight);
+        }
+
         void Update()
         {
+            // Paused frames do no work: deltaTime is 0 anyway, and the one sample about
+            // the frame budget should not keep moving sprites under the pause panel.
+            if (LifecycleGuard.IsPaused)
+            {
+                return;
+            }
+
+            // Rotation changes the visible rectangle; two int compares per frame.
+            if (Screen.width != _extentsWidth || Screen.height != _extentsHeight)
+            {
+                UpdateExtents();
+            }
+
             float dt = Time.deltaTime;
             for (int i = 0; i < _active; i++)
             {

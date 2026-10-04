@@ -47,7 +47,8 @@ namespace MGD.Samples
         }
 
         // Awaitable, not a coroutine: the module's rule for async work. Any exception
-        // surfaces in the console instead of being swallowed.
+        // surfaces in the console instead of being swallowed. LoadSceneAsync takes no
+        // cancellation token, so none is passed.
         async Awaitable LoadLauncherAsync()
         {
             await SceneManager.LoadSceneAsync(LauncherBuildIndex);

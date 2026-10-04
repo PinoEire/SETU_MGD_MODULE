@@ -1,7 +1,7 @@
 ---
 type: conventions
 status: living
-updated: 2026-09-15
+updated: 2026-10-04
 tags: [conventions, meta]
 ---
 
@@ -19,12 +19,12 @@ Every note begins with YAML frontmatter. An AI reads it as structured data; Obsi
 
 | Key | Values | Purpose |
 |-----|--------|---------|
-| `type` | `home`, `conventions`, `glossary`, `sample`, `decision`, `template` | What kind of note this is. |
+| `type` | `home`, `conventions`, `glossary`, `sample`, `decision` | What kind of note this is. A template carries the frontmatter of the note it produces. |
 | `status` | `planned`, `in-progress`, `done`, `superseded`, `living` | Whether the content can be trusted as current. `living` is for notes that are always being updated. |
 | `updated` | ISO date `YYYY-MM-DD` | Last meaningful edit. Bump it whenever the body changes. |
 | `tags` | list | Lowercase, hyphenated. Always include the type as a tag. |
 
-Sample notes add `lab` (for example `W02-A`), `unity` (editor version the sample was last verified in) and `scene` (path of the sample scene in the Unity project). Decision notes add `decision` (`accepted`, `superseded`) and `supersedes` (a wikilink or empty).
+Sample notes add `lab` (for example `W02-A`; a list such as `[W03-A, W03-B]` when one sample serves two labs; `none` for infrastructure), `unity` (editor version the sample was last verified in) and `scene` (path of the sample scene in the Unity project, or `none` for a sample with no scene). Decision notes add `decision` (`accepted`, `superseded`) and `supersedes` (a wikilink or empty).
 
 Anything a reader or tool would want to filter on goes in frontmatter, not in prose.
 

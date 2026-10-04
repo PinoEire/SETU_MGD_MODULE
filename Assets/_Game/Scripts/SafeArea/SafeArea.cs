@@ -36,31 +36,36 @@ namespace MGD.Samples
             }
         }
 
+        /// <summary>
+        /// Converts a pixel safe-area rect into normalised anchors (0..1). Anchors,
+        /// not offsets, keep the panel correct at any resolution and Canvas Scaler
+        /// setting because they are relative to the parent, not absolute. Returns
+        /// false for a zero-sized screen, which the editor can report for a frame
+        /// while a view is being created; dividing by it would give NaN anchors.
+        /// </summary>
+        public static bool ToAnchors(Rect safe, float screenWidth, float screenHeight, out Vector2 anchorMin, out Vector2 anchorMax)
+        {
+            if (screenWidth <= 0f || screenHeight <= 0f)
+            {
+                anchorMin = Vector2.zero;
+                anchorMax = Vector2.one;
+                return false;
+            }
+
+            anchorMin = new Vector2(safe.xMin / screenWidth, safe.yMin / screenHeight);
+            anchorMax = new Vector2(safe.xMax / screenWidth, safe.yMax / screenHeight);
+            return true;
+        }
+
         void Apply()
         {
             Rect safe = Screen.safeArea;
-            float width = Screen.width;
-            float height = Screen.height;
-
-            // The editor can report a zero-sized screen for a frame while a view is
-            // being created. Dividing by zero would produce NaN anchors, so wait.
-            if (width <= 0f || height <= 0f)
+            if (!ToAnchors(safe, Screen.width, Screen.height, out Vector2 anchorMin, out Vector2 anchorMax))
             {
                 return;
             }
 
             _applied = safe;
-
-            // Convert the pixel rect to normalised anchors (0..1). Anchors, not
-            // offsets, keep the panel correct at any resolution and Canvas Scaler
-            // setting because they are relative to the parent, not absolute.
-            Vector2 anchorMin = safe.position;
-            Vector2 anchorMax = safe.position + safe.size;
-            anchorMin.x /= width;
-            anchorMin.y /= height;
-            anchorMax.x /= width;
-            anchorMax.y /= height;
-
             _rect.anchorMin = anchorMin;
             _rect.anchorMax = anchorMax;
             _rect.offsetMin = Vector2.zero;

@@ -62,6 +62,10 @@ namespace MGD.Samples
                 button.interactable = false;
             }
 
+            // Awaitable, not a coroutine: the module's rule for async work. The
+            // discard means "fire and forget"; any exception still surfaces in the
+            // console instead of being swallowed. LoadSceneAsync takes no
+            // cancellation token, so none is passed.
             _ = LoadAsync(buildIndex);
         }
 

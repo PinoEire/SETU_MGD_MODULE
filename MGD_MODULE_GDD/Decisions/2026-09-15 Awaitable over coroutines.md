@@ -1,13 +1,15 @@
 ---
 type: decision
-status: done
-decision: accepted
+status: superseded
+decision: superseded
 supersedes: ""
-updated: 2026-09-15
+updated: 2026-10-04
 tags: [decision, async]
 ---
 
 # Awaitable over coroutines
+
+> Superseded by [[2026-10-04 Cancellation tokens where the awaited API takes one]]. Kept unchanged as history.
 
 ## Context
 

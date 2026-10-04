@@ -1,7 +1,5 @@
-using System.IO;
 using TMPro;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -12,39 +10,33 @@ namespace MGD.Samples.Editor
     /// <summary>
     /// Builds the launcher scene, the first scene in the build. The list of samples
     /// is not baked in: <see cref="LauncherMenu"/> reads Build Settings at runtime.
+    /// Every run assigns fresh object IDs, so run it only when this builder changes.
     /// </summary>
     public static class LauncherSceneBuilder
     {
+        const string BuilderName = "LauncherSceneBuilder";
         const string ScenePath = "Assets/_Game/Scenes/Launcher/Launcher.unity";
-        const float Margin = 96f;
 
         [MenuItem("MGD Samples/Build Launcher Scene")]
         public static void Build()
         {
-            if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+            Scene? scene = BeginScene(BuilderName);
+            if (scene == null)
             {
-                Debug.Log("[LauncherSceneBuilder] Cancelled: current scene has unsaved changes.");
                 return;
             }
-
-            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
-
-            CreateCamera(new Color(0.08f, 0.09f, 0.12f));
-            CreateEventSystem();
 
             // App-wide settings live in the first scene, once. See MobileBootstrap.
             new GameObject("Bootstrap", typeof(MobileBootstrap));
 
             Canvas canvas = CreateCanvas();
-            RectTransform root = CreateUiObject("Root", canvas.transform);
-            Stretch(root, Margin);
+            RectTransform root = CreateHudRoot(canvas);
 
             TextMeshProUGUI title = CreateLabel(root, "Title", "MGD Samples", 72f);
             Place(title.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, 110f), stretchWidth: true);
 
             TextMeshProUGUI subtitle = CreateLabel(root, "Subtitle", "Mobile Game Development, SETU 2026/27\nTap a sample. Android back returns here.", 32f);
-            Place(subtitle.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, 110f), stretchWidth: true);
-            subtitle.rectTransform.anchoredPosition = new Vector2(0f, -120f);
+            Place(subtitle.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, 110f), stretchWidth: true, offset: new Vector2(0f, -120f));
 
             // The list fills the space between the subtitle and the footer.
             RectTransform list = CreateUiObject("List", root);
@@ -69,16 +61,16 @@ namespace MGD.Samples.Editor
             footer.color = new Color(0.75f, 0.78f, 0.85f);
             Place(footer.rectTransform, new Vector2(0.5f, 0f), new Vector2(0f, 120f), stretchWidth: true);
 
+            // The first scene pauses like every other; back toggles the panel here
+            // because there is no launcher to return to.
+            AddPauseMenu(canvas, backTogglesPause: true, addSamplesButton: false);
+
             var menu = canvas.gameObject.AddComponent<LauncherMenu>();
             SetField(menu, "listRoot", list);
             SetField(menu, "buttonTemplate", template);
             SetField(menu, "footer", footer);
 
-            Directory.CreateDirectory(Path.GetDirectoryName(ScenePath));
-            EditorSceneManager.SaveScene(scene, ScenePath);
-            AddToBuildSettings(ScenePath, first: true);
-
-            Debug.Log($"[LauncherSceneBuilder] Saved {ScenePath} and placed it first in Build Settings.");
+            FinishScene(scene.Value, ScenePath, BuilderName, first: true);
         }
     }
 }

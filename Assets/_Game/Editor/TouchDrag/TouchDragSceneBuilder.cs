@@ -1,7 +1,5 @@
-using System.IO;
 using TMPro;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static MGD.Samples.Editor.SampleSceneBuild;
@@ -14,33 +12,30 @@ namespace MGD.Samples.Editor
     /// </summary>
     public static class TouchDragSceneBuilder
     {
+        const string BuilderName = "TouchDragSceneBuilder";
         const string ScenePath = "Assets/_Game/Scenes/TouchDrag/TouchDrag.unity";
         const string SpriteMaterialPath =
             "Packages/com.unity.render-pipelines.universal/Runtime/Materials/Sprite-Unlit-Default.mat";
-        const float Margin = 96f;
 
         // The Knob sprite is 0.2 world units across at its 200 pixels per unit;
-        // scale 5 makes it 1 unit, about 190 px or 73 dp on a 1080-wide phone at
-        // 420 dpi: comfortably above the 48 dp minimum touch target.
+        // scale 5 makes it 1 unit. The camera shows 10 units of height, so on a
+        // 1080 x 2400 phone that is 240 px, about 90 dp at 420 dpi, and on the
+        // 1080 x 1920 reference 192 px, about 73 dp: either way well above the
+        // 48 dp minimum touch target.
         const float SpriteScale = 5f;
 
         [MenuItem("MGD Samples/Build TouchDrag Scene")]
         public static void Build()
         {
-            if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+            Scene? scene = BeginScene(BuilderName);
+            if (scene == null)
             {
-                Debug.Log("[TouchDragSceneBuilder] Cancelled: current scene has unsaved changes.");
                 return;
             }
 
-            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
-
-            Camera camera = CreateCamera(new Color(0.08f, 0.09f, 0.12f));
-            CreateEventSystem();
-
             var controllerObject = new GameObject("Touch Drag Controller", typeof(TouchDragController));
             var controller = controllerObject.GetComponent<TouchDragController>();
-            SetField(controller, "worldCamera", camera);
+            SetField(controller, "worldCamera", Camera.main);
 
             Draggable[] draggables =
             {
@@ -50,15 +45,13 @@ namespace MGD.Samples.Editor
             };
 
             Canvas canvas = CreateCanvas();
-            RectTransform root = CreateUiObject("Root", canvas.transform);
-            Stretch(root, Margin);
+            RectTransform root = CreateHudRoot(canvas);
 
             TextMeshProUGUI title = CreateLabel(root, "Title", "TouchDrag sample", 56f);
             Place(title.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, 100f), stretchWidth: true);
 
             TextMeshProUGUI status = CreateLabel(root, "Status", "", 40f);
-            Place(status.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, 60f), stretchWidth: true);
-            status.rectTransform.anchoredPosition = new Vector2(0f, -110f);
+            Place(status.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, 60f), stretchWidth: true, offset: new Vector2(0f, -110f));
 
             TextMeshProUGUI hint = CreateLabel(root, "Hint",
                 "Touch a circle and drag it. One finger per circle; two fingers move two.\nCircles stay on screen. Android back returns to the list.",
@@ -69,29 +62,19 @@ namespace MGD.Samples.Editor
             var hud = root.gameObject.AddComponent<TouchDragHud>();
             SetField(hud, "controller", controller);
             SetField(hud, "status", status);
-            var props = new SerializedObject(hud);
-            SerializedProperty list = props.FindProperty("draggables");
-            list.arraySize = draggables.Length;
-            for (int i = 0; i < draggables.Length; i++)
-            {
-                list.GetArrayElementAtIndex(i).objectReferenceValue = draggables[i];
-            }
+            SetField(hud, "draggables", draggables);
 
-            props.ApplyModifiedPropertiesWithoutUndo();
-
-            // Android back returns to the launcher; this sample does not use back itself.
+            // Android back returns to the launcher; this sample does not use back itself,
+            // so the pause panel's own back toggle is off.
             canvas.gameObject.AddComponent<BackToLauncher>();
+            AddPauseMenu(canvas, backTogglesPause: false, addSamplesButton: false);
 
-            Directory.CreateDirectory(Path.GetDirectoryName(ScenePath));
-            EditorSceneManager.SaveScene(scene, ScenePath);
-            AddToBuildSettings(ScenePath);
-
-            Debug.Log($"[TouchDragSceneBuilder] Saved {ScenePath} and added it to Build Settings.");
+            FinishScene(scene.Value, ScenePath, BuilderName);
         }
 
         static Draggable CreateDraggable(string label, Color colour, Vector2 position)
         {
-            var go = new GameObject(label, typeof(SpriteRenderer), typeof(CircleCollider2D), typeof(Draggable));
+            var go = new GameObject(label, typeof(SpriteRenderer), typeof(CircleCollider2D), typeof(Rigidbody2D), typeof(Draggable));
             go.transform.position = position;
             go.transform.localScale = Vector3.one * SpriteScale;
 
@@ -106,10 +89,12 @@ namespace MGD.Samples.Editor
             var collider = go.GetComponent<CircleCollider2D>();
             collider.radius = renderer.sprite.bounds.extents.x;
 
+            // Kinematic: moved by the drag, never by physics (so gravity does not
+            // apply), and cheap to move. Draggable warns at runtime if this is changed.
+            go.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+
             var draggable = go.GetComponent<Draggable>();
-            var props = new SerializedObject(draggable);
-            props.FindProperty("label").stringValue = label;
-            props.ApplyModifiedPropertiesWithoutUndo();
+            SetField(draggable, "label", label);
             return draggable;
         }
     }
