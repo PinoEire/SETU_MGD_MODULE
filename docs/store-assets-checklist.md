@@ -17,5 +17,6 @@ Worked example of the Week 4 Lab B, Part A checklist, written for this samples a
 3. **Lifecycle**: the pause card over the running clocks. Caption: "Home, calls and screen-off pause the game; the player resumes."
 4. **Accessibility**: the Settings card with Large text and the 48 dp square. Caption: "Haptics, text size and reduce motion from the first build."
 5. **Performance**: the Worst state with the `[Baseline]` line readable. Caption: "Measure frame time, not FPS."
+6. **TouchDrag**: two fingers on two circles mid-drag, the status line naming both. Caption: "Touch that works the way thumbs do."
 
-Sources in Week 10: in-game capture at device resolution for shots 1 to 5; icon and feature graphic from the module's key art (not yet made).
+Sources in Week 10: in-game capture at device resolution for shots 1 to 6; icon and feature graphic from the module's key art (not yet made).

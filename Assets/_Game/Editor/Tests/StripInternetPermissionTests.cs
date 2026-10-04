@@ -39,11 +39,49 @@ namespace MGD.Samples.Editor
         }
 
         [Test]
-        public void Strip_ToleratesAttributeOrderAndSpacing()
+        public void Strip_ToleratesSpacingAndNoSpaceBeforeTheSlash()
         {
             string manifest = "<manifest>\n<uses-permission   android:name=\"android.permission.INTERNET\"/>\n</manifest>\n";
 
             Assert.AreEqual("<manifest>\n</manifest>\n", StripInternetPermission.Strip(manifest));
+        }
+
+        [Test]
+        public void Strip_ToleratesExtraAttributesInAnyOrder()
+        {
+            string manifest =
+                "<manifest>\n" +
+                "  <uses-permission tools:node=\"merge\" android:name=\"android.permission.INTERNET\" android:maxSdkVersion=\"30\" />\n" +
+                "</manifest>\n";
+
+            Assert.AreEqual("<manifest>\n</manifest>\n", StripInternetPermission.Strip(manifest));
+        }
+
+        [Test]
+        public void Strip_ToleratesExplicitClosingTag()
+        {
+            string manifest = "<manifest>\n  <uses-permission android:name=\"android.permission.INTERNET\"></uses-permission>\n</manifest>\n";
+
+            Assert.AreEqual("<manifest>\n</manifest>\n", StripInternetPermission.Strip(manifest));
+        }
+
+        [Test]
+        public void Strip_ToleratesWindowsLineEndings()
+        {
+            string manifest = UnityLibraryManifest.Replace("\n", "\r\n");
+
+            string result = StripInternetPermission.Strip(manifest);
+
+            StringAssert.DoesNotContain("android.permission.INTERNET", result);
+            Assert.AreEqual(manifest.Split('\n').Length - 1, result.Split('\n').Length);
+        }
+
+        [Test]
+        public void RequestsInternet_DetectsThePermissionWhateverTheShape()
+        {
+            Assert.IsTrue(StripInternetPermission.RequestsInternet(UnityLibraryManifest));
+            Assert.IsTrue(StripInternetPermission.RequestsInternet("<uses-permission\n  android:name='android.permission.INTERNET'/>"));
+            Assert.IsFalse(StripInternetPermission.RequestsInternet(UnityLibraryManifest.Replace("INTERNET", "VIBRATE")));
         }
     }
 }

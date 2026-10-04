@@ -32,8 +32,8 @@ The release keystore is `Keystore/user.keystore`, alias `android`. It sits insid
 | Field | Value |
 |-------|-------|
 | Alias | android |
-| Valid from / until | (paste from keytool) |
-| SHA-256 fingerprint | (paste from keytool) |
+| Valid from / until | left blank on purpose: keytool needs the keystore password, so this is filled by hand, never by a script or an AI session |
+| SHA-256 fingerprint | left blank for the same reason |
 
 Lose the keystore and no future build can replace an installed one with the same package name.
 
@@ -42,8 +42,8 @@ Lose the keystore and no future build can replace an installed one with the same
 1. Clone the repository and open the folder in Unity 6000.6 (Unity Hub > Add). Android Build Support must be installed with the editor.
 2. File > Build Profiles: select the **Android** profile and make it active.
 3. Project Settings > Player > Android, check: Package Name `com.dftgames.mgdsamples`, Version `0.2.0`, Scripting Backend **IL2CPP**, Target Architectures **ARM64** only (smaller APK; every supported phone is 64-bit), Target API Level **Automatic**, Publishing Settings **Custom Keystore** selected with both passwords typed in. In the Build Profiles window, Platform Settings: **Build App Bundle** off.
-4. Commit first, so the manifest row records the commit the APK was built from. Then menu **MGD Samples > Build Release APK**. The script (`Assets/_Game/Editor/Release/ReleaseBuild.cs`) checks the package name, IL2CPP, ARM64 only, Target API Automatic, App Bundle off, the custom keystore and both passwords, and refuses with one console line per unmet item; it does not check the version string. Otherwise it bumps Bundle Version Code, builds `releases/SETU_MGD_MODULE-<version>-arm64.apk` and appends a row to `releases/manifest.md` (a commit marked `-dirty` means the tree had uncommitted changes at build time). The APK is git-ignored; the manifest is committed.
-5. Install: `adb install -r releases/SETU_MGD_MODULE-0.2.0-arm64.apk`, then `adb shell dumpsys package com.dftgames.mgdsamples | grep version` should show the versionCode from the manifest. "App not installed" or `INSTALL_FAILED_VERSION_DOWNGRADE` means the phone has a higher code: build again.
+4. Commit first, so the manifest row records the commit the APK was built from. Then menu **MGD Samples > Build Release APK**. The script (`Assets/_Game/Editor/Release/ReleaseBuild.cs`) checks the package name, IL2CPP, ARM64 only, Target API Automatic, App Bundle off, the custom keystore, that its file exists, and both passwords, and refuses with one console line per unmet item; it does not check the version string. Otherwise it bumps Bundle Version Code, builds `releases/SETU_MGD_MODULE-<version>-<code>-arm64.apk` and appends a row to `releases/manifest.md` (a commit marked `-dirty` means the tree had uncommitted changes at build time). The APK is git-ignored; the manifest is committed.
+5. Install: `adb install -r releases/SETU_MGD_MODULE-0.2.0-<code>-arm64.apk`, then `adb shell dumpsys package com.dftgames.mgdsamples | grep version` should show the versionCode from the manifest. "App not installed" or `INSTALL_FAILED_VERSION_DOWNGRADE` means the phone has a higher code: build again.
 6. Publish: commit the manifest row, tag it (`git tag v0.2.0`, then `git push --tags`), create a GitHub Release on that tag with the APK attached, paste the link into the manifest's Download column and commit again. See the vault decision *2026-09-28 Release APKs live on GitHub Releases*.
 
 Batch-mode builds are not supported, because the keystore passwords exist only in the editor session.

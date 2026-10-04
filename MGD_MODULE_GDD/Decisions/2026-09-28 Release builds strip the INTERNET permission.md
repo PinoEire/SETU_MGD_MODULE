@@ -1,13 +1,15 @@
 ---
 type: decision
-status: done
-decision: accepted
+status: superseded
+decision: superseded
 supersedes: ""
-updated: 2026-09-28
+updated: 2026-10-04
 tags: [decision, android, permissions, release]
 ---
 
 # Release builds strip the INTERNET permission
+
+> Superseded by [[2026-10-04 A surviving INTERNET permission fails the release build]]. Kept unchanged as history.
 
 ## Context
 

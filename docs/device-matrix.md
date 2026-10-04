@@ -4,14 +4,14 @@ Worked example of the Week 4 Lab A, Part D matrix. Submit yours as `/docs/CA1/de
 
 | Device | Android | Serial (last 4) | Install result | Notes |
 |--------|---------|-----------------|----------------|-------|
-| (lecturer's phone: model) | (version) | (last 4) | Success, versionCode as in releases/manifest.md | (safe-area, aspect, refresh rate, install prompts) |
-| (second phone) | | | | |
+| Google Pixel 7a (lecturer) | 17 | 4834 | Success, versionCode 10 | Punch-hole camera at the top: SafeArea HUD moves 118 px down. 20:9 panel, 60 Hz in-game although 90 Hz exists. No install prompt beyond the USB debugging dialog. |
+| (second phone: fill in from a neighbour's device) | | | | |
 
 Fill a row from:
 
 ```bash
 adb devices -l
-adb -s <serial> install -r releases/SETU_MGD_MODULE-0.2.0-arm64.apk
+adb -s <serial> install -r releases/SETU_MGD_MODULE-0.2.0-<code>-arm64.apk
 adb -s <serial> shell dumpsys package com.dftgames.mgdsamples | grep version
 adb -s <serial> shell getprop ro.product.model
 adb -s <serial> shell getprop ro.build.version.release

@@ -16,7 +16,8 @@ namespace MGD.Samples.Editor
     /// the Android build profile, and records the result in the manifest.
     /// The keystore passwords are the ones typed into Player Settings this
     /// session, so this runs from the editor only, not from batch mode.
-    /// Commit before building: the manifest row records the current commit.
+    /// Commit before building: the manifest row records the current commit, and
+    /// a tree with uncommitted changes is recorded as "-dirty".
     /// </summary>
     public static class ReleaseBuild
     {
@@ -35,7 +36,7 @@ namespace MGD.Samples.Editor
                     Debug.LogError($"[ReleaseBuild] {problem}");
                 }
 
-                Debug.LogError("[ReleaseBuild] Not built. Fix the items above in Project Settings > Player > Android.");
+                Debug.LogError("[ReleaseBuild] Not built. Fix the items above; each line names its settings page.");
                 return;
             }
 
@@ -46,6 +47,10 @@ namespace MGD.Samples.Editor
                 return;
             }
 
+            // Read the commit before anything is written: bumping versionCode
+            // changes ProjectSettings.asset, which would mark every build dirty.
+            string commit = GitDescribe();
+
             // Android refuses to install a lower versionCode over a higher one, so
             // every build gets a new code. Bumped before the build because the APK
             // carries it; put back if the build fails.
@@ -54,7 +59,7 @@ namespace MGD.Samples.Editor
             PlayerSettings.Android.bundleVersionCode = code;
 
             string version = PlayerSettings.bundleVersion;
-            string apkPath = $"{ReleasesFolder}/{PlayerSettings.productName}-{version}-arm64.apk";
+            string apkPath = $"{ReleasesFolder}/{ApkFileName(PlayerSettings.productName, version, code)}";
             Directory.CreateDirectory(ReleasesFolder);
 
             BuildReport report;
@@ -75,22 +80,31 @@ namespace MGD.Samples.Editor
                 throw;
             }
 
-            if (report.summary.result != BuildResult.Succeeded)
+            if (report.summary.result != BuildResult.Succeeded || !File.Exists(apkPath))
             {
                 PlayerSettings.Android.bundleVersionCode = previousCode;
-                Debug.LogError($"[ReleaseBuild] Build {report.summary.result}: versionCode stays {previousCode}. See the errors above.");
+                Debug.LogError($"[ReleaseBuild] Build {report.summary.result}, APK present: {File.Exists(apkPath)}. versionCode stays {previousCode}. See the errors above.");
                 return;
             }
 
             AssetDatabase.SaveAssets(); // persists the bumped versionCode
 
             var apk = new FileInfo(apkPath);
-            string row = ReleaseManifest.Row(version, code, DateTime.Now.ToString("yyyy-MM-dd"), GitShortHash(), apk.Length, Sha256(apkPath));
+            string row = ReleaseManifest.Row(version, code, DateTime.Now.ToString("yyyy-MM-dd"), commit, apk.Length, Sha256(apkPath));
             ReleaseManifest.Append(ManifestPath, row);
 
-            Debug.Log($"[ReleaseBuild] Built {apkPath} ({apk.Length / 1048576.0:F1} MB), versionCode {code}. " +
+            Debug.Log($"[ReleaseBuild] Built {apkPath} ({apk.Length / 1048576.0:F1} MB), versionCode {code}, commit {commit}. " +
                       $"Row added to {ManifestPath}. Install with: adb install -r {apkPath}. " +
                       "Attach the APK to the GitHub Release and paste the link in the Download column.");
+        }
+
+        /// <summary>
+        /// Version and versionCode both in the name, so two builds of the same
+        /// version never overwrite each other and every manifest row keeps a file.
+        /// </summary>
+        public static string ApkFileName(string productName, string version, int versionCode)
+        {
+            return $"{productName}-{version}-{versionCode}-arm64.apk";
         }
 
         static string Sha256(string path)
@@ -102,7 +116,7 @@ namespace MGD.Samples.Editor
 
         // "a121f41" when the tree is clean, "a121f41-dirty" when the build
         // includes uncommitted changes: commit first if the row is to be evidence.
-        static string GitShortHash()
+        static string GitDescribe()
         {
             try
             {

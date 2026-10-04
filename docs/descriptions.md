@@ -19,9 +19,10 @@ What is in this build:
 - Lifecycle: the game pauses and saves when you press Home, take a call or the screen turns off; coming back never drops you straight into play.
 - Accessibility: a haptics toggle, three text sizes and a reduce-motion switch, remembered between sessions.
 - Performance: a stress scene with three load states, a frame-time readout and a render-scale probe for finding out whether the phone is CPU-bound or GPU-bound.
+- TouchDrag: three circles you drag with your fingers, one finger each, the kind of touch handling behind a unit on a map or an item in an inventory.
 
 Works fully offline. No adverts, no purchases, no accounts, no data collection. Android back always returns to the list; there is no Quit button because Android already has one.
 
 Made for students of A12581 at South East Technological University, academic year 2026/2027.
 
-(About 1,200 characters)
+(About 1,300 characters)

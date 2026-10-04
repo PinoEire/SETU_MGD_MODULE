@@ -14,6 +14,7 @@ namespace MGD.Samples.Editor
                 TargetApiAuto = true,
                 BuildAppBundle = false,
                 UseCustomKeystore = true,
+                KeystoreFileExists = true,
                 KeystorePasswordPresent = true,
                 KeyPasswordPresent = true,
                 PackageName = "com.dftgames.mgdsamples"
@@ -89,6 +90,18 @@ namespace MGD.Samples.Editor
         }
 
         [Test]
+        public void Check_KeystoreFileMissing_NamesTheFile()
+        {
+            ReleaseSettings s = Good();
+            s.KeystoreFileExists = false;
+
+            string[] problems = ReleaseChecklist.Check(s);
+
+            Assert.AreEqual(1, problems.Length);
+            StringAssert.Contains("Keystore file", problems[0]);
+        }
+
+        [Test]
         public void Check_AppBundleOn_NamesAppBundle()
         {
             ReleaseSettings s = Good();
@@ -105,6 +118,7 @@ namespace MGD.Samples.Editor
         [TestCase("com.pino.my-game", TestName = "Check_PackageName_Hyphen_Rejected")]
         [TestCase("com.1abc.game", TestName = "Check_PackageName_DigitLeadingSegment_Rejected")]
         [TestCase("Com.pino.game", TestName = "Check_PackageName_UpperCase_Rejected")]
+        [TestCase("com.pino.game.", TestName = "Check_PackageName_TrailingDot_Rejected")]
         [TestCase("", TestName = "Check_PackageName_Empty_Rejected")]
         public void Check_BadPackageName_Rejected(string packageName)
         {
@@ -119,12 +133,54 @@ namespace MGD.Samples.Editor
 
         [TestCase("com.pino.runner")]
         [TestCase("ie.setu.mgd_samples2")]
+        [TestCase("com.pino.game_2")]
         public void Check_GoodPackageName_Accepted(string packageName)
         {
             ReleaseSettings s = Good();
             s.PackageName = packageName;
 
             Assert.IsEmpty(ReleaseChecklist.Check(s));
+        }
+
+        [Test]
+        public void ResolveKeystorePath_InProjectPrefix_IsRelativeToTheProjectRoot()
+        {
+            string path = ReleaseSettings.ResolveKeystorePath("{inproject}: Keystore/user.keystore", @"D:\project", @"C:\dedicated");
+
+            Assert.AreEqual(Path.Combine(@"D:\project", "Keystore/user.keystore"), path);
+        }
+
+        [Test]
+        public void ResolveKeystorePath_DedicatedPrefix_IsRelativeToTheDedicatedFolder()
+        {
+            string path = ReleaseSettings.ResolveKeystorePath("{dedicated}: user.keystore", @"D:\project", @"C:\dedicated");
+
+            Assert.AreEqual(Path.Combine(@"C:\dedicated", "user.keystore"), path);
+        }
+
+        [Test]
+        public void ResolveKeystorePath_AbsolutePath_IsUsedAsGiven()
+        {
+            Assert.AreEqual(@"E:\keys\user.keystore", ReleaseSettings.ResolveKeystorePath(@"E:\keys\user.keystore", @"D:\project", @"C:\dedicated"));
+        }
+
+        [Test]
+        public void ResolveKeystorePath_RelativePathWithoutPrefix_IsRelativeToTheProjectRoot()
+        {
+            // What PlayerSettings.Android.keystoreName returns for an in-project keystore in Unity 6.
+            Assert.AreEqual(Path.Combine(@"D:\project", "Keystore/user.keystore"), ReleaseSettings.ResolveKeystorePath("Keystore/user.keystore", @"D:\project", @"C:\dedicated"));
+        }
+
+        [Test]
+        public void ResolveKeystorePath_Empty_StaysEmpty()
+        {
+            Assert.AreEqual("", ReleaseSettings.ResolveKeystorePath("", @"D:\project", @"C:\dedicated"));
+        }
+
+        [Test]
+        public void ApkFileName_CarriesVersionAndCode_SoBuildsNeverOverwriteEachOther()
+        {
+            Assert.AreEqual("SETU_MGD_MODULE-0.2.0-9-arm64.apk", ReleaseBuild.ApkFileName("SETU_MGD_MODULE", "0.2.0", 9));
         }
 
         [Test]
@@ -151,6 +207,26 @@ namespace MGD.Samples.Editor
                 Assert.AreEqual(1, System.Array.FindAll(lines, l => l.StartsWith("# Release manifest")).Length);
                 Assert.AreEqual("| row one |", lines[lines.Length - 2]);
                 Assert.AreEqual("| row two |", lines[lines.Length - 1]);
+            }
+            finally
+            {
+                File.Delete(path);
+            }
+        }
+
+        [Test]
+        public void ManifestAppend_ExistingEmptyFile_GetsTheHeader()
+        {
+            string path = Path.Combine(Path.GetTempPath(), "mgd-manifest-" + Path.GetRandomFileName() + ".md");
+            try
+            {
+                File.WriteAllText(path, "");
+
+                ReleaseManifest.Append(path, "| row |");
+
+                string[] lines = File.ReadAllLines(path);
+                StringAssert.StartsWith("# Release manifest", lines[0]);
+                Assert.AreEqual("| row |", lines[lines.Length - 1]);
             }
             finally
             {

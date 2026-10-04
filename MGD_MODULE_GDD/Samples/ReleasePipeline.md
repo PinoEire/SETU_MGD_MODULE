@@ -4,7 +4,7 @@ status: done
 lab: [W04-A, W04-B]
 unity: 6000.6.0f1
 scene: none
-updated: 2026-09-28
+updated: 2026-10-04
 tags: [sample, release, signing, versioning, w04]
 ---
 
@@ -31,26 +31,26 @@ Week 4 Lab A, *Harden the release pipeline: signing and versioning*, Parts A to 
 
 | Path | Purpose |
 |------|---------|
-| `Assets/_Game/Editor/Release/ReleaseChecklist.cs` | `ReleaseSettings` (a plain snapshot of the Android Player Settings), `ReleaseChecklist.Check` (one rule per line, one message per failure) and `ReleaseManifest` (row format and append). What students copy. |
-| `Assets/_Game/Editor/Release/ReleaseBuild.cs` | Menu item *MGD Samples > Build Release APK*: checklist, bump, build with the Android build profile, revert the bump on failure, SHA-256 and manifest row on success. What students copy. |
-| `Assets/_Game/Editor/Tests/ReleaseChecklistTests.cs` | Eighteen EditMode tests: clean settings pass; each rule fails alone (Mono, ARMv7 ticked, fixed Target API, both passwords, no custom keystore, App Bundle on); six bad and two good package names; the manifest row format; append on a fresh file and on a file without a trailing newline. |
-| `releases/manifest.md` | One row per release build. Committed. |
-| `releases/*.apk` | Git-ignored (with the IL2CPP symbols folder Unity writes beside it). Attached to the GitHub Release instead. |
+| `Assets/_Game/Editor/Release/ReleaseChecklist.cs` | `ReleaseSettings` (a plain snapshot of the Android Player Settings, including whether the keystore file exists), `ReleaseChecklist.Check` (one rule per line, one message per failure) and `ReleaseManifest` (row format and append). What students copy. |
+| `Assets/_Game/Editor/Release/ReleaseBuild.cs` | Menu item *MGD Samples > Build Release APK*: checklist, read the commit (before the bump dirties the tree), bump, build with the Android build profile to `releases/<product>-<version>-<code>-arm64.apk`, revert the bump on failure or exception, SHA-256 and manifest row on success. What students copy. |
+| `Assets/_Game/Editor/Tests/ReleaseChecklistTests.cs` | Twenty-eight EditMode tests: clean settings pass; each rule fails alone (Mono, ARMv7 ticked, fixed Target API, both passwords, no custom keystore, keystore file missing, App Bundle on); seven bad and three good package names; the keystore name resolved for the in-project, dedicated, absolute, relative and empty shapes; the APK file name; the manifest row format; append on a fresh file, an empty file and a file without a trailing newline. |
+| `releases/manifest.md` | One row per build the script makes, released or not; rows are never removed, and the Download column marks the ones that went out. Committed. |
+| `releases/*.apk` | Named `<product>-<version>-<versionCode>-arm64.apk` so builds never overwrite each other. Git-ignored (with the IL2CPP symbols folder Unity writes beside it). Attached to the GitHub Release instead. |
 | `README.md` | Signing, Build, Device targets and AI assistance sections. |
 | `docs/store-assets-checklist.md`, `docs/descriptions.md` | Lab B Part A worked examples for this app. |
 | `docs/privacy-statement.md` | Lab B Part B, written from the code: PlayerPrefs keys, no network, `VIBRATE` expected; the `dumpsys` block is pasted after the device run. |
 | `docs/device-matrix.md`, `docs/install-proof.txt` | Lab A Parts C and D structure; the phone rows are filled from the device. |
-| `ProjectSettings/ProjectSettings.asset` | Package name `com.dftgames.mgdsamples`, version 0.2.0, Bundle Version Code bumped by the script (7 after the builds it took to get the permissions right); hardware statistics upload off. |
+| `ProjectSettings/ProjectSettings.asset` | Package name `com.dftgames.mgdsamples`, version 0.2.0, Bundle Version Code bumped by the script on every build (the current value is in this file and in `releases/manifest.md`); hardware statistics upload off. |
 | `ProjectSettings/UnityConnectSettings.asset` | Engine Diagnostics off, so no engine data leaves the phone. |
-| `Assets/_Game/Editor/Release/StripInternetPermission.cs` | Build hook that deletes the `INTERNET` line from the generated `unityLibrary` manifest in release builds only; development builds keep it for the Profiler. `Strip` is pure and tested. See the decision below. |
-| `Assets/_Game/Editor/Tests/StripInternetPermissionTests.cs` | Four EditMode tests: only the `INTERNET` line goes, the line count drops by one, a manifest without it is unchanged, spacing and self-closing variants are matched. |
+| `Assets/_Game/Editor/Release/StripInternetPermission.cs` | Build hook that deletes the `INTERNET` element from the generated `unityLibrary` and `launcher` manifests in release builds only; development builds, and projects with Internet Access set to Require, keep it. Fails the build if the permission survives the strip, so the privacy statement cannot go stale silently. `Strip` and `RequestsInternet` are pure and tested. See the decision below. |
+| `Assets/_Game/Editor/Tests/StripInternetPermissionTests.cs` | Eight EditMode tests: only the `INTERNET` element goes, the line count drops by one, a manifest without it is unchanged, spacing, attribute order, extra attributes, an explicit closing tag and Windows line endings are all matched, and `RequestsInternet` detects the permission in any shape. |
 
 ## How to test
 
 1. **Refusal:** in Build Profiles > Android > Platform Settings turn *Build App Bundle* on (or leave a keystore password empty in Player Settings) and run *MGD Samples > Build Release APK*. Expected: one red console line per problem naming the settings page, then "Not built"; Bundle Version Code unchanged. Turn the setting back.
-2. **Build:** with both passwords typed in, run the menu item. Expected: `releases/SETU_MGD_MODULE-0.2.0-arm64.apk` appears, Bundle Version Code is one higher, and `releases/manifest.md` gains a row with size, SHA-256 and the current commit. `aapt dump badging` on the APK (in Unity's SDK `build-tools`) shows the package name, versionCode, `native-code: 'arm64-v8a'`, and the permissions `VIBRATE` and the app's own `DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`, and no `INTERNET`.
+2. **Build:** commit first, then with both passwords typed in run the menu item. Expected: `releases/SETU_MGD_MODULE-0.2.0-<code>-arm64.apk` appears, Bundle Version Code is one higher, and `releases/manifest.md` gains a row with size, SHA-256 and the commit, without `-dirty` because the commit was read before the bump. `aapt dump badging` on the APK (in Unity's SDK `build-tools`) shows the package name, versionCode, `native-code: 'arm64-v8a'`, and the permissions `VIBRATE` and the app's own `DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`, and no `INTERNET`.
 3. **Phone:** `adb install -r` the APK, then `adb shell dumpsys package com.dftgames.mgdsamples | grep version` shows the same versionCode. Paste both outputs into `docs/install-proof.txt`, add the row to `docs/device-matrix.md`, and the permission block to `docs/privacy-statement.md`.
-4. **Tests:** Window > General > Test Runner, EditMode, run all: 28 tests pass (22 here across the checklist, manifest and hook, six from [[Performance]]).
+4. **Tests:** Window > General > Test Runner, EditMode, run all: every test in the list passes (the checklist, manifest, file name and hook tests are the ones from this sample).
 
 ## Known limits
 
@@ -59,8 +59,8 @@ Week 4 Lab A, *Harden the release pipeline: signing and versioning*, Parts A to 
 - Uploading the APK to the GitHub Release and pasting the link is manual (no GitHub CLI on this machine).
 - The keytool validity and fingerprint lines in the README are filled by hand because keytool needs the keystore password.
 - Unity requests `INTERNET` in every Android build whatever the settings say; the build hook removes it from release builds only, so a Development build (Week 3 profiling) still shows it in `dumpsys`. Turning off Engine Diagnostics and hardware statistics was still right (both send data) but did not remove the permission on its own, and neither did removing the built-in Analytics package module.
-- The manifest row for a build made from an uncommitted tree shows the commit as `<hash>-dirty`; commit first when the row is meant as evidence, which the README's Build section says.
-- Verified 2026-09-28: refusal path (App Bundle on) and six real builds from the editor (versionCodes 2 to 7, 42.8 MB); APK badging checked with aapt after each, `INTERNET` gone at 7 with the build hook. Phone install proof pending.
+- The manifest row for a build made from an uncommitted tree shows the commit as `<hash>-dirty`; commit first when the row is meant as evidence, which the README's Build section says. The script reads the commit before it bumps versionCode, so a clean tree records a clean hash.
+- Verified 2026-09-28: refusal path (App Bundle on) and six real builds from the editor (versionCodes 2 to 7, 42.8 MB; rows 2 to 6 were made while the script was being written and discarded before the manifest was first committed, so the committed record starts at 7); APK badging checked with aapt after each, `INTERNET` gone at 7 with the build hook. 2026-10-04: commit read before the bump, APK named with the code, keystore-file check, strip failure is a build failure.
 
 ## Cuts list
 
@@ -70,7 +70,7 @@ Week 4 Lab A, *Harden the release pipeline: signing and versioning*, Parts A to 
 ## Decisions
 
 - [[2026-09-28 Release APKs live on GitHub Releases]]
-- [[2026-09-28 Release builds strip the INTERNET permission]]
+- [[2026-10-04 A surviving INTERNET permission fails the release build]]
 
 ## References
 

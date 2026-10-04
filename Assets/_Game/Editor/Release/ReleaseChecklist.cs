@@ -4,6 +4,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEditor.Build;
+using UnityEngine;
 
 namespace MGD.Samples.Editor
 {
@@ -18,13 +19,21 @@ namespace MGD.Samples.Editor
         public bool TargetApiAuto;
         public bool BuildAppBundle;
         public bool UseCustomKeystore;
+        public bool KeystoreFileExists;
         public bool KeystorePasswordPresent;
         public bool KeyPasswordPresent;
         public string PackageName;
 
-        /// <summary>Reads the live Player Settings for Android.</summary>
+        /// <summary>
+        /// Reads the live Player Settings for Android. These are the global
+        /// settings; a Build Profile with its own Player Settings overrides would
+        /// bypass them, and this project's Android profile has none.
+        /// </summary>
         public static ReleaseSettings FromPlayerSettings()
         {
+            string projectRoot = Path.GetDirectoryName(Application.dataPath);
+            string keystore = ResolveKeystorePath(PlayerSettings.Android.keystoreName, projectRoot,
+                UnityEditor.Android.AndroidExternalToolsSettings.keystoresDedicatedLocation);
             return new ReleaseSettings
             {
                 Il2Cpp = PlayerSettings.GetScriptingBackend(NamedBuildTarget.Android) == ScriptingImplementation.IL2CPP,
@@ -35,11 +44,45 @@ namespace MGD.Samples.Editor
                 // one you are building with first.
                 BuildAppBundle = EditorUserBuildSettings.buildAppBundle,
                 UseCustomKeystore = PlayerSettings.Android.useCustomKeystore,
+                // A missing keystore file fails after the whole IL2CPP compile with
+                // a Gradle signing error, the slowest possible way to find out.
+                KeystoreFileExists = !string.IsNullOrEmpty(keystore) && File.Exists(keystore),
                 // Both passwords are session-only: Unity never writes them to disk.
                 KeystorePasswordPresent = !string.IsNullOrEmpty(PlayerSettings.Android.keystorePass),
                 KeyPasswordPresent = !string.IsNullOrEmpty(PlayerSettings.Android.keyaliasPass),
                 PackageName = PlayerSettings.GetApplicationIdentifier(NamedBuildTarget.Android)
             };
+        }
+
+        /// <summary>
+        /// Turns the keystore name Unity stores into a path that can be tested with
+        /// <c>File.Exists</c>. Unity serialises an in-project keystore as
+        /// <c>{inproject}: Keystore/user.keystore</c> and one in the dedicated
+        /// folder as <c>{dedicated}: name</c>; the C# property usually hands back the
+        /// relative part without the prefix. Relative paths are taken from the
+        /// project root, never from the process working directory.
+        /// </summary>
+        public static string ResolveKeystorePath(string keystoreName, string projectRoot, string dedicatedRoot)
+        {
+            const string inProject = "{inproject}: ";
+            const string dedicated = "{dedicated}: ";
+
+            if (string.IsNullOrEmpty(keystoreName))
+            {
+                return "";
+            }
+
+            if (keystoreName.StartsWith(inProject))
+            {
+                return Path.Combine(projectRoot, keystoreName.Substring(inProject.Length));
+            }
+
+            if (keystoreName.StartsWith(dedicated))
+            {
+                return Path.Combine(dedicatedRoot ?? "", keystoreName.Substring(dedicated.Length));
+            }
+
+            return Path.IsPathRooted(keystoreName) ? keystoreName : Path.Combine(projectRoot, keystoreName);
         }
     }
 
@@ -80,6 +123,10 @@ namespace MGD.Samples.Editor
             {
                 problems.Add("Custom Keystore must be selected (Publishing Settings > Project Keystore).");
             }
+            else if (!s.KeystoreFileExists)
+            {
+                problems.Add("Keystore file not found at the path in Publishing Settings > Project Keystore.");
+            }
 
             if (!s.KeystorePasswordPresent)
             {
@@ -104,14 +151,15 @@ namespace MGD.Samples.Editor
     }
 
     /// <summary>
-    /// One Markdown row per release in <c>releases/manifest.md</c>. The APK is
-    /// not committed; the row is what proves which build went out.
+    /// One Markdown row per build in <c>releases/manifest.md</c>, released or not.
+    /// The APK is not committed; the row records the build and the Download
+    /// column marks the ones that went out.
     /// </summary>
     public static class ReleaseManifest
     {
         const string Header =
             "# Release manifest\n\n" +
-            "One row per release build made with *MGD Samples > Build Release APK*. The APK itself is attached to the GitHub Release for the tag; paste its link in the Download column. Anyone can check a downloaded file against the SHA-256 here.\n\n" +
+            "One row per build made with *MGD Samples > Build Release APK*, released or not; rows are never removed. The APK itself is attached to the GitHub Release for the tag; paste its link in the Download column, which also marks the builds that went out. Anyone can check a downloaded file against the SHA-256 here.\n\n" +
             "| Version | versionCode | Date | Commit | Size | SHA-256 | Download |\n" +
             "|---------|-------------|------|--------|------|---------|----------|\n";
 
@@ -123,15 +171,17 @@ namespace MGD.Samples.Editor
 
         public static void Append(string path, string row)
         {
-            if (!File.Exists(path))
+            // A missing or empty file gets the header first.
+            string existing = File.Exists(path) ? File.ReadAllText(path) : "";
+            if (existing.Length == 0)
             {
                 File.WriteAllText(path, Header);
+                existing = Header;
             }
 
             // A hand-edited manifest (the Download column is pasted in) may have
             // lost its final newline; never glue a row onto the previous one.
-            string existing = File.ReadAllText(path);
-            string separator = existing.Length == 0 || existing.EndsWith("\n") ? "" : "\n";
+            string separator = existing.EndsWith("\n") ? "" : "\n";
             File.AppendAllText(path, separator + row + "\n");
         }
     }
