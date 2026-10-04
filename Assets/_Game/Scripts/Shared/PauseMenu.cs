@@ -4,14 +4,17 @@ using UnityEngine.InputSystem;
 namespace MGD.Samples
 {
     /// <summary>
-    /// Shows the pause panel whenever <see cref="LifecycleGuard"/> pauses, and lets
-    /// the Android back gesture toggle the pause. Back arrives in the Input System
-    /// as the Escape key. There is no Quit button: mobile games do not have one.
+    /// Shows the pause panel whenever <see cref="LifecycleGuard"/> pauses, and, where
+    /// the scene owns the back gesture, lets Android back toggle the pause. Back
+    /// arrives in the Input System as the Escape key; in a scene where back already
+    /// returns to the launcher, <see cref="backTogglesPause"/> is off so the two do
+    /// not fight over one key. There is no Quit button: mobile games do not have
+    /// one. The pause state is static on the guard, so this needs no reference to it.
     /// </summary>
     public sealed class PauseMenu : MonoBehaviour
     {
         [SerializeField] GameObject panel;
-        [SerializeField] LifecycleGuard guard;
+        [SerializeField] bool backTogglesPause = true;
 
         void OnEnable()
         {
@@ -33,19 +36,24 @@ namespace MGD.Samples
 
         void Update()
         {
+            if (!backTogglesPause)
+            {
+                return;
+            }
+
             Keyboard keyboard = Keyboard.current;
             if (keyboard == null || !keyboard.escapeKey.wasPressedThisFrame)
             {
                 return;
             }
 
-            guard.SetPaused(!LifecycleGuard.IsPaused);
+            LifecycleGuard.SetPaused(!LifecycleGuard.IsPaused);
         }
 
         /// <summary>Wired to the Resume button's OnClick.</summary>
         public void OnResumePressed()
         {
-            guard.SetPaused(false);
+            LifecycleGuard.SetPaused(false);
         }
     }
 }

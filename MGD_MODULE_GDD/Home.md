@@ -1,7 +1,7 @@
 ---
 type: home
 status: living
-updated: 2026-09-28
+updated: 2026-10-04
 tags: [home, index]
 ---
 
@@ -24,7 +24,7 @@ The vault is also a **worked example of a GDD that both people and AI tools can 
 |--------|-----|--------|----------|
 | [[Launcher]] | none | done | First scene: lists every sample from Build Settings, loads with Awaitable, shows build info. |
 | [[SafeArea]] | W02 Lab A | done | Keep the HUD out of the notch and the gesture bar, on any phone, in both orientations. |
-| [[Lifecycle]] | W02 Lab B | done | Pause and save on Home, calls, screen off and focus loss; Android back toggles pause; resume is the player's choice. |
+| [[Lifecycle]] | W02 Lab B | done | Pause on Home, calls, screen off and focus loss, saving when the process may die; Android back toggles pause; resume is the player's choice. |
 | [[Accessibility]] | W02 Lab B | done | Haptics toggle, text size and reduce motion in PlayerPrefs on one Settings card, plus the ten-check pass as a worked example. |
 | [[TouchDrag]] | W02 Lab A | done | Drag sprites with fingers through Enhanced Touch: one finger per sprite, drags keyed by touchId, grab offset kept, pruned when a touch vanishes, clamped to the screen. |
 | [[Performance]] | W03 Lab A and B | done | A heavy scene with Idle, Steady and Worst states, the frame-target bootstrap, an allocation-free frame-time sampler and a render-scale probe, plus the bottleneck note and baseline sheet as worked examples. |
@@ -37,11 +37,15 @@ Planned samples follow the lab schedule in the curriculum README (Dropbox, `SETU
 | Date | Decision |
 |------|----------|
 | 2026-09-15 | [[2026-09-15 One folder and scene per sample]] (superseded) |
-| 2026-09-15 | [[2026-09-15 Awaitable over coroutines]] |
+| 2026-09-15 | [[2026-09-15 Awaitable over coroutines]] (superseded) |
 | 2026-09-15 | [[2026-09-15 Project-owned assets live under Assets _Game]] |
 | 2026-09-15 | [[2026-09-15 Back navigation returns to the launcher]] |
 | 2026-09-28 | [[2026-09-28 Release APKs live on GitHub Releases]] |
-| 2026-09-28 | [[2026-09-28 Release builds strip the INTERNET permission]] |
+| 2026-09-28 | [[2026-09-28 Release builds strip the INTERNET permission]] (superseded) |
+| 2026-10-04 | [[2026-10-04 Cancellation tokens where the awaited API takes one]] |
+| 2026-10-04 | [[2026-10-04 Shared scripts are the ones every scene needs]] |
+| 2026-10-04 | [[2026-10-04 A surviving INTERNET permission fails the release build]] |
+| 2026-10-04 | [[2026-10-04 Every scene pauses on focus loss]] |
 
 ## Reference
 
