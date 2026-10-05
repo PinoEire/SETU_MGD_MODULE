@@ -1,6 +1,7 @@
 using System.IO;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -24,6 +25,8 @@ namespace MGD.Samples
         // Start, not Awake: the TextMeshPro labels may not have initialised yet.
         void Start()
         {
+            ScaleDragThreshold();
+
             footer.text =
                 $"{Application.productName} {Application.version}  |  Unity {Application.unityVersion}\n" +
                 $"{SystemInfo.deviceModel}  |  {SystemInfo.operatingSystem}";
@@ -47,6 +50,35 @@ namespace MGD.Samples
                 int buildIndex = i; // captured per button
                 button.onClick.AddListener(() => Load(buildIndex));
             }
+        }
+
+        // uGUI's default drag threshold is 10 pixels, about 0.6 mm on a 420 dpi
+        // phone, so a tap that wobbles starts a scroll and the button never gets its
+        // click. Scale it with the screen density (10 px at 160 dpi, about 1.6 mm).
+        static void ScaleDragThreshold()
+        {
+            EventSystem events = EventSystem.current;
+            if (events != null)
+            {
+                events.pixelDragThreshold = DragThresholdFor(Screen.dpi, events.pixelDragThreshold);
+            }
+        }
+
+        /// <summary>
+        /// The drag threshold for this screen density: 10 px at 160 dpi, scaled,
+        /// clamped to 10..60 px because some Android devices report a wrong density,
+        /// and never lower than <paramref name="current"/>. An unknown density (0)
+        /// keeps <paramref name="current"/>. Pure, so it is tested.
+        /// </summary>
+        public static int DragThresholdFor(float dpi, int current)
+        {
+            if (dpi <= 0f)
+            {
+                return current;
+            }
+
+            int scaled = Mathf.Clamp(Mathf.RoundToInt(10f * dpi / 160f), 10, 60);
+            return Mathf.Max(current, scaled);
         }
 
         void Load(int buildIndex)

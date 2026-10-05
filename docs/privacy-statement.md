@@ -1,14 +1,14 @@
-# Data-use statement: MGD Samples 0.2.0
+# Data-use statement: MGD Samples (main, after 0.2.0)
 
-Worked example of the Week 4 Lab B, Part B statement, written from the code and the Player Settings of this build rather than from intentions. Submit yours as `/docs/CA1/privacy-statement.md` and read it back against `dumpsys` before you do. Package `com.dftgames.mgdsamples`, sideloaded only; nothing is uploaded to Play this semester.
+Worked example of the Week 4 Lab B, Part B statement, written from the code and the Player Settings rather than from intentions. It describes the current main branch; release 0.2.0 had no telemetry and no wallet. Submit yours as `/docs/CA1/privacy-statement.md` and read it back against `dumpsys` before you do. Package `com.dftgames.mgdsamples`, sideloaded only; nothing is uploaded to Play this semester.
 
 ## Data collected
 
-None. The app has no accounts, no analytics, no crash reporting and no advertising.
+None. The app has no accounts, no analytics service, no crash reporting and no advertising; the telemetry below is a local log that is never sent anywhere.
 
 ## Data stored on the device
 
-PlayerPrefs only. The keys this project's code writes are listed below; Unity's engine may add a few `unity.*` keys of its own (session counters), which hold no personal data.
+PlayerPrefs and one log file. The keys this project's code writes are listed below; Unity's engine may add a few `unity.*` keys of its own (session counters), which hold no personal data.
 
 | Key | Written by | Meaning |
 |-----|-----------|---------|
@@ -16,8 +16,10 @@ PlayerPrefs only. The keys this project's code writes are listed below; Unity's 
 | `MGD.TextScale` | Accessibility | Text-size factor |
 | `MGD.ReduceMotion` | Accessibility | Reduce-motion on or off |
 | `MGD.Lifecycle.TapCount` | Lifecycle demo | The demo counter saved on pause |
+| `wallet.coins` | Economy | Coins in the demo wallet |
+| `wallet.level` | Economy | The demo upgrade level |
 
-No files are written under `Application.persistentDataPath`. The Week 6 telemetry stub, when it arrives, will log to the local Unity log only. A player removes everything by uninstalling the app or clearing its storage in Android settings.
+One file is written under `Application.persistentDataPath`: `telemetry.log`, the local telemetry stub. Each line is a time since launch, a random eight-character session id (made fresh each run, not tied to the player or the device) and an event with numbers and ids (session start, round start and end, upgrade bought) as listed in `docs/economy-telemetry-map.md`, plus the app version, device model and Android version on `session_start`; no names or accounts. It never leaves the device, and it grows without a limit until the app's storage is cleared. A player removes everything by uninstalling the app or clearing its storage in Android settings.
 
 ## Network activity
 

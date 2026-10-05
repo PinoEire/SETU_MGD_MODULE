@@ -1,7 +1,7 @@
 ---
 type: glossary
 status: living
-updated: 2026-10-04
+updated: 2026-10-05
 tags: [glossary]
 ---
 
@@ -55,7 +55,7 @@ The part of the screen not covered by a notch, camera cut-out, rounded corner or
 Installing an APK directly on a device with `adb install -r`, bypassing any store.
 
 ## Telemetry stub
-Local `Debug.Log` events (`session_start`, `level_start`, and so on) that stand in for an analytics SDK.
+Local events (`session_start`, `level_start`, and so on) written to `Debug.Log` and to a file on the device, standing in for an analytics SDK. Nothing leaves the phone.
 
 ## versionCode
 The integer Android uses to order builds. Must increase on every install over an existing build; the human-readable version string does not matter to the installer.

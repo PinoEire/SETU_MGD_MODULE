@@ -32,6 +32,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Game/Scenes/Loading/LoadingHeavy.unity
     guid: 538d7aea341ee0740bba7f8f74be6024
+  - enabled: 1
+    path: Assets/_Game/Scenes/Economy/Economy.unity
+    guid: d351cb5e7268aaf4d83a1181a12a3d76
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

@@ -31,6 +31,7 @@ The vault is also a **worked example of a GDD that both people and AI tools can 
 | [[ReleasePipeline]] | W04 Lab A and B | done | One menu item that checks the Player Settings, bumps versionCode, builds the release APK and records it in a manifest; README sections and the CA1 docs as worked examples. No scene. |
 | [[Pooling]] | W05 Lab A | done | Awaitable WaveTimer with a linked cancellation token spawns from a prewarmed pool; tap or timeout releases; `created` proves nothing is instantiated in play. |
 | [[Loading]] | W05 Lab B | done | One persistent SceneLoader for every scene change: a loading bar on real progress, no second load or back mid-load, the allowSceneActivation trap shown live, and `[perf]` load-time lines. |
+| [[Economy]] | W06 Lab A and B | done | Tap targets in a timed round to earn coins, spend them on an upgrade that doubles the earn rate, a fake store behind `IPurchaseProvider`, a wallet that survives a force-stop, and the five telemetry events in logcat and a file. |
 
 Planned samples follow the lab schedule in the curriculum README (Dropbox, `SETU/2026-2027/Mobile Game Development/README.md`). A sample is added to this table only when its note exists.
 
@@ -49,6 +50,7 @@ Planned samples follow the lab schedule in the curriculum README (Dropbox, `SETU
 | 2026-10-04 | [[2026-10-04 A surviving INTERNET permission fails the release build]] |
 | 2026-10-04 | [[2026-10-04 Every scene pauses on focus loss]] |
 | 2026-10-05 | [[2026-10-05 Every scene load goes through the SceneLoader]] |
+| 2026-10-05 | [[2026-10-05 Telemetry is shared and session_start fires once per run]] |
 
 ## Reference
 
