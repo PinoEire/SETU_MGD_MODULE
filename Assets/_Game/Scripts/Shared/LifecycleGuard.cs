@@ -33,6 +33,14 @@ namespace MGD.Samples
         // plays at 0.5 (slow motion) does not come back at 1.
         static float _resumeTimeScale = 1f;
 
+        // With domain reloading off in the editor, a handler left subscribed when
+        // Play stopped mid-load would survive into the next session; start clean.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetStatics()
+        {
+            PausedChanged = null;
+        }
+
         // Home, app switch, incoming call, screen off.
         void OnApplicationPause(bool paused)
         {

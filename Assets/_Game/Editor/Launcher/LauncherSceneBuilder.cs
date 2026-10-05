@@ -28,6 +28,8 @@ namespace MGD.Samples.Editor
 
             // App-wide settings live in the first scene, once. See MobileBootstrap.
             new GameObject("Bootstrap", typeof(MobileBootstrap));
+            // Logs time to interactive on the first frame the menu can be used.
+            new GameObject("Menu Ready", typeof(MenuReady));
 
             Canvas canvas = CreateCanvas();
             RectTransform root = CreateHudRoot(canvas);
@@ -46,15 +48,18 @@ namespace MGD.Samples.Editor
             list.offsetMin = new Vector2(0f, 200f);
             list.offsetMax = new Vector2(0f, -260f);
             var layout = list.gameObject.AddComponent<VerticalLayoutGroup>();
-            layout.spacing = 24f;
+            layout.spacing = 16f;
             layout.childAlignment = TextAnchor.UpperCenter;
             layout.childControlWidth = false;
             layout.childControlHeight = false;
             layout.childForceExpandWidth = false;
             layout.childForceExpandHeight = false;
 
-            // Inactive template; LauncherMenu clones it once per scene.
-            Button template = CreateButton(list, "Button Template", "Sample", new Vector2(720f, 150f), 48f);
+            // Inactive template; LauncherMenu clones it once per scene. 130 units tall
+            // is about 49 dp on the reference phone, just above the 48 dp minimum, so
+            // eight samples (8 x 130 + 7 x 16 = 1152) fit the list's 1268 units on the
+            // 1080 x 1920 reference without reaching the footer.
+            Button template = CreateButton(list, "Button Template", "Sample", new Vector2(720f, 130f), 48f);
             template.gameObject.SetActive(false);
 
             TextMeshProUGUI footer = CreateLabel(root, "Footer", "", 26f, TextAlignmentOptions.Bottom);
@@ -70,7 +75,45 @@ namespace MGD.Samples.Editor
             SetField(menu, "buttonTemplate", template);
             SetField(menu, "footer", footer);
 
+            CreateSceneLoader();
+
             FinishScene(scene.Value, ScenePath, BuilderName, first: true);
+        }
+
+        // Above every scene's canvases, the pause panel included.
+        const int LoadingSortOrder = 100;
+
+        static void CreateSceneLoader()
+        {
+            // Its own canvas under its own root, because DontDestroyOnLoad keeps a
+            // root object and everything under it: the loading screen must survive
+            // the scene change it is covering.
+            var loaderObject = new GameObject("Scene Loader", typeof(SceneLoader));
+            Canvas canvas = CreateCanvas();
+            canvas.name = "Loading Canvas";
+            canvas.sortingOrder = LoadingSortOrder;
+            canvas.transform.SetParent(loaderObject.transform, false);
+
+            RectTransform screen = CreateUiObject("Loading Screen", canvas.transform);
+            Stretch(screen);
+            var dim = screen.gameObject.AddComponent<Image>();
+            dim.color = new Color(0.08f, 0.09f, 0.12f, 0.96f);
+            dim.raycastTarget = true; // swallows taps while loading
+
+            TextMeshProUGUI label = CreateLabel(screen, "Label", "Loading", 56f);
+            Place(label.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(800f, 100f), offset: new Vector2(0f, 110f));
+
+            Slider bar = CreateBar(screen, "Bar", new Vector2(800f, 48f));
+            Place(bar.GetComponent<RectTransform>(), new Vector2(0.5f, 0.5f), new Vector2(800f, 48f));
+
+            TextMeshProUGUI percent = CreateLabel(screen, "Percent", "0%", 40f);
+            Place(percent.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(400f, 70f), offset: new Vector2(0f, -90f));
+
+            var loader = loaderObject.GetComponent<SceneLoader>();
+            SetField(loader, "loadingScreen", screen.gameObject);
+            SetField(loader, "bar", bar);
+            SetField(loader, "percent", percent);
+            screen.gameObject.SetActive(false);
         }
     }
 }

@@ -23,6 +23,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Game/Scenes/TouchDrag/TouchDrag.unity
     guid: 38f2753af1fad4f45814a4300494a968
+  - enabled: 1
+    path: Assets/_Game/Scenes/Pooling/Pooling.unity
+    guid: 30ffdb2a1a9ebd049bdeb7e4fc0202c7
+  - enabled: 1
+    path: Assets/_Game/Scenes/Loading/Loading.unity
+    guid: 20926556cd094224eb93da757ae3b1b3
+  - enabled: 1
+    path: Assets/_Game/Scenes/Loading/LoadingHeavy.unity
+    guid: 538d7aea341ee0740bba7f8f74be6024
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

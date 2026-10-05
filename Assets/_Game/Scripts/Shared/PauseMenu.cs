@@ -36,7 +36,8 @@ namespace MGD.Samples
 
         void Update()
         {
-            if (!backTogglesPause)
+            // No pausing mid-load: the loading screen covers the panel anyway.
+            if (!backTogglesPause || SceneLoader.IsLoading)
             {
                 return;
             }

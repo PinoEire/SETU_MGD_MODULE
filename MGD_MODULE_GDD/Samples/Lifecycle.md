@@ -4,7 +4,7 @@ status: done
 lab: W02-B
 unity: 6000.6.0f1
 scene: Assets/_Game/Scenes/Lifecycle/Lifecycle.unity
-updated: 2026-10-04
+updated: 2026-10-05
 tags: [sample, lifecycle, android, w02]
 ---
 
@@ -68,7 +68,7 @@ Week 2 Lab B, Part A: *Lifecycle, back, accessibility and scope lock*. The lab s
 - Back in menus outside play (a `MenuStack` with push and pop) is out of scope, as the lab sheet allows.
 - The HUD uses a fixed margin instead of the SafeArea panel, because samples do not reference each other's scripts. A real game would put this HUD under `SafeArea`.
 - The tone is generated at runtime rather than shipped as an audio asset, to keep the sample free of binary files.
-- A pause that lands in the few frames of a scene load (Home pressed right after a button) is handled by the outgoing scene's guard, whose `OnDestroy` resets the state when the new scene arrives, so the player lands unpaused with no panel. The player is present when it happens, so nothing is lost.
+- A pause that lands during a `SceneLoader` load (Home pressed right after a button) is cleared by the outgoing scene's guard in `OnDestroy`, and `SceneLoader` then puts it back once the new scene is active, so the player comes back to the new scene's pause panel rather than a running game (see [[Loading]]). A load started from a paused scene (back while paused) arrives unpaused, because the player chose to leave. The two loads that bypass the loader (the Loading sample's trap demo and the editor-only fallback in `BackToLauncher`) still land unpaused.
 - Android tells an app nothing for the system UI that does not take window focus: the status bar peek of a full-screen game (the first swipe from the top), a heads-up notification, the volume popup, a partial shade pull that springs back. None of them fires `OnApplicationFocus(false)`, in Unity or in any other engine, so the guard cannot pause on them and does not need to: the game is still in front and still playable. Everything that does take focus pauses: the open shade, quick settings, the recents screen, the assistant overlay, a permission dialog. Verified on a Pixel 7a (Android 17) on 2026-10-04 by reading the on-screen log after each one.
 - Verified 2026-09-15: editor Play mode (pause, resume, save and restore, exit to launcher while paused, which is what exercises `OnDestroy`) and the five-row matrix on an Android device. Static `SetPaused` and the time-scale restore added 2026-10-04 with tests.
 

@@ -8,7 +8,8 @@ namespace MGD.Samples
     /// Returns to the launcher scene (build index 0). With <see cref="listenForBack"/>
     /// on, the Android back gesture (delivered by the Input System as Escape) does it;
     /// samples that use back for something else, such as pausing, turn the listener
-    /// off and wire a button to <see cref="Go"/> instead.
+    /// off and wire a button to <see cref="Go"/> instead. While a load is running,
+    /// back and Go() do nothing.
     /// </summary>
     public sealed class BackToLauncher : MonoBehaviour
     {
@@ -20,7 +21,7 @@ namespace MGD.Samples
 
         void Update()
         {
-            if (!listenForBack || _loading)
+            if (!listenForBack || _loading || SceneLoader.IsLoading)
             {
                 return;
             }
@@ -37,7 +38,7 @@ namespace MGD.Samples
         /// <summary>Wired to a button's OnClick, or called from code.</summary>
         public void Go()
         {
-            if (_loading)
+            if (_loading || SceneLoader.IsLoading)
             {
                 return;
             }
@@ -46,11 +47,17 @@ namespace MGD.Samples
             _ = LoadLauncherAsync();
         }
 
-        // Awaitable, not a coroutine: the module's rule for async work. Any exception
-        // surfaces in the console instead of being swallowed. LoadSceneAsync takes no
-        // cancellation token, so none is passed.
+        // Through the shared SceneLoader. A scene opened directly in the editor has
+        // no loader (the Launcher creates it), so it falls back to a plain load.
         async Awaitable LoadLauncherAsync()
         {
+            if (SceneLoader.Instance != null)
+            {
+                await SceneLoader.Instance.Load(LauncherBuildIndex, Application.exitCancellationToken);
+                return;
+            }
+
+            Debug.Log("[BackToLauncher] No SceneLoader (this scene was opened directly), so the launcher loads without the loading screen.");
             await SceneManager.LoadSceneAsync(LauncherBuildIndex);
         }
     }

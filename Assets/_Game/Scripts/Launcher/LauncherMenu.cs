@@ -62,16 +62,16 @@ namespace MGD.Samples
                 button.interactable = false;
             }
 
-            // Awaitable, not a coroutine: the module's rule for async work. The
-            // discard means "fire and forget"; any exception still surfaces in the
-            // console instead of being swallowed. LoadSceneAsync takes no
-            // cancellation token, so none is passed.
+            // Through the shared SceneLoader, which this scene creates; see SceneLoader.
+            // The discard means "fire and forget"; any exception still surfaces in
+            // the console instead of being swallowed.
             _ = LoadAsync(buildIndex);
         }
 
         async Awaitable LoadAsync(int buildIndex)
         {
-            await SceneManager.LoadSceneAsync(buildIndex);
+            // The loader persists from this scene, so it always exists here.
+            await SceneLoader.Instance.Load(buildIndex, Application.exitCancellationToken);
         }
     }
 }

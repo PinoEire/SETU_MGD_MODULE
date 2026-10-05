@@ -228,6 +228,32 @@ namespace MGD.Samples.Editor
         }
 
         /// <summary>
+        /// A progress bar: a uGUI Slider that cannot be dragged and has no handle,
+        /// value 0 to 1. Code sets <c>value</c>; the fill shows it.
+        /// </summary>
+        public static Slider CreateBar(Transform parent, string name, Vector2 size)
+        {
+            var uiSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
+            var background = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/Background.psd");
+            var resources = new DefaultControls.Resources { standard = uiSprite, background = background };
+            GameObject go = DefaultControls.CreateSlider(resources);
+            go.name = name;
+            go.transform.SetParent(parent, false);
+            SetLayerRecursively(go, LayerMask.NameToLayer("UI"));
+            go.GetComponent<RectTransform>().sizeDelta = size;
+
+            var slider = go.GetComponent<Slider>();
+            Object.DestroyImmediate(go.transform.Find("Handle Slide Area").gameObject);
+            slider.handleRect = null;
+            slider.interactable = false;
+            slider.transition = Selectable.Transition.None;
+            slider.minValue = 0f;
+            slider.maxValue = 1f;
+            slider.value = 0f;
+            return slider;
+        }
+
+        /// <summary>
         /// Anchors the rect at one normalised point of its parent, moved by
         /// <paramref name="offset"/> canvas units. With <paramref name="stretchWidth"/>
         /// the rect spans the parent's width and <paramref name="size"/>.x is

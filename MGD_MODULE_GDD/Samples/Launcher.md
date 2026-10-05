@@ -4,7 +4,7 @@ status: done
 lab: none
 unity: 6000.6.0f1
 scene: Assets/_Game/Scenes/Launcher/Launcher.unity
-updated: 2026-10-04
+updated: 2026-10-05
 tags: [sample, infrastructure, navigation]
 ---
 
@@ -21,7 +21,7 @@ None directly. The footer is the About / Build Info screen required for CA3; the
 ## What the student learns
 
 - Build Settings can be read at runtime (`SceneManager.sceneCountInBuildSettings`, `SceneUtility.GetScenePathByBuildIndex`), so a menu need not hard-code its entries.
-- `await SceneManager.LoadSceneAsync(...)` inside an `async Awaitable` method is the whole async pattern; there is no coroutine.
+- Every load goes through the shared `SceneLoader`, which this scene creates and keeps alive with `DontDestroyOnLoad`; see [[Loading]] and [[2026-10-05 Every scene load goes through the SceneLoader]].
 - Disable the buttons the moment a load starts, or a second tap starts a second load.
 - Every sample must have a way back. The rule is in [[2026-09-15 Back navigation returns to the launcher]].
 
@@ -31,12 +31,14 @@ None directly. The footer is the About / Build Info screen required for CA3; the
 |------|---------|
 | `Assets/_Game/Scripts/Launcher/LauncherMenu.cs` | On the Canvas. Builds one button per scene in Build Settings (except itself), loads on tap, fills the footer. |
 | `Assets/_Game/Scripts/Launcher/README.md` | Two-paragraph summary for students who open the folder without this vault. |
-| `Assets/_Game/Scripts/Shared/BackToLauncher.cs` | Shared. Loads build index 0 on Android back (Escape), or from a button through `Go()` with the listener off. Every sample scene carries one. |
+| `Assets/_Game/Scripts/Shared/BackToLauncher.cs` | Shared. Loads build index 0 through the `SceneLoader` on Android back (Escape), or from a button through `Go()` with the listener off; does nothing mid-load. Every sample scene carries one. |
+| `Assets/_Game/Scripts/Shared/SceneLoader.cs` | Shared, on the persistent `Scene Loader` object this scene creates with its own loading canvas (sorted above every other canvas). Every scene change goes through it. Belongs to [[Loading]]. |
+| `Assets/_Game/Scripts/Shared/MenuReady.cs` | Shared, on the `Menu Ready` object: logs `[perf] interactive X.XXs` once per app run. Belongs to [[Loading]]. |
 | `Assets/_Game/Scripts/Shared/MobileBootstrap.cs` | Shared, on the `Bootstrap` object. Sets the 60 fps target, vSync 0 and no screen sleep, logs the `[Boot]` line. Belongs to [[Performance]]. |
 | `Assets/_Game/Scripts/Shared/LifecycleGuard.cs` | Shared, on the `Lifecycle Guard` object every scene gets through `SampleSceneBuild.AddPauseMenu`: pauses on focus loss and Home. Belongs to [[Lifecycle]]. |
 | `Assets/_Game/Scripts/Shared/PauseMenu.cs` | Shared, on the Canvas with the hidden `Pause Panel`: shows the panel and handles Resume. Here back toggles the panel, because there is no launcher to return to. Belongs to [[Lifecycle]]. |
 | `Assets/_Game/Editor/Launcher/LauncherSceneBuilder.cs` | Menu item *MGD Samples > Build Launcher Scene*. Builds the scene and moves it to index 0 in Build Settings. |
-| `Assets/_Game/Scenes/Launcher/Launcher.unity` | Title, subtitle, a vertical list with an inactive button template, footer, the hidden pause panel and the `Lifecycle Guard` object. Generated; not hand-edited. |
+| `Assets/_Game/Scenes/Launcher/Launcher.unity` | Title, subtitle, a vertical list with an inactive button template (130 units tall, 16 apart, so eight scenes fit above the footer), footer, the hidden pause panel, the `Lifecycle Guard`, `Menu Ready` and `Scene Loader` objects. Generated; not hand-edited. |
 
 ## How to test
 

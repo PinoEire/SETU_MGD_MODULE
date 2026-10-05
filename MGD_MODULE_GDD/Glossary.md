@@ -1,7 +1,7 @@
 ---
 type: glossary
 status: living
-updated: 2026-09-15
+updated: 2026-10-04
 tags: [glossary]
 ---
 
@@ -44,6 +44,9 @@ Android's system log. Read through the Android Logcat package in the editor or `
 
 ## MDA
 Mechanics, Dynamics, Aesthetics (Hunicke, LeBlanc, Zubek 2004). The one-page design framing students submit in Week 2.
+
+## Object pool
+A set of objects created once at load and reused: switched on to spawn, switched off and returned instead of destroyed. Keeps `Instantiate`, `Destroy` and their garbage out of the steady state.
 
 ## Safe area
 The part of the screen not covered by a notch, camera cut-out, rounded corner or gesture bar. Unity exposes it as `Screen.safeArea` in pixels.

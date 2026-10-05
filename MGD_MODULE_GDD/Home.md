@@ -1,7 +1,7 @@
 ---
 type: home
 status: living
-updated: 2026-10-04
+updated: 2026-10-05
 tags: [home, index]
 ---
 
@@ -29,6 +29,8 @@ The vault is also a **worked example of a GDD that both people and AI tools can 
 | [[TouchDrag]] | W02 Lab A | done | Drag sprites with fingers through Enhanced Touch: one finger per sprite, drags keyed by touchId, grab offset kept, pruned when a touch vanishes, clamped to the screen. |
 | [[Performance]] | W03 Lab A and B | done | A heavy scene with Idle, Steady and Worst states, the frame-target bootstrap, an allocation-free frame-time sampler and a render-scale probe, plus the bottleneck note and baseline sheet as worked examples. |
 | [[ReleasePipeline]] | W04 Lab A and B | done | One menu item that checks the Player Settings, bumps versionCode, builds the release APK and records it in a manifest; README sections and the CA1 docs as worked examples. No scene. |
+| [[Pooling]] | W05 Lab A | done | Awaitable WaveTimer with a linked cancellation token spawns from a prewarmed pool; tap or timeout releases; `created` proves nothing is instantiated in play. |
+| [[Loading]] | W05 Lab B | done | One persistent SceneLoader for every scene change: a loading bar on real progress, no second load or back mid-load, the allowSceneActivation trap shown live, and `[perf]` load-time lines. |
 
 Planned samples follow the lab schedule in the curriculum README (Dropbox, `SETU/2026-2027/Mobile Game Development/README.md`). A sample is added to this table only when its note exists.
 
@@ -46,6 +48,7 @@ Planned samples follow the lab schedule in the curriculum README (Dropbox, `SETU
 | 2026-10-04 | [[2026-10-04 Shared scripts are the ones every scene needs]] |
 | 2026-10-04 | [[2026-10-04 A surviving INTERNET permission fails the release build]] |
 | 2026-10-04 | [[2026-10-04 Every scene pauses on focus loss]] |
+| 2026-10-05 | [[2026-10-05 Every scene load goes through the SceneLoader]] |
 
 ## Reference
 
