@@ -1,7 +1,7 @@
 ---
 type: home
 status: living
-updated: 2026-10-05
+updated: 2026-10-19
 tags: [home, index]
 ---
 
@@ -32,6 +32,7 @@ The vault is also a **worked example of a GDD that both people and AI tools can 
 | [[Pooling]] | W05 Lab A | done | Awaitable WaveTimer with a linked cancellation token spawns from a prewarmed pool; tap or timeout releases; `created` proves nothing is instantiated in play. |
 | [[Loading]] | W05 Lab B | done | One persistent SceneLoader for every scene change: a loading bar on real progress, no second load or back mid-load, the allowSceneActivation trap shown live, and `[perf]` load-time lines. |
 | [[Economy]] | W06 Lab A and B | done | Tap targets in a timed round to earn coins, spend them on an upgrade that doubles the earn rate, a fake store behind `IPurchaseProvider`, a wallet that survives a force-stop, and the five telemetry events in logcat and a file. |
+| [[Adaptive]] | W07 Lab A and B | done | Adaptive Performance `[AP]` thermal and bottleneck lines, a Balanced / High FPS toggle on every pause card that sets the frame target and render scale, an allocation-free thermal overlay, and a soak clock with a GPU heat load. |
 
 Planned samples follow the lab schedule in the curriculum README (Dropbox, `SETU/2026-2027/Mobile Game Development/README.md`). A sample is added to this table only when its note exists.
 
@@ -51,6 +52,8 @@ Planned samples follow the lab schedule in the curriculum README (Dropbox, `SETU
 | 2026-10-04 | [[2026-10-04 Every scene pauses on focus loss]] |
 | 2026-10-05 | [[2026-10-05 Every scene load goes through the SceneLoader]] |
 | 2026-10-05 | [[2026-10-05 Telemetry is shared and session_start fires once per run]] |
+| 2026-10-19 | [[2026-10-19 Performance mode is shared and its toggle is on every pause card]] |
+| 2026-10-19 | [[2026-10-19 Adaptive Performance settings stay where Unity creates them]] |
 
 ## Reference
 
@@ -64,6 +67,6 @@ Planned samples follow the lab schedule in the curriculum README (Dropbox, `SETU
 - Stable frame-time over peak FPS. No per-frame allocations in the steady state.
 - [[Glossary#Awaitable|Awaitable]] for async work, never coroutines (see the decision above).
 - Genre-agnostic: a sample must fit any of the five student project options.
-- Everything we write lives under `Assets/_Game/`; imported content is never edited in place (see the decision above).
+- Everything we write lives under `Assets/_Game/`; imported content is never edited in place (see the decision above). Settings a Unity feature generates (`Assets/Adaptive Performance/`) stay where Unity puts them.
 - C# lives in namespace `MGD.Samples` (editor code in `MGD.Samples.Editor`). It is also the project's root namespace, so new scripts get it without typing it.
 - No third-party SDKs, no store uploads, no secrets in the repo.

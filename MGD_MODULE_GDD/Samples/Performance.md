@@ -4,7 +4,7 @@ status: done
 lab: [W03-A, W03-B]
 unity: 6000.6.0f1
 scene: Assets/_Game/Scenes/Performance/Performance.unity
-updated: 2026-10-05
+updated: 2026-10-19
 tags: [sample, performance, profiling, frame-pacing, w03]
 ---
 
@@ -20,7 +20,7 @@ Week 3 Lab A, *Rendering budgets and profiling on device*: Parts B to F (the wor
 
 ## What the student learns
 
-- Android runs at 30 fps until `Application.targetFrameRate` is set; the setting belongs in the first scene, once, with `QualitySettings.vSyncCount = 0` because Android ignores vSync.
+- Android runs at 30 fps until `Application.targetFrameRate` is set; it is set once, before or in the first scene (here by `PerformanceMode`, see [[Adaptive]]), with `QualitySettings.vSyncCount = 0` because Android ignores vSync.
 - [[Glossary#Frame pacing|Frame pacing]] is measured in milliseconds with `Time.unscaledDeltaTime`, never in fps, and the number that matters is the 99th percentile, not the average.
 - A sampler that runs in the release build must not allocate: fixed arrays, `Array.Sort` on a reused buffer, one `Debug.Log` per window of 600 frames.
 - Halving the URP render scale is the cheapest CPU-versus-GPU experiment there is: frame time drops by a third or more, the GPU was the bottleneck; it barely moves, the CPU was.
@@ -32,15 +32,15 @@ Week 3 Lab A, *Rendering budgets and profiling on device*: Parts B to F (the wor
 
 | Path | Purpose |
 |------|---------|
-| `Assets/_Game/Scripts/Shared/MobileBootstrap.cs` | Shared, on a `Bootstrap` object in the Launcher. `Awake` sets `targetFrameRate` 60, `vSyncCount` 0, `Screen.sleepTimeout` never, and logs the `[Boot]` line with device, OS, graphics API and resolution, once per app run (it also logs the `session_start` telemetry event, see [[Economy]]). The Week 1 script at project quality. What students copy. |
+| `Assets/_Game/Scripts/Shared/MobileBootstrap.cs` | Shared, on a `Bootstrap` object in the Launcher. `Awake` sets `vSyncCount` 0 (the frame target is `PerformanceMode`'s, applied before the first scene loads, 60 in Balanced; see [[Adaptive]]), `Screen.sleepTimeout` never, and logs the `[Boot]` line with device, OS, graphics API and resolution, once per app run (it also logs the `session_start` telemetry event, see [[Economy]]). The Week 1 script at project quality. What students copy. |
 | `Assets/_Game/Scripts/Performance/FrameTimeSampler.cs` | Fixed buffer of 600 unscaled frame times, reset after each window. When full, copies into a reused sort buffer, computes average and p99 through `FrameStats`, logs `[Baseline] avg X ms  p99 Y ms` and writes the same text to an optional label with `SetText`. Skips the first frame after a load or a `Restart()`, whose delta carries the load time. No allocation in `Update`. What students copy. |
 | `Assets/_Game/Scripts/Performance/FrameStats.cs` | Static. `Compute(samples, scratch, out average, out p99)`: the maths on its own so it can be unit tested. What students copy with the sampler. |
-| `Assets/_Game/Scripts/Performance/RenderScaleProbe.cs` | `Toggle()` switches the active URP asset's `renderScale` between its starting value and 0.5, logs `[Probe] renderScale = x`, exposes `IsLow`. `OnDestroy` restores the starting value so the asset is not left modified after Play in the editor. What students copy. |
+| `Assets/_Game/Scripts/Performance/RenderScaleProbe.cs` | `Toggle()` switches the active URP asset's `renderScale` between the current performance mode's scale and `lowScale` (0.5), logs `[Probe] renderScale = x`, exposes `IsLow`. `OnDestroy` restores the current performance mode's scale (read then, not remembered, because the pause card's High FPS toggle can change it mid-scene) so the asset is not left modified. What students copy. |
 | `Assets/_Game/Scripts/Performance/LoadGenerator.cs` | Owns the sprite field. Creates `worstCount` SpriteRenderers once in `Awake` (built-in Knob sprite, URP `Sprite-Unlit-Default` material, random translucent colour), keeps positions and velocities in arrays, moves the active ones in one loop and bounces them off the camera edges, re-read when the screen size changes. `SetLoad(LoadState)` activates 0, `steadyCount` (200) or `worstCount` (1500) of them; the worst state also scales them up so they overlap. Counts and scales are serialised fields. Demo scaffolding students may borrow as a stress test. `Update` does nothing while `LifecycleGuard.IsPaused`. |
 | `Assets/_Game/Scripts/Performance/PerformanceDemoHud.cs` | Demo only. Wires the Idle, Steady, Worst and Probe buttons; keeps the status label current (load state and active sprite count, target fps, panel refresh rate from `Screen.currentResolution.refreshRateRatio`, render scale); hides the Probe button unless `Debug.isDebugBuild`. |
 | `Assets/_Game/Scripts/Performance/README.md` | Two-paragraph summary for students who open the folder without this vault. |
 | `Assets/_Game/Editor/Performance/PerformanceSceneBuilder.cs` | Menu item *MGD Samples > Build Performance Scene*. Camera, event system, the `Load Generator` object with its sprite and material assigned, a dark translucent HUD card in the bottom third with title, status line, sampler line, the three load buttons in a row and the Probe button, then adds the scene to Build Settings. |
-| `Assets/_Game/Editor/Launcher/LauncherSceneBuilder.cs` | Creates the `Bootstrap` object carrying `MobileBootstrap`, which is why the frame target belongs to the first scene. |
+| `Assets/_Game/Editor/Launcher/LauncherSceneBuilder.cs` | Creates the `Bootstrap` object carrying `MobileBootstrap`. |
 | `Assets/_Game/Editor/Tests/FrameStatsTests.cs` | Twelve EditMode tests for `FrameStats`: average and p99 of a known buffer, samples left unsorted, all-equal input, five spikes in 600 frames leaving p99 alone and seven moving it, the index at 600, 100, 2 and 1 samples, percentile clamped to 0..1, empty buffer and short scratch buffer throw. Lives in an `Editor` folder so it compiles into the editor assembly without an assembly definition. |
 | `Assets/_Game/Scenes/Performance/Performance.unity` | Generated; not hand-edited. |
 | `Assets/_Game/Scenes/Launcher/Launcher.unity` | Regenerated for the `Bootstrap` object. |
@@ -57,13 +57,14 @@ Week 3 Lab A, *Rendering budgets and profiling on device*: Parts B to F (the wor
 2. **Editor, load states:** the scene opens in Idle: no sprites, the status line reads `Idle, 0 sprites | target 60 fps` over `panel 60 Hz | render scale 1.00` (panel value is the monitor's). Tap Steady: 200 small sprites bounce; tap Worst: 1500 larger translucent sprites fill the view and the Profiler's CPU frame time rises. Tap Idle: everything stops and the count is 0. The Stats overlay shows batches and SetPass calls climbing between the states.
 3. **Editor, sampler:** after 600 frames a `[Baseline] avg X ms  p99 Y ms` line appears in the console and on the sampler label, and repeats every 600 frames. The Profiler's GC Alloc column for `FrameTimeSampler.Update` reads 0 B on every frame except the one that logs.
 4. **Editor, probe:** the Probe button is visible (the editor counts as a debug build). Tap it: the console reads `[Probe] renderScale = 0.5`, the status line's render scale reads 0.50 and the Game view goes softer. Tap again: back to 1.00. Stop Play: the URP asset in `Assets/Settings/` shows no pending change.
-5. **Editor, back:** Escape returns to the Launcher; the URP render scale is at its starting value.
+5. **Editor, back:** Escape returns to the Launcher; the URP render scale is at the current mode's scale (1.0 in Balanced).
 6. **Phone, Lab A:** Android Dev build with the Profiler attached, Worst state for 30 s, then Probe and 30 s more. Fill *Numbers* and *Verdict* in `docs/bottleneck-01.md` from the capture.
 7. **Phone, Lab B:** release build, `adb logcat -s Unity`, 20 s in each state, record the second `[Baseline]` line of each into `docs/baseline-sheet.md`, then `dumpsys meminfo`, three cold starts and the APK size for the remaining rows.
 8. **EditMode tests:** Window > General > Test Runner, EditMode, run all: the `FrameStats` tests pass.
 
 ## Known limits
 
+- The status line is redrawn on a button press, so after the High FPS toggle on the pause card changes the mode it shows the old target and scale until the next press.
 - The probe changes the shared URP asset at runtime, which is what the lab does; a real game would keep a per-quality asset or use `UniversalRenderPipeline.asset.renderScale` behind the Week 7 performance-mode toggle.
 - `Screen.currentResolution.refreshRateRatio` reports the panel mode Android has chosen, which is 60 Hz for most games even on 120 Hz phones; requesting more is the Week 7 High FPS toggle.
 - The sprite field is a stress test, not gameplay. It has no pooling API; Week 5 adds one.

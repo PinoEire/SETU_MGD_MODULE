@@ -35,7 +35,7 @@ namespace MGD.Samples.Editor
             // pause (the thing this sample demonstrates), so the way out is the
             // Samples button on the pause card, not the back gesture. The card sits
             // in the band the HUD leaves free, so the clocks stay readable while paused.
-            Button samples = AddPauseMenu(canvas, backTogglesPause: true, addSamplesButton: true, cardAnchorY: 0.32f);
+            Button samples = AddPauseMenu(canvas, backTogglesPause: true, addSamplesButton: true, cardAnchorY: 0.4f);
             var back = canvas.gameObject.AddComponent<BackToLauncher>();
             SetField(back, "listenForBack", false);
             UnityEventTools.AddPersistentListener(samples.onClick, new UnityAction(back.Go));

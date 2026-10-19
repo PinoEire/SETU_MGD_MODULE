@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 namespace MGD.Samples
 {
@@ -10,11 +11,15 @@ namespace MGD.Samples
     /// returns to the launcher, <see cref="backTogglesPause"/> is off so the two do
     /// not fight over one key. There is no Quit button: mobile games do not have
     /// one. The pause state is static on the guard, so this needs no reference to it.
+    /// The card also carries the High FPS toggle (Week 7): a setting belongs in the
+    /// pause or settings menu, not on the HUD. It is set from the current mode each
+    /// time the panel opens, without firing its event.
     /// </summary>
     public sealed class PauseMenu : MonoBehaviour
     {
         [SerializeField] GameObject panel;
         [SerializeField] bool backTogglesPause = true;
+        [SerializeField] Toggle highFps;
 
         void OnEnable()
         {
@@ -29,6 +34,13 @@ namespace MGD.Samples
 
         void Show(bool paused)
         {
+            // isOn would call OnHighFpsChanged and re-apply (and re-save) the mode
+            // every time the menu opened.
+            if (paused && highFps != null)
+            {
+                highFps.SetIsOnWithoutNotify(PerformanceMode.IsHighFps);
+            }
+
             // Toggle the panel itself, not a parent: an inactive parent would also
             // stop this component from receiving the event.
             panel.SetActive(paused);
@@ -55,6 +67,12 @@ namespace MGD.Samples
         public void OnResumePressed()
         {
             LifecycleGuard.SetPaused(false);
+        }
+
+        /// <summary>Wired to the High FPS toggle's On Value Changed (dynamic bool).</summary>
+        public void OnHighFpsChanged(bool on)
+        {
+            PerformanceMode.SetHighFps(on);
         }
     }
 }

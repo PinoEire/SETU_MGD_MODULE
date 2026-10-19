@@ -58,8 +58,7 @@ namespace MGD.Samples
         void RefreshStatus()
         {
             // Android picks the panel mode; most games get 60 Hz even on a 120 Hz
-            // phone unless they ask for more (Week 7). targetFrameRate reads -1 if
-            // the scene was opened directly: the bootstrap lives in the Launcher.
+            // phone unless they ask for more (the High FPS toggle on the pause card).
             double panelHz = Screen.currentResolution.refreshRateRatio.value;
             status.text =
                 $"{load.State}, {load.ActiveCount} sprites  |  target {Application.targetFrameRate} fps\n" +

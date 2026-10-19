@@ -1,13 +1,16 @@
 ---
 type: glossary
 status: living
-updated: 2026-10-05
+updated: 2026-10-19
 tags: [glossary]
 ---
 
 # Glossary
 
 Module vocabulary, one line each. Link a term with `[[Glossary#Term]]` the first time it appears in a note.
+
+## Adaptive Performance
+Unity's wrapper for the phone's thermal and performance APIs (on Android, ADPF, Android 11 and later): `ThermalStatus` for the warning level, temperature level and trend, `PerformanceStatus` for the bottleneck, and optional scalers that lower quality under load. Built into Unity since 6.3; the Android provider is a package.
 
 ## ANR
 Application Not Responding. Android shows a dialog when the main thread is blocked for about five seconds. Visible in Logcat; a CA3 QA-pack item.
@@ -48,6 +51,9 @@ Mechanics, Dynamics, Aesthetics (Hunicke, LeBlanc, Zubek 2004). The one-page des
 ## Object pool
 A set of objects created once at load and reused: switched on to spawn, switched off and returned instead of destroyed. Keeps `Instantiate`, `Destroy` and their garbage out of the steady state.
 
+## Render scale
+The URP asset's `renderScale`: the fraction of the screen resolution the 3D and 2D scene is rendered at before it is scaled up; UI is drawn at full resolution. Below 1 it costs the GPU fewer pixels per frame.
+
 ## Safe area
 The part of the screen not covered by a notch, camera cut-out, rounded corner or gesture bar. Unity exposes it as `Screen.safeArea` in pixels.
 
@@ -56,6 +62,9 @@ Installing an APK directly on a device with `adb install -r`, bypassing any stor
 
 ## Telemetry stub
 Local events (`session_start`, `level_start`, and so on) written to `Debug.Log` and to a file on the device, standing in for an analytics SDK. Nothing leaves the phone.
+
+## Thermal throttling
+The phone lowering its CPU and GPU clocks to stay within a safe temperature. Frame time that held for the first minutes slips later; Adaptive Performance reports it as `ThrottlingImminent`, then `Throttling`.
 
 ## versionCode
 The integer Android uses to order builds. Must increase on every install over an existing build; the human-readable version string does not matter to the installer.

@@ -35,6 +35,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Game/Scenes/Economy/Economy.unity
     guid: d351cb5e7268aaf4d83a1181a12a3d76
+  - enabled: 1
+    path: Assets/_Game/Scenes/Adaptive/Adaptive.unity
+    guid: e59b5ec8489520648b6e272ffe56752f
   m_configObjects:
+    com.unity.adaptivePerformance.basic.provider_settings: {fileID: 11400000, guid: 872ed1c086ff47444bccecc5f61b0c52, type: 2}
+    com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000, guid: 4ee1d472b21669f4cb412c8045ee9882, type: 2}
+    com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 5e2d8ac8301ff9240a09102482a6cf55, type: 2}
+    com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 667d988c3d56b204bbeda4029e0be74f, type: 2}
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

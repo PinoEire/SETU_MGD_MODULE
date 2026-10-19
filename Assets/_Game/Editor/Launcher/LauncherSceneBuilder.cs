@@ -36,10 +36,14 @@ namespace MGD.Samples.Editor
                 return;
             }
 
-            // App-wide settings live in the first scene, once. See MobileBootstrap.
+            // App-wide settings live in the first scene, once. See MobileBootstrap;
+            // the frame target is PerformanceMode's, applied before any scene loads.
             new GameObject("Bootstrap", typeof(MobileBootstrap));
             // Logs time to interactive on the first frame the menu can be used.
             new GameObject("Menu Ready", typeof(MenuReady));
+            // Logs Adaptive Performance events from every scene: it keeps itself
+            // alive across loads, like the Scene Loader below.
+            new GameObject("Adaptive Performance", typeof(AdaptiveBootstrap));
 
             Canvas canvas = CreateCanvas();
             RectTransform root = CreateHudRoot(canvas);

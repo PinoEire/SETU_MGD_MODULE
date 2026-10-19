@@ -4,7 +4,7 @@ status: done
 lab: none
 unity: 6000.6.0f1
 scene: Assets/_Game/Scenes/Launcher/Launcher.unity
-updated: 2026-10-05
+updated: 2026-10-19
 tags: [sample, infrastructure, navigation]
 ---
 
@@ -36,12 +36,13 @@ None directly. The footer is the About / Build Info screen required for CA3; the
 | `Assets/_Game/Scripts/Shared/BackToLauncher.cs` | Shared. Loads build index 0 through the `SceneLoader` on Android back (Escape), or from a button through `Go()` with the listener off; does nothing mid-load. Every sample scene carries one. |
 | `Assets/_Game/Scripts/Shared/SceneLoader.cs` | Shared, on the persistent `Scene Loader` object this scene creates with its own loading canvas (sorted above every other canvas). Every scene change goes through it. Belongs to [[Loading]]. |
 | `Assets/_Game/Scripts/Shared/MenuReady.cs` | Shared, on the `Menu Ready` object: logs `[perf] interactive X.XXs` once per app run. Belongs to [[Loading]]. |
-| `Assets/_Game/Scripts/Shared/MobileBootstrap.cs` | Shared, on the `Bootstrap` object. Sets the 60 fps target, vSync 0 and no screen sleep; logs the `[Boot]` line and the `session_start` telemetry event once per app run, although the Launcher is loaded again on every return. Belongs to [[Performance]]. |
+| `Assets/_Game/Scripts/Shared/AdaptiveBootstrap.cs` | Shared, on the persistent `Adaptive Performance` object this scene creates (a later copy destroys itself): logs `[AP]` thermal and bottleneck lines whichever scene is open. Belongs to [[Adaptive]]. |
+| `Assets/_Game/Scripts/Shared/MobileBootstrap.cs` | Shared, on the `Bootstrap` object. Sets vSync 0 and no screen sleep (the frame target is `PerformanceMode`'s, see [[Adaptive]]); logs the `[Boot]` line and the `session_start` telemetry event once per app run, although the Launcher is loaded again on every return. Belongs to [[Performance]]. |
 | `Assets/_Game/Scripts/Shared/Telemetry.cs` | Shared static class: one line per event to the console and to `telemetry.log`. Belongs to [[Economy]]; see [[2026-10-05 Telemetry is shared and session_start fires once per run]]. |
 | `Assets/_Game/Scripts/Shared/LifecycleGuard.cs` | Shared, on the `Lifecycle Guard` object every scene gets through `SampleSceneBuild.AddPauseMenu`: pauses on focus loss and Home. Belongs to [[Lifecycle]]. |
-| `Assets/_Game/Scripts/Shared/PauseMenu.cs` | Shared, on the Canvas with the hidden `Pause Panel`: shows the panel and handles Resume. Here back toggles the panel, because there is no launcher to return to. Belongs to [[Lifecycle]]. |
+| `Assets/_Game/Scripts/Shared/PauseMenu.cs` | Shared, on the Canvas with the hidden `Pause Panel`: shows the panel, handles Resume and the High FPS toggle. Here back toggles the panel, because there is no launcher to return to. Belongs to [[Lifecycle]]. |
 | `Assets/_Game/Editor/Launcher/LauncherSceneBuilder.cs` | Menu item *MGD Samples > Build Launcher Scene*. Builds the scene and moves it to index 0 in Build Settings. The sample list is a vertical `ScrollRect` (clipped viewport, content with a `ContentSizeFitter`, auto-hiding scrollbar) between the subtitle and the footer. |
-| `Assets/_Game/Scenes/Launcher/Launcher.unity` | Title, subtitle, a scrolling vertical list with an inactive button template (150 units tall, about 57 dp, 24 apart), footer, the hidden pause panel, the `Lifecycle Guard`, `Menu Ready` and `Scene Loader` objects. Generated; not hand-edited. |
+| `Assets/_Game/Scenes/Launcher/Launcher.unity` | Title, subtitle, a scrolling vertical list with an inactive button template (150 units tall, about 57 dp, 24 apart), footer, the hidden pause panel, the `Lifecycle Guard`, `Menu Ready`, `Adaptive Performance` and `Scene Loader` objects. Generated; not hand-edited. |
 
 ## How to test
 
@@ -66,6 +67,7 @@ None directly. The footer is the About / Build Info screen required for CA3; the
 
 ## Decisions
 
+- [[2026-10-19 Performance mode is shared and its toggle is on every pause card]]
 - [[2026-09-15 Back navigation returns to the launcher]]
 - [[2026-10-04 Cancellation tokens where the awaited API takes one]]
 - [[2026-10-04 Shared scripts are the ones every scene needs]]

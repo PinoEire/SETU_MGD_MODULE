@@ -4,7 +4,7 @@ status: done
 lab: W02-B
 unity: 6000.6.0f1
 scene: Assets/_Game/Scenes/Lifecycle/Lifecycle.unity
-updated: 2026-10-05
+updated: 2026-10-19
 tags: [sample, lifecycle, android, w02]
 ---
 
@@ -36,7 +36,7 @@ Week 2 Lab B, Part A: *Lifecycle, back, accessibility and scope lock*. The lab s
 | Path | Purpose |
 |------|---------|
 | `Assets/_Game/Scripts/Shared/LifecycleGuard.cs` | Shared since 2026-10-04: on the `Lifecycle Guard` object in every scene, added by `SampleSceneBuild.AddPauseMenu`. Saves and pauses on `OnApplicationPause(true)`, pauses on focus loss, exposes the static `IsPaused`, `SetPaused` and `PausedChanged`, sets `timeScale` and `AudioListener.pause`. What students copy. |
-| `Assets/_Game/Scripts/Shared/PauseMenu.cs` | Shared, on every Canvas. Shows the panel from the event, handles Resume, and toggles pause on Escape (Android back) only where `backTogglesPause` is on: here and in the Launcher, the two scenes that do not hand back to `BackToLauncher`. What students copy. |
+| `Assets/_Game/Scripts/Shared/PauseMenu.cs` | Shared, on every Canvas. Shows the panel from the event, handles Resume, and toggles pause on Escape (Android back) only where `backTogglesPause` is on: here, in the Launcher and in [[Adaptive]], the scenes that do not hand back to `BackToLauncher`. The card also carries the High FPS toggle ([[Adaptive]]), set with `SetIsOnWithoutNotify` when the panel opens. What students copy. |
 | `Assets/_Game/Scripts/Lifecycle/LifecycleDemoHud.cs` | Demo only. Spinner, game-time and real-time clocks, a generated looping tone, a tap counter kept in PlayerPrefs, and a six-line log of pause and focus callbacks with wall-clock times. |
 | `Assets/_Game/Scripts/Lifecycle/README.md` | Two-paragraph summary for students who open the folder without this vault. |
 | `Assets/_Game/Editor/Lifecycle/LifecycleSceneBuilder.cs` | Menu item *MGD Samples > Build Lifecycle Scene*. Builds and saves the scene, wires the buttons, adds the scene to Build Settings. |

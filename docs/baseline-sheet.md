@@ -1,6 +1,6 @@
 # Performance Baseline Sheet
 
-Worked example of the Week 3 Lab B, Part F table for this project. Submit yours as `/docs/CA2/baseline/baseline-sheet.md`, one column per build, and add a column whenever something meaningful changes. The Menu row is the Performance scene at Idle, Steady gameplay is the Steady state (200 sprites), Worst case is the Worst state (1500 sprites at scale 4). Phone cells come from the release build on the device with `adb logcat -s Unity` (the second `[Baseline]` line of each state), `dumpsys meminfo` and `am start -W`; nothing is guessed. The Week 5 and Week 7 rows stay empty until those labs.
+Worked example of the Week 3 Lab B, Part F table for this project. Submit yours as `/docs/CA2/baseline/baseline-sheet.md`, one column per build, and add a column whenever something meaningful changes. The Menu row is the Performance scene at Idle, Steady gameplay is the Steady state (200 sprites), Worst case is the Worst state (1500 sprites at scale 4). Phone cells come from the release build on the device with `adb logcat -s Unity` (the second `[Baseline]` line of each state), `dumpsys meminfo` and `am start -W`; nothing is guessed. The Week 5 row and the Week 7 *Thermals* section stay empty until those labs.
 
 | Field | Row 1 |
 |-------|-------|
@@ -15,5 +15,21 @@ Worked example of the Week 3 Lab B, Part F table for this project. Submit yours 
 | Worst case: SetPass / batches / triangles | 14 / 1,506 / 10,895 (editor Stats; 1,500 of the batches go through the SRP Batcher, which is why SetPass stays at 14) |
 | Cold start ms (median of 3), first interactive s | 122 ms (171, 116, 122 from `am start -W`; the Launcher is interactive as soon as it draws, under 1 s) |
 | APK size (MB) | 42.8 (44,928,385 bytes) |
-| Thermal delta, throttling (Week 7) | |
+| Thermal delta, throttling (Week 7) | See *Thermals* below |
 | Load time (Week 5) | |
+
+## Thermals
+
+The Week 7 Lab B, Part E fields for a 10-minute soak in Balanced mode. Run it in the Adaptive scene with the load on Hot: tap *Restart soak*, start the logcat recording, and take the overlay screenshots at minutes 0, 5 and 10 (`minute-00.png`, `minute-05.png`, `minute-10.png` in `/docs/CA2/baseline/thermal-soak/`). The `[Soak]` lines in the recording mark every minute and the first warning, so the logcat file carries its own timeline. Phone cells stay empty until the device run.
+
+| Field | Value |
+|-------|-------|
+| Build ID and mode | (versionName (commit), Balanced) |
+| Start temperature (C) | |
+| End temperature (C) and 10-minute delta | |
+| Overlay level at minute 0 / 5 / 10 | |
+| First `ThrottlingImminent` (minute, logcat time) | |
+| `Throttling` observed (yes/no, minute) | |
+| Frame time before: mean / 99th (ms) | |
+| Frame time after: mean / 99th (ms) | |
+| Conditions | unplugged, brightness 50%, case off, ambient about 21 C |

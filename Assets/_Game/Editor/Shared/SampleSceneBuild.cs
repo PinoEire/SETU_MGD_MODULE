@@ -115,7 +115,8 @@ namespace MGD.Samples.Editor
         /// <summary>
         /// The pause handling every scene needs (decision 2026-10-04 Every scene
         /// pauses on focus loss): a <see cref="LifecycleGuard"/> on its own object, a
-        /// hidden full-screen pause panel with a Resume button, and a
+        /// hidden full-screen pause panel with a Resume button and the High FPS
+        /// toggle (Week 7, <see cref="PerformanceMode"/>), and a
         /// <see cref="PauseMenu"/> on the Canvas. With <paramref name="backTogglesPause"/>
         /// the Android back gesture opens and closes the panel, for a scene that does
         /// not hand back to <see cref="BackToLauncher"/>. A scene that does that and
@@ -141,23 +142,29 @@ namespace MGD.Samples.Editor
             var cardImage = card.gameObject.AddComponent<Image>();
             cardImage.color = new Color(0.1f, 0.11f, 0.14f, 1f);
             cardImage.raycastTarget = false;
-            Place(card, new Vector2(0.5f, cardAnchorY), new Vector2(900f, addSamplesButton ? 580f : 440f));
+            Place(card, new Vector2(0.5f, cardAnchorY), new Vector2(900f, addSamplesButton ? 730f : 590f));
 
             // Rows measured from the top of the card, in canvas units: title 12 to 122
             // (110 tall so a 72 pt title still fits at the Large text size, where
             // TextMeshPro blanks an Ellipsis label whose line does not fit), Resume 150
-            // to 300, the optional Samples button 330 to 440, the hint in the bottom 100.
+            // to 300, the High FPS toggle 320 to 450, the optional Samples button 480
+            // to 590, the hint in the bottom 100.
             TextMeshProUGUI title = CreateLabel(card, "Title", "Paused", 72f);
             Place(title.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, 110f), stretchWidth: true, offset: new Vector2(0f, -12f));
 
             Button resume = CreateButton(card, "Button Resume", "Resume", new Vector2(520f, 150f), 56f);
             Place(resume.GetComponent<RectTransform>(), new Vector2(0.5f, 1f), new Vector2(520f, 150f), offset: new Vector2(0f, -150f));
 
+            // A setting lives in the pause menu, not on the HUD. The row is 130 units
+            // tall, about 50 dp on the reference phone.
+            Toggle highFps = CreateToggle(card, "Toggle High FPS", "High FPS", 520f, 48f);
+            Place(highFps.GetComponent<RectTransform>(), new Vector2(0.5f, 1f), new Vector2(520f, 130f), offset: new Vector2(0f, -320f));
+
             Button samples = null;
             if (addSamplesButton)
             {
                 samples = CreateButton(card, "Button Samples", "Back to samples", new Vector2(520f, 110f), 40f);
-                Place(samples.GetComponent<RectTransform>(), new Vector2(0.5f, 1f), new Vector2(520f, 110f), offset: new Vector2(0f, -330f));
+                Place(samples.GetComponent<RectTransform>(), new Vector2(0.5f, 1f), new Vector2(520f, 110f), offset: new Vector2(0f, -480f));
             }
 
             string hintText = backTogglesPause
@@ -170,8 +177,11 @@ namespace MGD.Samples.Editor
             var menu = canvas.gameObject.AddComponent<PauseMenu>();
             SetField(menu, "panel", panel.gameObject);
             SetField(menu, "backTogglesPause", backTogglesPause);
-            // Persistent listener: what a student wires by hand in the Inspector.
+            SetField(menu, "highFps", highFps);
+            // Persistent listeners: what a student wires by hand in the Inspector. The
+            // toggle's is the dynamic bool kind, so the new value is passed through.
             UnityEventTools.AddPersistentListener(resume.onClick, new UnityAction(menu.OnResumePressed));
+            UnityEventTools.AddPersistentListener(highFps.onValueChanged, new UnityAction<bool>(menu.OnHighFpsChanged));
 
             panel.gameObject.SetActive(false);
             return samples;

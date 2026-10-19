@@ -18,6 +18,7 @@ PlayerPrefs and one log file. The keys this project's code writes are listed bel
 | `MGD.Lifecycle.TapCount` | Lifecycle demo | The demo counter saved on pause |
 | `wallet.coins` | Economy | Coins in the demo wallet |
 | `wallet.level` | Economy | The demo upgrade level |
+| `perf_mode` | Every scene (pause menu) | Balanced (0) or High FPS (1) |
 
 One file is written under `Application.persistentDataPath`: `telemetry.log`, the local telemetry stub. Each line is a time since launch, a random eight-character session id (made fresh each run, not tied to the player or the device) and an event with numbers and ids (session start, round start and end, upgrade bought) as listed in `docs/economy-telemetry-map.md`, plus the app version, device model and Android version on `session_start`; no names or accounts. It never leaves the device, and it grows without a limit until the app's storage is cleared. A player removes everything by uninstalling the app or clearing its storage in Android settings.
 
@@ -27,7 +28,7 @@ None. The code contains no `UnityWebRequest`, sockets or third-party network cal
 
 ## Third-party SDKs
 
-None. Unity packages only (URP, Input System, TextMeshPro, 2D packages, Test Framework); none of them collects data in this configuration.
+None. Unity packages only (URP, Input System, TextMeshPro, 2D packages, Test Framework, Adaptive Performance with its Android provider); none of them collects data in this configuration. Adaptive Performance reads the phone's thermal and frame-timing state through Android's own performance APIs, on the device, and only writes it to logcat.
 
 ## Permissions requested
 
