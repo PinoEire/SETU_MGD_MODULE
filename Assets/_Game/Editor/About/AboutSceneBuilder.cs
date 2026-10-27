@@ -18,6 +18,10 @@ namespace MGD.Samples.Editor
         const string BuilderName = "AboutSceneBuilder";
         const string ScenePath = "Assets/_Game/Scenes/About/About.unity";
 
+        // The closed-test feedback form. Set here rather than in the scene, which
+        // the builder rewrites; change it and rebuild the scene for a new form.
+        const string FeedbackFormUrl = "https://forms.gle/jQPJpaKcuoKtJj6S8";
+
         // 140 units is about 53 dp on the reference phone, above the 48 dp minimum.
         static readonly Vector2 ButtonSize = new Vector2(600f, 140f);
 
@@ -56,6 +60,7 @@ namespace MGD.Samples.Editor
             var link = root.gameObject.AddComponent<FeedbackLink>();
             SetField(link, "label", feedback);
             SetField(link, "openButton", open.gameObject);
+            SetField(link, "url", FeedbackFormUrl);
             // Persistent listener: what a student wires by hand in the Inspector.
             UnityEventTools.AddPersistentListener(open.onClick, new UnityAction(link.OnOpenPressed));
 

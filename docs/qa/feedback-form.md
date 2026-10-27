@@ -2,7 +2,7 @@
 
 Worked example of the Week 8 Lab A, Part C form for this project. Submit yours as `/docs/CA3/qa/survey/form-link.md`. Build the form in Microsoft Forms (forms.office.com, SETU account) or Google Forms, with anonymous responses on and no names or emails collected, and keep it under three minutes.
 
-Form link: (paste the short link here, and into `FeedbackLink.url` in the About scene, then rebuild).
+Form link: https://forms.gle/jQPJpaKcuoKtJj6S8 (a Google Form). The About scene shows it and opens it with the *Open feedback form* button; it is set in `AboutSceneBuilder.FeedbackFormUrl`, so change it there and rebuild the scene for a new form.
 
 ## Fields, in this order
 

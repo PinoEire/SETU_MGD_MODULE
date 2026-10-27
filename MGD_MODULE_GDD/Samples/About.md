@@ -36,7 +36,7 @@ Week 8 Lab A, *Peer distribution: APK, QR code and feedback*: Part B (`BuildStam
 | `Assets/_Game/Scripts/Shared/MobileBootstrap.cs` | `session_start` gains `build`, the same ID. Belongs to [[Performance]]. |
 | `Assets/_Game/Scripts/Launcher/LauncherMenu.cs` | The footer shows the build ID after the version. Belongs to [[Launcher]]. |
 | `Assets/_Game/Editor/Release/ReleaseBuild.cs`, `ReleaseChecklist.cs` | The manifest row gains a last column, Build ID, from the build report's GUID, which is the built player's `Application.buildGUID`. Belongs to [[ReleasePipeline]]. |
-| `Assets/_Game/Editor/About/AboutSceneBuilder.cs` | Menu item *MGD Samples > Build About Scene*: title, the `BuildLabel` stamp, a hint to quote the build ID, the feedback line and button, a footer; `BackToLauncher` listening and the shared pause card. |
+| `Assets/_Game/Editor/About/AboutSceneBuilder.cs` | Menu item *MGD Samples > Build About Scene*: title, the `BuildLabel` stamp, a hint to quote the build ID, the feedback line and button (the link from its `FeedbackFormUrl` constant), a footer; `BackToLauncher` listening and the shared pause card. |
 | `Assets/_Game/Editor/Tests/BuildStampTests.cs` | Eight EditMode tests: eight-character IDs, a short GUID, empty, null and all-zero GUIDs as `editor`, a real GUID that starts with zeros, the stamp layout, and the refresh rate rounded under a comma-decimal locale. `ReleaseChecklistTests` checks the manifest row's new column. |
 | `Assets/_Game/Scenes/About/About.unity` | Generated; not hand-edited. |
 | `releases/manifest.md` | Header gains the Build ID column; earlier rows end at Download. |
@@ -44,15 +44,15 @@ Week 8 Lab A, *Peer distribution: APK, QR code and feedback*: Part B (`BuildStam
 
 ## How to test
 
-1. **Editor:** Play the Launcher. The footer reads `SETU_MGD_MODULE <version> (editor)  |  Unity ...`. Tap About: four stamp lines with `(editor)`, this PC's model, OS, RAM and Game view size, the hint to quote the build ID, and `Feedback: set the form link on FeedbackLink` with no button.
-2. **Editor, link:** set `url` on the About scene's `FeedbackLink` (in Play, or in the builder and rebuild): the button appears and opens the link in the browser.
+1. **Editor:** Play the Launcher. The footer reads `SETU_MGD_MODULE <version> (editor)  |  Unity ...`. Tap About: four stamp lines with `(editor)`, this PC's model, OS, RAM and Game view size, the hint to quote the build ID, `Feedback: <the form link>` and the *Open feedback form* button.
+2. **Editor, link:** tap *Open feedback form*: the browser opens the form. Stop Play, open the About scene, clear `url` on `FeedbackLink` and Play: the line becomes `Feedback: set the form link on FeedbackLink` with no button (a build hides both); then discard the change (do not save the scene).
 3. **Release build:** *MGD Samples > Build Release APK*. The `[ReleaseBuild]` line names the build ID, and the new manifest row ends with it.
 4. **Phone:** install it; About shows `v<version> (<id>)` with the same ID as the manifest row; `adb logcat -s Unity | findstr /L "build="` shows `build=<version>/<id>`, and the `session_start` telemetry line carries `build=<id>`. `adb shell dumpsys package com.dftgames.mgdsamples | findstr "versionName versionCode"` matches the stamp's version.
 5. **EditMode tests:** *MGD Samples > Run EditMode Tests*: 179 passed.
 
 ## Known limits
 
-- No form link ships yet; paste one into `FeedbackLink.url` and rebuild before a closed test.
+- The form link is set in `AboutSceneBuilder` (`FeedbackFormUrl`, the class demo form); a new form means changing it there and rebuilding the scene, because the builder rewrites the scene.
 - The stamp is written once in `Start`, so after a rotation the resolution line shows the orientation the screen opened in.
 - `SystemInfo.systemMemorySize` reports what the OS gives the app, which on some phones is a little below the advertised RAM.
 - Verified 2026-10-27 in editor Play mode; the manifest Build ID and the phone stamp are checked at the next release build.
