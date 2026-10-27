@@ -2,9 +2,9 @@
 type: sample
 status: done
 lab: none
-unity: 6000.6.0f1
+unity: 6000.6.6f1
 scene: Assets/_Game/Scenes/Launcher/Launcher.unity
-updated: 2026-10-19
+updated: 2026-10-27
 tags: [sample, infrastructure, navigation]
 ---
 
@@ -12,11 +12,11 @@ tags: [sample, infrastructure, navigation]
 
 ## Goal
 
-The first scene in the build: a menu that lists every sample and loads the one tapped, with a footer that shows app version, Unity version and device. It is infrastructure rather than a lab topic, but it is also the first place students see three module rules applied: async loading with `Awaitable`, an About / Build Info line, and back navigation that never quits the app.
+The first scene in the build: a menu that lists every sample and loads the one tapped, with a footer that shows app version and [[Glossary#Build ID|build ID]], Unity version and device. It is infrastructure rather than a lab topic, but it is also the first place students see three module rules applied: async loading with `Awaitable`, an About / Build Info line, and back navigation that never quits the app.
 
 ## Lab it supports
 
-None directly. The footer is the About / Build Info screen required for CA3; the load pattern previews Week 5 Lab B (*async loading that never hangs*).
+None directly. The footer is a short build stamp; the full About / Build Info screen required for CA3 is the [[About]] sample; the load pattern previews Week 5 Lab B (*async loading that never hangs*).
 
 ## What the student learns
 
@@ -31,7 +31,7 @@ None directly. The footer is the About / Build Info screen required for CA3; the
 
 | Path | Purpose |
 |------|---------|
-| `Assets/_Game/Scripts/Launcher/LauncherMenu.cs` | On the Canvas. Builds one button per scene in Build Settings (except itself), loads on tap, fills the footer, and scales the scene's `EventSystem.pixelDragThreshold` to the screen density (10 px at 160 dpi) so taps on the scrolling list are not taken for drags. |
+| `Assets/_Game/Scripts/Launcher/LauncherMenu.cs` | On the Canvas. Builds one button per scene in Build Settings (except itself), loads on tap, fills the footer (the build ID from `BuildStamp`, see [[About]]), and scales the scene's `EventSystem.pixelDragThreshold` to the screen density (10 px at 160 dpi) so taps on the scrolling list are not taken for drags. |
 | `Assets/_Game/Scripts/Launcher/README.md` | Two-paragraph summary for students who open the folder without this vault. |
 | `Assets/_Game/Scripts/Shared/BackToLauncher.cs` | Shared. Loads build index 0 through the `SceneLoader` on Android back (Escape), or from a button through `Go()` with the listener off; does nothing mid-load. Every sample scene carries one. |
 | `Assets/_Game/Scripts/Shared/SceneLoader.cs` | Shared, on the persistent `Scene Loader` object this scene creates with its own loading canvas (sorted above every other canvas). Every scene change goes through it. Belongs to [[Loading]]. |
@@ -67,6 +67,7 @@ None directly. The footer is the About / Build Info screen required for CA3; the
 
 ## Decisions
 
+- [[2026-10-27 The build ID is the first eight characters of buildGUID, everywhere]]
 - [[2026-10-19 Performance mode is shared and its toggle is on every pause card]]
 - [[2026-09-15 Back navigation returns to the launcher]]
 - [[2026-10-04 Cancellation tokens where the awaited API takes one]]

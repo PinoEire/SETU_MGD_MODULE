@@ -4,7 +4,7 @@ status: done
 lab: [W04-A, W04-B]
 unity: 6000.6.0f1
 scene: none
-updated: 2026-10-04
+updated: 2026-10-27
 tags: [sample, release, signing, versioning, w04]
 ---
 
@@ -32,9 +32,9 @@ Week 4 Lab A, *Harden the release pipeline: signing and versioning*, Parts A to 
 | Path | Purpose |
 |------|---------|
 | `Assets/_Game/Editor/Release/ReleaseChecklist.cs` | `ReleaseSettings` (a plain snapshot of the Android Player Settings, including whether the keystore file exists), `ReleaseChecklist.Check` (one rule per line, one message per failure) and `ReleaseManifest` (row format and append). What students copy. |
-| `Assets/_Game/Editor/Release/ReleaseBuild.cs` | Menu item *MGD Samples > Build Release APK*: checklist, read the commit (before the bump dirties the tree), bump, build with the Android build profile to `releases/<product>-<version>-<code>-arm64.apk`, revert the bump on failure or exception, SHA-256 and manifest row on success. What students copy. |
+| `Assets/_Game/Editor/Release/ReleaseBuild.cs` | Menu item *MGD Samples > Build Release APK*: checklist, read the commit (before the bump dirties the tree), bump, build with the Android build profile to `releases/<product>-<version>-<code>-arm64.apk`, revert the bump on failure or exception, SHA-256 and manifest row on success; the row ends with the build ID from the build report, the same one the [[About]] screen shows. What students copy. |
 | `Assets/_Game/Editor/Tests/ReleaseChecklistTests.cs` | Twenty-eight EditMode tests: clean settings pass; each rule fails alone (Mono, ARMv7 ticked, fixed Target API, both passwords, no custom keystore, keystore file missing, App Bundle on); seven bad and three good package names; the keystore name resolved for the in-project, dedicated, absolute, relative and empty shapes; the APK file name; the manifest row format; append on a fresh file, an empty file and a file without a trailing newline. |
-| `releases/manifest.md` | One row per build the script makes, released or not; rows are never removed, and the Download column marks the ones that went out. Committed. |
+| `releases/manifest.md` | One row per build the script makes, released or not; rows are never removed, and the Download column marks the ones that went out. The Build ID column, added in Week 8, matches a row to a tester's About screen; earlier rows end before it. Committed. |
 | `releases/*.apk` | Named `<product>-<version>-<versionCode>-arm64.apk` so builds never overwrite each other. Git-ignored (with the IL2CPP symbols folder Unity writes beside it). Attached to the GitHub Release instead. |
 | `README.md` | Signing, Build, Device targets and AI assistance sections. |
 | `docs/store-assets-checklist.md`, `docs/descriptions.md` | Lab B Part A worked examples for this app. |

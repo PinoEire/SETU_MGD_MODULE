@@ -187,10 +187,12 @@ namespace MGD.Samples.Editor
         public void ManifestRow_FormatsFixedColumns()
         {
             string row = ReleaseManifest.Row("0.2.0", 2, "2026-09-28", "a121f41", 41_943_040L,
-                "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef");
+                "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef", "a1b2c3d4");
 
+            // Download is pasted in by hand, so it stays empty; the build ID goes last
+            // so rows written before the column existed still line up.
             Assert.AreEqual(
-                "| 0.2.0 | 2 | 2026-09-28 | a121f41 | 40.0 MB | 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef | |",
+                "| 0.2.0 | 2 | 2026-09-28 | a121f41 | 40.0 MB | 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef | | a1b2c3d4 |",
                 row);
         }
 

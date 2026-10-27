@@ -18,3 +18,13 @@ adb -s <serial> shell getprop ro.build.version.release
 ```
 
 Things worth a note: a different notch or punch-hole moving the SafeArea HUD, a 120 Hz panel still reporting 60 Hz in the Performance scene, a brand that needs *Install via USB* in Developer options, a lower-end phone where the Worst state visibly stutters.
+
+## Week 8: tiers for the closed test
+
+The Week 8 Lab A, Part E columns, for `/docs/CA3/qa/device-matrix.md`: one row per phone a build was installed on during the closed test, with the build IDs it ran (from the About screen). RAM comes from the About screen stamp, SoC from *Settings > About phone* (or the model's specification page); aim for at least one low-tier phone.
+
+| Phone | SoC | RAM | Android | Panel Hz | Tier (Low/Mid/High) | Owner (initials) | Builds tested |
+|-------|-----|-----|---------|----------|---------------------|------------------|---------------|
+| Google Pixel 7a | Tensor G2 | (from About) | 17 | 60 in-game (90 available) | Mid | PDF | (fill in: version and build ID) |
+| Peer 1 | | | | | | | |
+| Peer 2 | | | | | | | |

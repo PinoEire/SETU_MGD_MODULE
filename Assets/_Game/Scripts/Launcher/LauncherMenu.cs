@@ -11,8 +11,8 @@ namespace MGD.Samples
     /// First scene of the build. Lists every other scene in Build Settings as a
     /// button, so a new sample appears here as soon as its builder registers the
     /// scene, and loads the chosen one asynchronously. The footer shows the app
-    /// version, Unity version and device, which is the About / Build Info line the
-    /// module asks every submission to have.
+    /// version and build ID, Unity version and device: a short build stamp; the
+    /// About scene has the full one.
     /// </summary>
     public sealed class LauncherMenu : MonoBehaviour
     {
@@ -28,7 +28,7 @@ namespace MGD.Samples
             ScaleDragThreshold();
 
             footer.text =
-                $"{Application.productName} {Application.version}  |  Unity {Application.unityVersion}\n" +
+                $"{Application.productName} {Application.version} ({BuildStamp.BuildId})  |  Unity {Application.unityVersion}\n" +
                 $"{SystemInfo.deviceModel}  |  {SystemInfo.operatingSystem}";
 
             int self = SceneManager.GetActiveScene().buildIndex;

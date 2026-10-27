@@ -159,14 +159,20 @@ namespace MGD.Samples.Editor
     {
         const string Header =
             "# Release manifest\n\n" +
-            "One row per build made with *MGD Samples > Build Release APK*, released or not; rows are never removed. The APK itself is attached to the GitHub Release for the tag; paste its link in the Download column, which also marks the builds that went out. Anyone can check a downloaded file against the SHA-256 here.\n\n" +
-            "| Version | versionCode | Date | Commit | Size | SHA-256 | Download |\n" +
-            "|---------|-------------|------|--------|------|---------|----------|\n";
+            "One row per build made with *MGD Samples > Build Release APK*, released or not; rows are never removed. The APK itself is attached to the GitHub Release for the tag; paste its link in the Download column, which also marks the builds that went out. Anyone can check a downloaded file against the SHA-256 here, and match the build ID on a tester's About screen to its row.\n\n" +
+            "| Version | versionCode | Date | Commit | Size | SHA-256 | Download | Build ID |\n" +
+            "|---------|-------------|------|--------|------|---------|----------|----------|\n";
 
-        public static string Row(string version, int versionCode, string date, string commit, long bytes, string sha256)
+        /// <summary>
+        /// One manifest row. Download stays empty for the link pasted in later; the
+        /// build ID (what the About screen shows) is the last column because it was
+        /// added after the first releases, whose rows simply end before it.
+        /// </summary>
+        public static string Row(string version, int versionCode, string date, string commit, long bytes, string sha256,
+            string buildId)
         {
             string size = (bytes / 1048576.0).ToString("F1", CultureInfo.InvariantCulture) + " MB";
-            return $"| {version} | {versionCode} | {date} | {commit} | {size} | {sha256} | |";
+            return $"| {version} | {versionCode} | {date} | {commit} | {size} | {sha256} | | {buildId} |";
         }
 
         public static void Append(string path, string row)

@@ -1,7 +1,7 @@
 ---
 type: glossary
 status: living
-updated: 2026-10-19
+updated: 2026-10-27
 tags: [glossary]
 ---
 
@@ -13,7 +13,7 @@ Module vocabulary, one line each. Link a term with `[[Glossary#Term]]` the first
 Unity's wrapper for the phone's thermal and performance APIs (on Android, ADPF, Android 11 and later): `ThermalStatus` for the warning level, temperature level and trend, `PerformanceStatus` for the bottleneck, and optional scalers that lower quality under load. Built into Unity since 6.3; the Android provider is a package.
 
 ## ANR
-Application Not Responding. Android shows a dialog when the main thread is blocked for about five seconds. Visible in Logcat; a CA3 QA-pack item.
+Application Not Responding. Android shows a dialog when the app's main (UI) thread has not handled an input event within about five seconds (broadcasts and services have their own timeouts); a blocked thread with no input waiting does not trigger one. Visible in Logcat; a CA3 QA-pack item.
 
 ## APK
 Android Package. The single-file installable used for sideloading in this module. Distinct from an AAB (App Bundle), which is only for store upload.
@@ -23,6 +23,9 @@ The 64-bit ARM architecture. Required for modern Android distribution; only sele
 
 ## Awaitable
 Unity's built-in async type (`UnityEngine.Awaitable`) for awaiting frames, seconds, async operations and background threads without coroutines.
+
+## Build ID
+The first eight characters of `Application.buildGUID`, which Unity makes new for every build. Shown on the About screen and recorded in telemetry and the release manifest, so feedback and logs name exactly one binary.
 
 ## Cuts list
 An ordered list of features to drop first if time runs out. Every sample and every student project keeps one.
@@ -65,6 +68,9 @@ Local events (`session_start`, `level_start`, and so on) written to `Debug.Log` 
 
 ## Thermal throttling
 The phone lowering its CPU and GPU clocks to stay within a safe temperature. Frame time that held for the first minutes slips later; Adaptive Performance reports it as `ThrottlingImminent`, then `Throttling`.
+
+## Tombstone
+The crash report Android writes when a native crash (a signal such as SIGSEGV) ends a process; logcat shows it under the `DEBUG` tag after `Fatal signal`.
 
 ## versionCode
 The integer Android uses to order builds. Must increase on every install over an existing build; the human-readable version string does not matter to the installer.

@@ -1,7 +1,7 @@
 ---
 type: home
 status: living
-updated: 2026-10-19
+updated: 2026-10-27
 tags: [home, index]
 ---
 
@@ -33,6 +33,8 @@ The vault is also a **worked example of a GDD that both people and AI tools can 
 | [[Loading]] | W05 Lab B | done | One persistent SceneLoader for every scene change: a loading bar on real progress, no second load or back mid-load, the allowSceneActivation trap shown live, and `[perf]` load-time lines. |
 | [[Economy]] | W06 Lab A and B | done | Tap targets in a timed round to earn coins, spend them on an upgrade that doubles the earn rate, a fake store behind `IPurchaseProvider`, a wallet that survives a force-stop, and the five telemetry events in logcat and a file. |
 | [[Adaptive]] | W07 Lab A and B | done | Adaptive Performance `[AP]` thermal and bottleneck lines, a Balanced / High FPS toggle on every pause card that sets the frame target and render scale, an allocation-free thermal overlay, and a soak clock with a GPU heat load. |
+| [[About]] | W08 Lab A | done | The About / Build Info screen: a build stamp whose eight-character build ID is also in `session_start` and the release manifest, and the closed-test feedback-form link. |
+| [[QA]] | W08 Lab B | done | Buttons that make a managed exception, an ANR and a native crash on purpose (two taps each) so their logcat signatures are known, a low-memory counter, and the six-scenario test plan and Known Issues as worked examples. |
 
 Planned samples follow the lab schedule in the curriculum README (Dropbox, `SETU/2026-2027/Mobile Game Development/README.md`). A sample is added to this table only when its note exists.
 
@@ -54,6 +56,8 @@ Planned samples follow the lab schedule in the curriculum README (Dropbox, `SETU
 | 2026-10-05 | [[2026-10-05 Telemetry is shared and session_start fires once per run]] |
 | 2026-10-19 | [[2026-10-19 Performance mode is shared and its toggle is on every pause card]] |
 | 2026-10-19 | [[2026-10-19 Adaptive Performance settings stay where Unity creates them]] |
+| 2026-10-27 | [[2026-10-27 The build ID is the first eight characters of buildGUID, everywhere]] |
+| 2026-10-27 | [[2026-10-27 The QA crash buttons work in release builds behind a two-tap guard]] |
 
 ## Reference
 

@@ -90,10 +90,14 @@ namespace MGD.Samples.Editor
             AssetDatabase.SaveAssets(); // persists the bumped versionCode
 
             var apk = new FileInfo(apkPath);
-            string row = ReleaseManifest.Row(version, code, DateTime.Now.ToString("yyyy-MM-dd"), commit, apk.Length, Sha256(apkPath));
+            // The summary's GUID is the built player's Application.buildGUID, so this
+            // is the ID the About screen (BuildStamp) shows on the phone.
+            string buildId = BuildStamp.ShortId(report.summary.guid.ToString());
+            string row = ReleaseManifest.Row(version, code, DateTime.Now.ToString("yyyy-MM-dd"), commit, apk.Length,
+                Sha256(apkPath), buildId);
             ReleaseManifest.Append(ManifestPath, row);
 
-            Debug.Log($"[ReleaseBuild] Built {apkPath} ({apk.Length / 1048576.0:F1} MB), versionCode {code}, commit {commit}. " +
+            Debug.Log($"[ReleaseBuild] Built {apkPath} ({apk.Length / 1048576.0:F1} MB), versionCode {code}, build {buildId}, commit {commit}. " +
                       $"Row added to {ManifestPath}. Install with: adb install -r {apkPath}. " +
                       "Attach the APK to the GitHub Release and paste the link in the Download column.");
         }

@@ -42,8 +42,10 @@ namespace MGD.Samples
             Debug.Log($"[Boot] {SystemInfo.deviceModel} | {SystemInfo.operatingSystem} | " +
                       $"{SystemInfo.graphicsDeviceType} | {Screen.width}x{Screen.height} @ {Screen.dpi} dpi | " +
                       $"target {Application.targetFrameRate} fps ({PerformanceMode.Current})");
+            // The build ID ties every session in a pulled log to one binary.
             Telemetry.Log("session_start",
                 ("app_version", Application.version),
+                ("build", BuildStamp.BuildId),
                 ("device_model", SystemInfo.deviceModel),
                 ("android", SystemInfo.operatingSystem));
         }

@@ -1,9 +1,9 @@
 # Release manifest
 
-One row per build made with *MGD Samples > Build Release APK*, released or not; rows are never removed. The APK itself is attached to the GitHub Release for the tag; paste its link in the Download column, which also marks the builds that went out. Anyone can check a downloaded file against the SHA-256 here.
+One row per build made with *MGD Samples > Build Release APK*, released or not; rows are never removed. The APK itself is attached to the GitHub Release for the tag; paste its link in the Download column, which also marks the builds that went out. Anyone can check a downloaded file against the SHA-256 here, and match the build ID on a tester's About screen to its row. Rows written before the Build ID column existed end at Download.
 
-| Version | versionCode | Date | Commit | Size | SHA-256 | Download |
-|---------|-------------|------|--------|------|---------|----------|
+| Version | versionCode | Date | Commit | Size | SHA-256 | Download | Build ID |
+|---------|-------------|------|--------|------|---------|----------|----------|
 | 0.2.0 | 7 | 2026-09-28 | a121f41-dirty | 42.8 MB | 2f342152593f54a33f52e854bda97efc45afbb57600f97264478e1fbde7b1a3d | |
 | 0.2.0 | 8 | 2026-09-28 | c8c5204-dirty | 42.8 MB | 21e5bd4767a7f308f84b7ceebc142aca05863d527c38ded74f67fd8ce8452585 | |
 | 0.2.0 | 9 | 2026-09-28 | 15a8d85-dirty | 42.8 MB | 1a0f0f03228ac78f0b13a733173f05279fa4b381768fbda62ff3c3d98e7a22d9 | |
