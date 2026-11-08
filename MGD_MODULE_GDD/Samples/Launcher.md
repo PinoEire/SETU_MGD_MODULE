@@ -4,7 +4,7 @@ status: done
 lab: none
 unity: 6000.6.6f1
 scene: Assets/_Game/Scenes/Launcher/Launcher.unity
-updated: 2026-10-27
+updated: 2026-11-08
 tags: [sample, infrastructure, navigation]
 ---
 
@@ -42,7 +42,7 @@ None directly. The footer is a short build stamp; the full About / Build Info sc
 | `Assets/_Game/Scripts/Shared/LifecycleGuard.cs` | Shared, on the `Lifecycle Guard` object every scene gets through `SampleSceneBuild.AddPauseMenu`: pauses on focus loss and Home. Belongs to [[Lifecycle]]. |
 | `Assets/_Game/Scripts/Shared/PauseMenu.cs` | Shared, on the Canvas with the hidden `Pause Panel`: shows the panel, handles Resume and the High FPS toggle. Here back toggles the panel, because there is no launcher to return to. Belongs to [[Lifecycle]]. |
 | `Assets/_Game/Editor/Launcher/LauncherSceneBuilder.cs` | Menu item *MGD Samples > Build Launcher Scene*. Builds the scene and moves it to index 0 in Build Settings. The sample list is a vertical `ScrollRect` (clipped viewport, content with a `ContentSizeFitter`, auto-hiding scrollbar) between the subtitle and the footer. |
-| `Assets/_Game/Scenes/Launcher/Launcher.unity` | Title, subtitle, a scrolling vertical list with an inactive button template (150 units tall, about 57 dp, 24 apart), footer, the hidden pause panel, the `Lifecycle Guard`, `Menu Ready`, `Adaptive Performance` and `Scene Loader` objects. Generated; not hand-edited. |
+| `Assets/_Game/Scenes/Launcher/Launcher.unity` | Title, subtitle, a scrolling vertical list with an inactive button template (150 units tall, about 57 dp, 24 apart), footer, the hidden pause panel, the `Lifecycle Guard`, `Menu Ready`, `Adaptive Performance`, `Store Shot` (see [[Store]]) and `Scene Loader` objects. Generated; not hand-edited. |
 
 ## How to test
 

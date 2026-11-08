@@ -36,6 +36,7 @@ The vault is also a **worked example of a GDD that both people and AI tools can 
 | [[About]] | W08 Lab A | done | The About / Build Info screen: a build stamp whose eight-character build ID is also in `session_start` and the release manifest, and the closed-test feedback-form link. |
 | [[QA]] | W08 Lab B | done | Buttons that make a managed exception, an ANR and a native crash on purpose (two taps each) so their logcat signatures are known, a low-memory counter, and the six-scenario test plan and Known Issues as worked examples. |
 | [[Tiers]] | W09 Lab A and B | done | Three quality levels with a URP asset each, a device tier picked at start-up from RAM and cores with an override, High FPS only on the High tier, and an asset-budget audit menu. |
+| [[Store]] | W10 Lab A and B | done | A StoreShot capture button in Development Builds, and a worked store kit: icon pair, feature graphic, five 9:16 phone screenshots, descriptions and the critique file. |
 
 Planned samples follow the lab schedule in the curriculum README (Dropbox, `SETU/2026-2027/Mobile Game Development/README.md`). A sample is added to this table only when its note exists.
 
@@ -61,6 +62,7 @@ Planned samples follow the lab schedule in the curriculum README (Dropbox, `SETU
 | 2026-10-27 | [[2026-10-27 The QA crash buttons work in release builds behind a two-tap guard]] |
 | 2026-11-08 | [[2026-11-08 The device tier sets the quality level and High FPS runs only on High]] |
 | 2026-11-08 | [[2026-11-08 Quality tier assets live in Assets _Game Settings]] |
+| 2026-11-08 | [[2026-11-08 StoreShot is persistent and its button exists in Development Builds only]] |
 
 ## Reference
 

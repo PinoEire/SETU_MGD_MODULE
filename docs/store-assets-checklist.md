@@ -1,12 +1,12 @@
 # Store-asset checklist
 
-Worked example of the Week 4 Lab B, Part A checklist, written for this samples app as if it were going to Play. Submit yours as `/docs/CA1/store-assets-checklist.md`. Sizes are from the Play Console help page *Add preview assets* (https://support.google.com/googleplay/android-developer/answer/9866151); confirm them on the day you submit, because they change. Nothing is uploaded this semester.
+Worked example of the Week 4 Lab B, Part A checklist (the Week 10 version, with the files made, is `docs/store/asset-checklist.md`), written for this samples app as if it were going to Play. Submit yours as `/docs/CA1/store-assets-checklist.md`. Sizes are from the Play Console help page *Add preview assets* (https://support.google.com/googleplay/android-developer/answer/9866151); confirm them on the day you submit, because they change. Nothing is uploaded this semester.
 
 | Asset | Spec | Status | Notes |
 |-------|------|--------|-------|
 | App icon | 512 x 512, 32-bit PNG with alpha, up to 1024 KB | planned | No rounded corners or drop shadow: Play masks the icon itself. |
-| Feature graphic | 1024 x 500, JPEG or 24-bit PNG, no alpha | planned | Shown above a listing video; keep text out of the outer 10 per cent. |
-| Phone screenshots | 2 to 8; each side 320 to 3840 px, the long side at most twice the short side; JPEG or 24-bit PNG, no alpha. For promotion on Play: at least four at 1080 px minimum, 16:9 or 9:16 | planned | Portrait 9:16 at 1080 x 1920 or more, captured on device at 1080 x 2400 with `adb shell screencap` and cropped to 9:16 (the 2400-tall raw capture is 20:9 and fails the ratio). |
+| Feature graphic | 1024 x 500, JPEG or 24-bit PNG, no alpha | planned | Focal point and key elements towards the centre, background towards the edges; the worked Week 10 version is `docs/store/feature-1024x500.png`. |
+| Phone screenshots | up to 8 per device type, at least 2 in total; each side 320 to 3840 px, the long side at most twice the short side; JPEG or 24-bit PNG, no alpha. For promotion on Play: at least four at 1080 px minimum, 16:9 or 9:16 | planned | Portrait 9:16 at 1080 x 1920 or more, captured on device at 1080 x 2400 with `adb shell screencap` and cropped to 9:16 (the 2400-tall raw capture is 20:9 and fails the ratio). |
 | 7-inch tablet screenshots | at least 4 if declared; each side 1080 to 7680 px; 16:9 or 9:16 | not planned | Portrait phone layout only; declare no tablet support. |
 | Promo video | YouTube link, public or unlisted | not planned | |
 

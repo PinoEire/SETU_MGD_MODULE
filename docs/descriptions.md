@@ -1,6 +1,6 @@
 # Store descriptions
 
-Worked example of the Week 4 Lab B, Part A listing copy for this samples app. Submit yours as `/docs/CA1/descriptions.md`. Count the characters; Play cuts the short description at 80 and the long one at 4000. Describe only what the current build contains.
+Worked example of the Week 4 Lab B, Part A listing copy for this samples app, as it stood at 0.2.0 (the Week 10 version is `docs/store/descriptions.md`). Submit yours as `/docs/CA1/descriptions.md`. Count the characters; Play cuts the short description at 80 and the long one at 4000. Describe only what the current build contains.
 
 ## Short description (80 characters max)
 

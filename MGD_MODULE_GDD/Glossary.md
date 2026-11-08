@@ -39,6 +39,9 @@ Low, Mid or High: how capable a phone is, picked at start-up from its RAM and co
 ## dp
 Density-independent pixel. One dp is one pixel on a 160 dpi screen; convert with `Screen.dpi / 160f`. Touch targets should be at least 48 dp.
 
+## Feature graphic
+The 1024x500 banner at the top of a Play listing (JPEG or 24-bit PNG, no alpha). Play overlays a play button on it when the listing's preview video does not autoplay. Play's design guidance: focal point towards the centre, background towards the edges, vibrant colour, the experience rather than the icon.
+
 ## Frame pacing
 Delivering frames at a steady interval rather than as fast as possible. Optimized Frame Pacing in Player Settings plus a sensible `Application.targetFrameRate`.
 

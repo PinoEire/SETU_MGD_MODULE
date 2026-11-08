@@ -1,6 +1,8 @@
 using TMPro;
 using UnityEditor;
+using UnityEditor.Events;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static MGD.Samples.Editor.SampleSceneBuild;
@@ -26,6 +28,9 @@ namespace MGD.Samples.Editor
 
         // Above every scene's canvases, the pause panel included.
         const int LoadingSortOrder = 100;
+
+        // Above every sample's HUD, below the loading screen.
+        const int ShotSortOrder = 90;
 
         [MenuItem("MGD Samples/Build Launcher Scene")]
         public static void Build()
@@ -82,6 +87,7 @@ namespace MGD.Samples.Editor
             SetField(menu, "footer", footer);
 
             CreateSceneLoader();
+            CreateStoreShot();
 
             FinishScene(scene.Value, ScenePath, BuilderName, first: true);
         }
@@ -147,6 +153,33 @@ namespace MGD.Samples.Editor
             scroll.verticalScrollbar = bar;
             scroll.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
             return content;
+        }
+
+        /// <summary>
+        /// The Week 10 store-screenshot tool: a persistent object with its own
+        /// canvas holding one Shot button (Development Builds only), on the right
+        /// edge a quarter of the way down, clear of the notch and the gesture bar.
+        /// The canvas is the one thing hidden for the captured frame.
+        /// </summary>
+        static void CreateStoreShot()
+        {
+            var shotObject = new GameObject("Store Shot", typeof(StoreShot));
+            Canvas canvas = CreateCanvas();
+            canvas.name = "Shot Canvas";
+            canvas.sortingOrder = ShotSortOrder;
+            canvas.transform.SetParent(shotObject.transform, false);
+
+            // 140 units is about 53 dp on the reference phone, above the 48 dp minimum.
+            var size = new Vector2(140f, 140f);
+            // 36 rather than the usual 48: the label sits in a button a third the usual width.
+            Button button = CreateButton(canvas.transform, "Button Shot", "Shot", size, 36f);
+            Place(button.GetComponent<RectTransform>(), new Vector2(1f, 0.75f), size, offset: new Vector2(-24f, 0f));
+
+            var shot = shotObject.GetComponent<StoreShot>();
+            SetField(shot, "hideWhileCapturing", new Object[] { canvas.gameObject });
+            SetField(shot, "debugButton", button.gameObject);
+            // Persistent listener: what a student wires by hand in the Inspector.
+            UnityEventTools.AddPersistentListener(button.onClick, new UnityAction(shot.OnShotPressed));
         }
 
         static void CreateSceneLoader()
