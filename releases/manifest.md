@@ -17,4 +17,4 @@ One row per build made with *MGD Samples > Build Release APK*, released or not; 
 | 0.4.0 | 17 | 2026-10-19 | v0.3.0-5-ga92cb61 | 44.1 MB | 36ba2224a243cb1c499fd6c5b00b6fd8a40066273d54a7adf4ce753c3486fa3a | [v0.4.0](https://github.com/PinoEire/SETU_MGD_MODULE/releases/download/v0.4.0/SETU_MGD_MODULE-0.4.0-17-arm64.apk) |
 | 0.5.0 | 18 | 2026-10-27 | v0.4.0-4-gc671b03 | 44.2 MB | def490231973632304204c73289aa8a3e6b3a8290beaf816579a82f126e00229 | [v0.5.0](https://github.com/PinoEire/SETU_MGD_MODULE/releases/download/v0.5.0/SETU_MGD_MODULE-0.5.0-18-arm64.apk) | a8bbe419 |
 | 0.6.0 | 19 | 2026-11-08 | v0.5.0-1-g068ffbf-dirty | 44.2 MB | ef6303257009ead074e99f0fd78427f2f119c21f5cc0e68b90e4b53a8bd4458c | | 54c77060 |
-| 0.6.0 | 20 | 2026-11-08 | v0.5.0-2-g0d5a0ea | 44.2 MB | cbf609e99defd64cdba1b09a18d61b01a410fcf42c848835c67f247af1ff1d85 | | 77014616 |
+| 0.6.0 | 20 | 2026-11-08 | v0.5.0-2-g0d5a0ea | 44.2 MB | cbf609e99defd64cdba1b09a18d61b01a410fcf42c848835c67f247af1ff1d85 | [v0.6.0](https://github.com/PinoEire/SETU_MGD_MODULE/releases/download/v0.6.0/SETU_MGD_MODULE-0.6.0-20-arm64.apk) | 77014616 |
