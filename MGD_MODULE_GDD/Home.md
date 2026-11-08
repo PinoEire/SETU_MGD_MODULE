@@ -37,6 +37,7 @@ The vault is also a **worked example of a GDD that both people and AI tools can 
 | [[QA]] | W08 Lab B | done | Buttons that make a managed exception, an ANR and a native crash on purpose (two taps each) so their logcat signatures are known, a low-memory counter, and the six-scenario test plan and Known Issues as worked examples. |
 | [[Tiers]] | W09 Lab A and B | done | Three quality levels with a URP asset each, a device tier picked at start-up from RAM and cores with an override, High FPS only on the High tier, and an asset-budget audit menu. |
 | [[Store]] | W10 Lab A and B | done | A StoreShot capture button in Development Builds, and a worked store kit: icon pair, feature graphic, five 9:16 phone screenshots, descriptions and the critique file. |
+| [[Resume]] | W11 Lab A | done | Timed Awaitables on one token source that is cancelled on pause and replaced on resume, so a one-shot boss timer fires once and a wave loop never runs twice; offline progress on the wall clock that survives a process kill; the six-case resume matrix as a worked example. |
 
 Planned samples follow the lab schedule in the curriculum README (Dropbox, `SETU/2026-2027/Mobile Game Development/README.md`). A sample is added to this table only when its note exists.
 
@@ -63,6 +64,7 @@ Planned samples follow the lab schedule in the curriculum README (Dropbox, `SETU
 | 2026-11-08 | [[2026-11-08 The device tier sets the quality level and High FPS runs only on High]] |
 | 2026-11-08 | [[2026-11-08 Quality tier assets live in Assets _Game Settings]] |
 | 2026-11-08 | [[2026-11-08 StoreShot is persistent and its button exists in Development Builds only]] |
+| 2026-11-08 | [[2026-11-08 Timers restart on the game's resume, not on OnApplicationPause(false)]] |
 
 ## Reference
 
