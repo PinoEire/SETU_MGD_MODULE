@@ -66,6 +66,7 @@ Planned samples follow the lab schedule in the curriculum README (Dropbox, `SETU
 | 2026-11-08 | [[2026-11-08 StoreShot is persistent and its button exists in Development Builds only]] |
 | 2026-11-08 | [[2026-11-08 Timers restart on the game's resume, not on OnApplicationPause(false)]] |
 | 2026-11-08 | [[2026-11-08 The build date and commit are stamped into a tracked BuildInfo asset before every build]] |
+| 2026-11-08 | [[2026-11-08 Scenes are changed in place, never rebuilt from scratch]] |
 
 ## Reference
 
