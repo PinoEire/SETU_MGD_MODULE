@@ -51,7 +51,7 @@ namespace MGD.Samples
             }
 
             _low = !_low;
-            _urp.renderScale = _low ? lowScale : PerformanceMode.RenderScaleFor(PerformanceMode.Current);
+            _urp.renderScale = _low ? lowScale : PerformanceMode.CurrentRenderScale;
             Debug.Log($"[Probe] renderScale = {_urp.renderScale}");
         }
 
@@ -60,7 +60,7 @@ namespace MGD.Samples
             // The asset outlives this scene (and, in the editor, Play mode).
             if (_low)
             {
-                _urp.renderScale = PerformanceMode.RenderScaleFor(PerformanceMode.Current);
+                _urp.renderScale = PerformanceMode.CurrentRenderScale;
                 _low = false;
             }
         }

@@ -2,7 +2,7 @@
 type: sample
 status: planned
 lab: W00-A
-unity: 6000.6.6f1
+unity: 6000.6.8f1
 scene: Assets/_Game/Scenes/<Name>/<Name>.unity
 updated: {{date:YYYY-MM-DD}}
 tags: [sample]

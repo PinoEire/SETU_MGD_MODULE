@@ -1,7 +1,7 @@
 ---
 type: glossary
 status: living
-updated: 2026-10-27
+updated: 2026-11-08
 tags: [glossary]
 ---
 
@@ -21,6 +21,9 @@ Android Package. The single-file installable used for sideloading in this module
 ## ARM64
 The 64-bit ARM architecture. Required for modern Android distribution; only selectable in Unity once the scripting backend is IL2CPP.
 
+## ASTC
+Adaptive Scalable Texture Compression: the GPU texture format modern Android phones read directly. The block size sets the trade: 4x4 keeps detail (UI, normal maps), 6x6 is smaller (albedo).
+
 ## Awaitable
 Unity's built-in async type (`UnityEngine.Awaitable`) for awaiting frames, seconds, async operations and background threads without coroutines.
 
@@ -29,6 +32,9 @@ The first eight characters of `Application.buildGUID`, which Unity makes new for
 
 ## Cuts list
 An ordered list of features to drop first if time runs out. Every sample and every student project keeps one.
+
+## Device tier
+Low, Mid or High: how capable a phone is, picked at start-up from its RAM and cores (or forced for testing), and used to choose a quality level and frame cap.
 
 ## dp
 Density-independent pixel. One dp is one pixel on a 160 dpi screen; convert with `Screen.dpi / 160f`. Touch targets should be at least 48 dp.
@@ -53,6 +59,9 @@ Mechanics, Dynamics, Aesthetics (Hunicke, LeBlanc, Zubek 2004). The one-page des
 
 ## Object pool
 A set of objects created once at load and reused: switched on to spawn, switched off and returned instead of destroyed. Keeps `Instantiate`, `Destroy` and their garbage out of the steady state.
+
+## Quality level
+A named set of graphics settings (Project Settings > Quality), here one per device tier, each with its own URP asset; switched with `QualitySettings.SetQualityLevel`.
 
 ## Render scale
 The URP asset's `renderScale`: the fraction of the screen resolution the 3D and 2D scene is rendered at before it is scaled up; UI is drawn at full resolution. Below 1 it costs the GPU fewer pixels per frame.

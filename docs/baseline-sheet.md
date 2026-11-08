@@ -1,6 +1,6 @@
 # Performance Baseline Sheet
 
-Worked example of the Week 3 Lab B, Part F table for this project. Submit yours as `/docs/CA2/baseline/baseline-sheet.md`, one column per build, and add a column whenever something meaningful changes. The Menu row is the Performance scene at Idle, Steady gameplay is the Steady state (200 sprites), Worst case is the Worst state (1500 sprites at scale 4). Phone cells come from the release build on the device with `adb logcat -s Unity` (the second `[Baseline]` line of each state), `dumpsys meminfo` and `am start -W`; nothing is guessed. The Week 5 and Week 8 rows and the Week 7 *Thermals* section stay empty until the phone runs for those labs.
+Worked example of the Week 3 Lab B, Part F table for this project. Submit yours as `/docs/CA2/baseline/baseline-sheet.md`, one column per build, and add a column whenever something meaningful changes. The Menu row is the Performance scene at Idle, Steady gameplay is the Steady state (200 sprites), Worst case is the Worst state (1500 sprites at scale 4). Phone cells come from the release build on the device with `adb logcat -s Unity` (the second `[Baseline]` line of each state), `dumpsys meminfo` and `am start -W`; nothing is guessed. The Week 5, 8 and 9 rows and the Week 7 *Thermals* section stay empty until the phone runs for those labs.
 
 | Field | Row 1 |
 |-------|-------|
@@ -18,6 +18,7 @@ Worked example of the Week 3 Lab B, Part F table for this project. Submit yours 
 | Thermal delta, throttling (Week 7) | See *Thermals* below |
 | Load time (Week 5) | |
 | Warm start ms, PSS after 5 min in the busiest scene (Week 8) | |
+| Tier picked on this phone; Texture2D, AudioClip, Managed MB against the budgets in `docs/asset-budgets.md` (Week 9) | |
 
 ## Thermals
 

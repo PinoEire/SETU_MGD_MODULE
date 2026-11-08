@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -13,13 +14,19 @@ namespace MGD.Samples
     /// one. The pause state is static on the guard, so this needs no reference to it.
     /// The card also carries the High FPS toggle (Week 7): a setting belongs in the
     /// pause or settings menu, not on the HUD. It is set from the current mode each
-    /// time the panel opens, without firing its event.
+    /// time the panel opens, without firing its event. Below the High device tier
+    /// High FPS cannot take effect (Week 9), so the toggle is greyed out and its
+    /// label says why.
     /// </summary>
     public sealed class PauseMenu : MonoBehaviour
     {
         [SerializeField] GameObject panel;
         [SerializeField] bool backTogglesPause = true;
         [SerializeField] Toggle highFps;
+
+        const string HighFpsLabel = "High FPS";
+        const string HighFpsLockedLabel = "High FPS (High tier only)";
+        TMP_Text _highFpsText;
 
         void OnEnable()
         {
@@ -39,6 +46,20 @@ namespace MGD.Samples
             if (paused && highFps != null)
             {
                 highFps.SetIsOnWithoutNotify(PerformanceMode.IsHighFps);
+                bool allowed = PerformanceMode.IsHighFpsAllowed;
+                highFps.interactable = allowed;
+                // Not ??=: it skips Unity's own null check on a destroyed object.
+                if (_highFpsText == null)
+                {
+                    _highFpsText = highFps.GetComponentInChildren<TMP_Text>(true);
+                }
+
+                if (_highFpsText != null)
+                {
+                    // interactable greys only the box; dim the label to match.
+                    _highFpsText.text = allowed ? HighFpsLabel : HighFpsLockedLabel;
+                    _highFpsText.alpha = allowed ? 1f : 0.5f;
+                }
             }
 
             // Toggle the panel itself, not a parent: an inactive parent would also

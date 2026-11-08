@@ -1,7 +1,7 @@
 ---
 type: home
 status: living
-updated: 2026-10-27
+updated: 2026-11-08
 tags: [home, index]
 ---
 
@@ -35,6 +35,7 @@ The vault is also a **worked example of a GDD that both people and AI tools can 
 | [[Adaptive]] | W07 Lab A and B | done | Adaptive Performance `[AP]` thermal and bottleneck lines, a Balanced / High FPS toggle on every pause card that sets the frame target and render scale, an allocation-free thermal overlay, and a soak clock with a GPU heat load. |
 | [[About]] | W08 Lab A | done | The About / Build Info screen: a build stamp whose eight-character build ID is also in `session_start` and the release manifest, and the closed-test feedback-form link. |
 | [[QA]] | W08 Lab B | done | Buttons that make a managed exception, an ANR and a native crash on purpose (two taps each) so their logcat signatures are known, a low-memory counter, and the six-scenario test plan and Known Issues as worked examples. |
+| [[Tiers]] | W09 Lab A and B | done | Three quality levels with a URP asset each, a device tier picked at start-up from RAM and cores with an override, High FPS only on the High tier, and an asset-budget audit menu. |
 
 Planned samples follow the lab schedule in the curriculum README (Dropbox, `SETU/2026-2027/Mobile Game Development/README.md`). A sample is added to this table only when its note exists.
 
@@ -58,6 +59,8 @@ Planned samples follow the lab schedule in the curriculum README (Dropbox, `SETU
 | 2026-10-19 | [[2026-10-19 Adaptive Performance settings stay where Unity creates them]] |
 | 2026-10-27 | [[2026-10-27 The build ID is the first eight characters of buildGUID, everywhere]] |
 | 2026-10-27 | [[2026-10-27 The QA crash buttons work in release builds behind a two-tap guard]] |
+| 2026-11-08 | [[2026-11-08 The device tier sets the quality level and High FPS runs only on High]] |
+| 2026-11-08 | [[2026-11-08 Quality tier assets live in Assets _Game Settings]] |
 
 ## Reference
 

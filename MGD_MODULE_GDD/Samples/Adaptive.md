@@ -4,7 +4,7 @@ status: done
 lab: [W07-A, W07-B]
 unity: 6000.6.6f1
 scene: Assets/_Game/Scenes/Adaptive/Adaptive.unity
-updated: 2026-10-19
+updated: 2026-11-08
 tags: [sample, performance, adaptive-performance, thermal, frame-pacing, w07]
 ---
 
@@ -33,7 +33,7 @@ Week 7 Lab A, *Adaptive performance and the frame-rate toggle*: Parts A to E (in
 
 | Path | Purpose |
 |------|---------|
-| `Assets/_Game/Scripts/Shared/PerformanceMode.cs` | Shared, static. `PerfMode` Balanced (60 fps, scale 1.0) or HighFps (120, 0.8); `Apply` sets `targetFrameRate` and the active URP asset's `renderScale`, saves `perf_mode` and logs `perf_mode=<mode> high=<bool> target=<fps> scale=<scale>`; `SetHighFps(bool)` is the toggle form (a static method cannot be picked in a UnityEvent, so the toggle reaches it through `PauseMenu.OnHighFpsChanged`); `ApplySaved` runs before the first scene loads; an unknown saved value reads as Balanced. In the editor it puts the asset's render scale back once Play mode has ended. What students copy. |
+| `Assets/_Game/Scripts/Shared/PerformanceMode.cs` | Shared, static. `PerfMode` Balanced (since Week 9 the device tier's own cap and scale: 60 fps at 1.0 on the High tier, see [[Tiers]]) or HighFps (120, 0.8, on the High tier only); `Apply` sets `targetFrameRate` and the active URP asset's `renderScale`, saves `perf_mode` and logs `perf_mode=<mode> high=<bool> target=<fps> scale=<scale> tier=<tier>`; `SetHighFps(bool)` is the toggle form (a static method cannot be picked in a UnityEvent, so the toggle reaches it through `PauseMenu.OnHighFpsChanged`); `ApplySaved` runs before the first scene loads, called by `DeviceTier` after the tier is set; an unknown saved value reads as Balanced. In the editor it puts the asset's render scale back once Play mode has ended. What students copy. |
 | `Assets/_Game/Scripts/Shared/AdaptiveBootstrap.cs` | Shared, on a DontDestroyOnLoad `Adaptive Performance` object the Launcher creates (a later copy destroys itself). `Start` reads `Holder.Instance`, logs `[AP] provider inactive on this device` or subscribes to both events and logs `[AP] active warning=... level=...`; the handlers log `[AP] thermal ...` and `[AP] bottleneck=...` with invariant number formatting; `OnDestroy` unsubscribes. What students copy. |
 | `Assets/_Game/Scripts/Shared/PauseMenu.cs` | Gains the `highFps` toggle: set with `SetIsOnWithoutNotify` from `PerformanceMode.IsHighFps` each time the panel opens, wired to `OnHighFpsChanged(bool)`. Belongs to [[Lifecycle]]. |
 | `Assets/_Game/Scripts/Shared/MobileBootstrap.cs` | No longer sets the frame target (`PerformanceMode` does, earlier); its `[Boot]` line now reports the applied target and mode. Belongs to [[Performance]]. |
@@ -53,11 +53,11 @@ Week 7 Lab A, *Adaptive performance and the frame-rate toggle*: Parts A to E (in
 
 ## How to test
 
-1. **Editor, Launcher:** Play the Launcher. The console shows `[Boot] ... target 60 fps (Balanced)` and `[AP] active warning=NoWarning level=0.00` (the editor runs the Simulator provider), and soon `[AP] bottleneck=TargetFrameRate`.
+1. **Editor, Launcher:** Play the Launcher. The console shows `[Boot] ... target 60 fps (Balanced, tier High)` (a development PC is a High-tier device) and `[AP] active warning=NoWarning level=0.00` (the editor runs the Simulator provider), and soon `[AP] bottleneck=TargetFrameRate`.
 2. **Editor, Adaptive scene:** tap Adaptive. The readout shows the frame time, `temp 0.00  trend 0.00`, `NoWarning | bottleneck ...`, `Balanced  60 fps  scale 1.00` and the soak clock counting. *Load* cycles Off, Warm, Hot and logs `[Heat]`.
-3. **Editor, toggle:** press Escape (Android back): the pause card opens below the readout with High FPS off. Tick it: the console reads `perf_mode=HighFps high=True target=120 scale=0.80` and the readout `High FPS  120 fps  scale 0.80`. Close and reopen the menu: the box is still ticked and no second `perf_mode` line appears. *Back to samples*, then Play again later: the mode is kept.
+3. **Editor, toggle:** press Escape (Android back): the pause card opens below the readout with High FPS off. Tick it: the console reads `perf_mode=HighFps high=True target=120 scale=0.80 tier=High` (this PC is a High-tier device) and the readout `High FPS  120 fps  scale 0.80`. Close and reopen the menu: the box is still ticked and no second `perf_mode` line appears. *Back to samples*, then Play again later: the mode is kept.
 4. **Editor, thermal:** Window > General > Device Simulator, Adaptive Performance panel: drag the thermal level up; an `[AP] thermal warning=...` line appears and the readout's first line follows.
-5. **Editor, clean-up:** stop Play in High FPS. `Assets/Settings/UniversalRP.asset` shows no change in git and its render scale reads 1.
+5. **Editor, clean-up:** stop Play in High FPS. The active quality level's URP asset (`Assets/_Game/Settings/Quality/URP-High.asset` on this PC, see [[Tiers]]) shows no change in git and its render scale reads 1.
 6. **Phone, Lab A:** release build, `adb logcat -s Unity | findstr /L "[AP] perf_mode"` (`/L` makes `[AP]` literal; without it findstr reads it as a character class), an `[AP] active` line at start; 30 s in each mode in the Adaptive scene on Hot with a screenshot each; fill `docs/perf-modes.md`.
 7. **Phone, Lab B:** `adb shell dumpsys battery | findstr temperature`, *Restart soak*, `adb logcat -v time -s Unity > logcat-soak.txt`, ten minutes on Hot in Balanced, screenshots at 0, 5 and 10 from the overlay, temperature again; fill the *Thermals* section of `docs/baseline-sheet.md` from the `[Soak]` and `[AP] thermal` lines.
 8. **EditMode tests:** *MGD Samples > Run EditMode Tests*: 165 passed.
@@ -69,7 +69,7 @@ Week 7 Lab A, *Adaptive performance and the frame-rate toggle*: Parts A to E (in
 - The heat load is overdraw and nothing else; a CPU-bound game heats a phone differently. Tune the layer counts per phone so Hot holds the frame rate at first.
 - The soak clock counts real time, so leaving the app does not stop it; a soak with a break in it should be restarted.
 - Adaptive Performance logging is on, which prints a status block every 50 frames in development builds; the lab sheet says to switch it off before the CA2 candidate build.
-- In the editor, a script recompile during Play drops the hook that restores the URP render scale; stop Play before editing scripts, or check `UniversalRP.asset` in git.
+- In the editor, a script recompile during Play drops the hook that restores the URP render scale; stop Play before editing scripts, or check the tier's URP asset in `Assets/_Game/Settings/Quality/` in git.
 - No automated test covers the toggle being set without firing when the menu opens (`OnEnable` does not run in EditMode); How to test step 3 checks it by hand.
 - The PC never leaves the frame cap, so the editor confirms behaviour, not numbers. Verified 2026-10-19 in editor Play mode; phone numbers pending.
 

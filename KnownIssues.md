@@ -37,3 +37,12 @@ Worked example of the Week 8 Lab B, Part D file for this project: issues found a
 - **Actual:** the status line under the three buttons overlaps the trim-memory hint at the bottom; the canvas is about 966 units tall in landscape, and the stack needs more.
 - **Logcat:** none (layout only).
 - **Build, device:** the first build after 0.4.0 (17); found in code review from the layout sizes, not yet seen on a phone.
+
+## 5. Tiers: the checker covers the override controls in landscape
+
+- **Scenario:** 3, rotation.
+- **Steps:** auto-rotate on; open the Tiers sample; rotate to landscape.
+- **Expected:** the readout, the checker texture and the override dropdown all readable, as in portrait.
+- **Actual:** the checker, anchored under the readout, runs over the override label, dropdown and note; the canvas is about 966 units tall in landscape and the column needs more.
+- **Logcat:** none (layout only).
+- **Build, device:** the first build after 0.5.0 (18); seen in the editor's Game view at 1016x572.

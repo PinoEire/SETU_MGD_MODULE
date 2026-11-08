@@ -384,6 +384,59 @@ namespace MGD.Samples.Editor
             return toggle;
         }
 
+        /// <summary>
+        /// A TextMeshPro dropdown resized for touch: the closed control and every
+        /// item in its open list are <paramref name="rowHeight"/> units tall (130 is
+        /// about 49 dp on the reference phone), where the default control's items
+        /// are about 20, far below the 48 dp minimum.
+        /// </summary>
+        public static TMP_Dropdown CreateDropdown(Transform parent, string name, string[] options, float width,
+            float rowHeight = 130f, float fontSize = 44f)
+        {
+            var resources = new TMP_DefaultControls.Resources
+            {
+                standard = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd"),
+                background = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/Background.psd"),
+                dropdown = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/DropdownArrow.psd"),
+                checkmark = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/Checkmark.psd"),
+                mask = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UIMask.psd")
+            };
+            GameObject go = TMP_DefaultControls.CreateDropdown(resources);
+            go.name = name;
+            go.transform.SetParent(parent, false);
+            SetLayerRecursively(go, LayerMask.NameToLayer("UI"));
+            go.GetComponent<RectTransform>().sizeDelta = new Vector2(width, rowHeight);
+
+            var dropdown = go.GetComponent<TMP_Dropdown>();
+            dropdown.options.Clear();
+            foreach (string option in options)
+            {
+                dropdown.options.Add(new TMP_Dropdown.OptionData(option));
+            }
+
+            dropdown.captionText.fontSize = fontSize;
+            // Keep a long option's text clear of the arrow, which ends 72 units from the right.
+            dropdown.captionText.rectTransform.offsetMax = new Vector2(-72f, dropdown.captionText.rectTransform.offsetMax.y);
+            dropdown.captionText.text = options.Length > 0 ? options[0] : "";
+            RectTransform arrow = go.transform.Find("Arrow").GetComponent<RectTransform>();
+            arrow.sizeDelta = new Vector2(48f, 48f);
+            arrow.anchoredPosition = new Vector2(-40f, 0f);
+
+            // The open list: one row per option, each a full-width tap target.
+            RectTransform template = dropdown.template;
+            template.sizeDelta = new Vector2(template.sizeDelta.x, rowHeight * options.Length + 8f);
+            RectTransform content = template.Find("Viewport/Content").GetComponent<RectTransform>();
+            content.sizeDelta = new Vector2(content.sizeDelta.x, rowHeight);
+            RectTransform item = content.Find("Item").GetComponent<RectTransform>();
+            item.sizeDelta = new Vector2(item.sizeDelta.x, rowHeight);
+            dropdown.itemText.fontSize = fontSize;
+            RectTransform check = item.Find("Item Checkmark").GetComponent<RectTransform>();
+            check.sizeDelta = new Vector2(48f, 48f);
+            check.anchoredPosition = new Vector2(40f, 0f);
+            dropdown.itemText.rectTransform.offsetMin = new Vector2(88f, dropdown.itemText.rectTransform.offsetMin.y);
+            return dropdown;
+        }
+
         public static void SetLayerRecursively(GameObject go, int layer)
         {
             go.layer = layer;

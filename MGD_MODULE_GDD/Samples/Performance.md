@@ -4,7 +4,7 @@ status: done
 lab: [W03-A, W03-B]
 unity: 6000.6.0f1
 scene: Assets/_Game/Scenes/Performance/Performance.unity
-updated: 2026-10-19
+updated: 2026-11-08
 tags: [sample, performance, profiling, frame-pacing, w03]
 ---
 
@@ -32,7 +32,7 @@ Week 3 Lab A, *Rendering budgets and profiling on device*: Parts B to F (the wor
 
 | Path | Purpose |
 |------|---------|
-| `Assets/_Game/Scripts/Shared/MobileBootstrap.cs` | Shared, on a `Bootstrap` object in the Launcher. `Awake` sets `vSyncCount` 0 (the frame target is `PerformanceMode`'s, applied before the first scene loads, 60 in Balanced; see [[Adaptive]]), `Screen.sleepTimeout` never, and logs the `[Boot]` line with device, OS, graphics API and resolution, once per app run (it also logs the `session_start` telemetry event, see [[Economy]]). The Week 1 script at project quality. What students copy. |
+| `Assets/_Game/Scripts/Shared/MobileBootstrap.cs` | Shared, on a `Bootstrap` object in the Launcher. `Awake` sets `vSyncCount` 0 (the frame target is set before the first scene loads by `DeviceTier` and `PerformanceMode`: 60 in Balanced on a Mid or High tier; see [[Tiers]] and [[Adaptive]]), `Screen.sleepTimeout` never, and logs the `[Boot]` line with device, OS, graphics API, resolution, target and tier, once per app run (it also logs the `session_start` telemetry event, see [[Economy]]). The Week 1 script at project quality. What students copy. |
 | `Assets/_Game/Scripts/Performance/FrameTimeSampler.cs` | Fixed buffer of 600 unscaled frame times, reset after each window. When full, copies into a reused sort buffer, computes average and p99 through `FrameStats`, logs `[Baseline] avg X ms  p99 Y ms` and writes the same text to an optional label with `SetText`. Skips the first frame after a load or a `Restart()`, whose delta carries the load time. No allocation in `Update`. What students copy. |
 | `Assets/_Game/Scripts/Performance/FrameStats.cs` | Static. `Compute(samples, scratch, out average, out p99)`: the maths on its own so it can be unit tested. What students copy with the sampler. |
 | `Assets/_Game/Scripts/Performance/RenderScaleProbe.cs` | `Toggle()` switches the active URP asset's `renderScale` between the current performance mode's scale and `lowScale` (0.5), logs `[Probe] renderScale = x`, exposes `IsLow`. `OnDestroy` restores the current performance mode's scale (read then, not remembered, because the pause card's High FPS toggle can change it mid-scene) so the asset is not left modified. What students copy. |

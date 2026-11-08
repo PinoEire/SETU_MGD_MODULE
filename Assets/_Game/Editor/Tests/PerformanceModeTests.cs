@@ -1,3 +1,4 @@
+using System;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
 using UnityEngine;
@@ -8,7 +9,9 @@ using UnityEngine.TestTools;
 namespace MGD.Samples.Editor
 {
     // Apply writes the real PlayerPrefs key, the global frame-rate target and the
-    // project's URP asset, so every test puts all three back.
+    // active URP asset, so every test puts all three back. The tier is whatever
+    // DeviceTier.Current is in the editor, so applied values are compared with
+    // what the rules give for that tier.
     public class PerformanceModeTests
     {
         bool _hadKey;
@@ -50,18 +53,37 @@ namespace MGD.Samples.Editor
             }
         }
 
-        [Test]
-        public void Balanced_Is60FpsAtFullScale()
+        [TestCase(Tier.Low, 30, 0.75f)]
+        [TestCase(Tier.Mid, 60, 0.9f)]
+        [TestCase(Tier.High, 60, 1f)]
+        public void Balanced_IsTheTiersOwnCapAndScale(Tier tier, int fps, float scale)
         {
-            Assert.AreEqual(60, PerformanceMode.FrameRateFor(PerfMode.Balanced));
-            Assert.AreEqual(1f, PerformanceMode.RenderScaleFor(PerfMode.Balanced));
+            Assert.AreEqual(fps, PerformanceMode.FrameRateFor(PerfMode.Balanced, tier));
+            Assert.AreEqual(scale, PerformanceMode.RenderScaleFor(PerfMode.Balanced, tier), 1e-6f);
         }
 
         [Test]
-        public void HighFps_Asks120AtEightyPercentScale()
+        public void HighFps_OnTheHighTier_Asks120AtEightyPercentScale()
         {
-            Assert.AreEqual(120, PerformanceMode.FrameRateFor(PerfMode.HighFps));
-            Assert.AreEqual(0.8f, PerformanceMode.RenderScaleFor(PerfMode.HighFps));
+            Assert.AreEqual(120, PerformanceMode.FrameRateFor(PerfMode.HighFps, Tier.High));
+            Assert.AreEqual(0.8f, PerformanceMode.RenderScaleFor(PerfMode.HighFps, Tier.High), 1e-6f);
+        }
+
+        [TestCase(Tier.Low)]
+        [TestCase(Tier.Mid)]
+        public void HighFps_BelowTheHighTier_RunsAsBalanced(Tier tier)
+        {
+            Assert.AreEqual(PerfMode.Balanced, PerformanceMode.Effective(PerfMode.HighFps, tier));
+            Assert.AreEqual(DeviceTier.FrameRateFor(tier), PerformanceMode.FrameRateFor(PerfMode.HighFps, tier));
+            Assert.AreEqual(DeviceTier.RenderScaleFor(tier), PerformanceMode.RenderScaleFor(PerfMode.HighFps, tier), 1e-6f);
+        }
+
+        [TestCase(Tier.Low, false)]
+        [TestCase(Tier.Mid, false)]
+        [TestCase(Tier.High, true)]
+        public void HighFpsAllowed_OnlyOnTheHighTier(Tier tier, bool allowed)
+        {
+            Assert.AreEqual(allowed, PerformanceMode.HighFpsAllowedOn(tier));
         }
 
         [TestCase(0, PerfMode.Balanced)]
@@ -74,47 +96,51 @@ namespace MGD.Samples.Editor
         }
 
         [Test]
-        public void SetHighFps_On_AppliesSavesAndLogsHighFps()
+        public void SetHighFps_On_SavesTheChoiceAndAppliesWhatTheTierAllows()
         {
-            LogAssert.Expect(LogType.Log, new Regex("^perf_mode=HighFps high=True target=120 scale=0.80$"));
+            Tier tier = DeviceTier.Current;
+            PerfMode effective = PerformanceMode.Effective(PerfMode.HighFps, tier);
+            LogAssert.Expect(LogType.Log, new Regex(FormattableString.Invariant(
+                $"^perf_mode={effective} high={effective == PerfMode.HighFps} target={PerformanceMode.FrameRateFor(effective, tier)} scale={PerformanceMode.RenderScaleFor(effective, tier):0.00} tier={tier}$")));
 
             PerformanceMode.SetHighFps(true);
 
-            Assert.AreEqual(PerfMode.HighFps, PerformanceMode.Current);
-            Assert.IsTrue(PerformanceMode.IsHighFps);
-            Assert.AreEqual(120, Application.targetFrameRate);
-            Assert.AreEqual(1, PlayerPrefs.GetInt(PerformanceMode.Key));
+            Assert.AreEqual(1, PlayerPrefs.GetInt(PerformanceMode.Key), "the choice is saved whatever the tier");
+            Assert.AreEqual(effective, PerformanceMode.Current);
+            Assert.AreEqual(PerformanceMode.FrameRateFor(effective, tier), Application.targetFrameRate);
             if (_urp != null)
             {
-                Assert.AreEqual(0.8f, _urp.renderScale, 1e-5f);
+                Assert.AreEqual(PerformanceMode.RenderScaleFor(effective, tier), _urp.renderScale, 1e-5f);
             }
         }
 
         [Test]
         public void SetHighFps_Off_AppliesAndSavesBalanced()
         {
+            Tier tier = DeviceTier.Current;
             PerformanceMode.SetHighFps(true);
             PerformanceMode.SetHighFps(false);
 
             Assert.AreEqual(PerfMode.Balanced, PerformanceMode.Current);
             Assert.IsFalse(PerformanceMode.IsHighFps);
-            Assert.AreEqual(60, Application.targetFrameRate);
+            Assert.AreEqual(DeviceTier.FrameRateFor(tier), Application.targetFrameRate);
             Assert.AreEqual(0, PlayerPrefs.GetInt(PerformanceMode.Key));
             if (_urp != null)
             {
-                Assert.AreEqual(1f, _urp.renderScale, 1e-5f);
+                Assert.AreEqual(DeviceTier.RenderScaleFor(tier), _urp.renderScale, 1e-5f);
             }
         }
 
         [Test]
-        public void ApplySaved_UsesTheSavedMode()
+        public void ApplySaved_UsesTheSavedChoice()
         {
+            Tier tier = DeviceTier.Current;
             PlayerPrefs.SetInt(PerformanceMode.Key, 1);
 
             PerformanceMode.ApplySaved();
 
-            Assert.AreEqual(PerfMode.HighFps, PerformanceMode.Current);
-            Assert.AreEqual(120, Application.targetFrameRate);
+            Assert.AreEqual(PerformanceMode.Effective(PerfMode.HighFps, tier), PerformanceMode.Current);
+            Assert.AreEqual(PerformanceMode.FrameRateFor(PerfMode.HighFps, tier), Application.targetFrameRate);
         }
 
         [Test]
@@ -125,7 +151,7 @@ namespace MGD.Samples.Editor
             PerformanceMode.ApplySaved();
 
             Assert.AreEqual(PerfMode.Balanced, PerformanceMode.Current);
-            Assert.AreEqual(60, Application.targetFrameRate);
+            Assert.AreEqual(DeviceTier.FrameRateFor(DeviceTier.Current), Application.targetFrameRate);
         }
     }
 }

@@ -19,8 +19,9 @@ PlayerPrefs and one log file. The keys this project's code writes are listed bel
 | `wallet.coins` | Economy | Coins in the demo wallet |
 | `wallet.level` | Economy | The demo upgrade level |
 | `perf_mode` | Every scene (pause menu) | Balanced (0) or High FPS (1) |
+| `tier_override` | Tiers | The device tier chosen by hand (0 Low, 1 Mid, 2 High); absent means detected |
 
-One file is written under `Application.persistentDataPath`: `telemetry.log`, the local telemetry stub. Each line is a time since launch, a random eight-character session id (made fresh each run, not tied to the player or the device) and an event with numbers and ids (session start, round start and end, upgrade bought) as listed in `docs/economy-telemetry-map.md`, plus the app version, build ID, device model and Android version on `session_start`; no names or accounts. It never leaves the device, and it grows without a limit until the app's storage is cleared. A player removes everything by uninstalling the app or clearing its storage in Android settings.
+One file is written under `Application.persistentDataPath`: `telemetry.log`, the local telemetry stub. Each line is a time since launch, a random eight-character session id (made fresh each run, not tied to the player or the device) and an event with numbers and ids (session start, round start and end, upgrade bought) as listed in `docs/economy-telemetry-map.md`, plus the app version, build ID, device tier, device model and Android version on `session_start`; no names or accounts. It never leaves the device, and it grows without a limit until the app's storage is cleared. A player removes everything by uninstalling the app or clearing its storage in Android settings.
 
 ## Network activity
 

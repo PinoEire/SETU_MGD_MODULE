@@ -1,10 +1,10 @@
 # Performance modes
 
-Worked example of the Week 7 Lab A, Part E table for this project. Submit yours as `/docs/CA2/baseline/perf-modes.md`, with the two screenshots in `/docs/CA2/baseline/perf-modes/` and the logcat excerpt as `/docs/CA2/baseline/logcat-ap-events.txt`. The settings are `PerformanceMode.cs` (`Scripts/Shared/`); the toggle is on every scene's pause card. Measure in the Adaptive scene with the load on Hot, the phone unplugged, 30 s in each mode, read the average frame time from the overlay, and take the 99th percentile, which the overlay does not show, from Profile Analyzer on a 30 s Profiler capture (Development build with the Profiler attached, not the release APK). Phone cells stay empty until the device run; nothing is guessed.
+Worked example of the Week 7 Lab A, Part E table for this project. Submit yours as `/docs/CA2/baseline/perf-modes.md`, with the two screenshots in `/docs/CA2/baseline/perf-modes/` and the logcat excerpt as `/docs/CA2/baseline/logcat-ap-events.txt`. The settings are `PerformanceMode.cs` (`Scripts/Shared/`); the toggle is on every scene's pause card. Measure in the Adaptive scene with the load on Hot, the phone unplugged, 30 s in each mode, read the average frame time from the overlay, and take the 99th percentile, which the overlay does not show, from Profile Analyzer on a 30 s Profiler capture (Development build with the Profiler attached, not the release APK). Since Week 9 Balanced follows the device tier (Low 30 fps at 0.75, Mid 60 at 0.9, High 60 at 1.0) and High FPS only takes effect on the High tier, so measure on a High-tier phone, or force High from the Tiers sample. Phone cells stay empty until the device run; nothing is guessed.
 
 | Mode | targetFrameRate | Render scale | Frame time avg (ms) | 99th (ms) | Bottleneck | Panel Hz |
 |------|-----------------|--------------|---------------------|-----------|------------|----------|
-| Balanced (default) | 60 | 1.0 | | | | |
+| Balanced (default, High tier) | 60 | 1.0 | | | | |
 | High FPS | 120 | 0.8 | | | | |
 
 Device, build and conditions: (fill in: model, Android version, versionName / versionCode, Game Mode setting, display refresh setting).
@@ -17,4 +17,4 @@ Device, build and conditions: (fill in: model, Android version, versionName / ve
 
 ## Editor check (not a measurement)
 
-2026-10-19, editor Play mode, Simulator provider: flipping the toggle logs `perf_mode=HighFps high=True target=120 scale=0.80`, the overlay reads `High FPS  120 fps  scale 0.80`, and the URP asset is back at 1.00 after Stop. The PC never leaves the frame cap, so its frame times say nothing about a phone.
+2026-10-19, editor Play mode, Simulator provider: flipping the toggle logged `perf_mode=HighFps high=True target=120 scale=0.80` (Week 9 adds `tier=High` to the line), the overlay reads `High FPS  120 fps  scale 0.80`, and the URP asset is back at 1.00 after Stop. The PC never leaves the frame cap, so its frame times say nothing about a phone.
