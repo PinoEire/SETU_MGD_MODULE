@@ -33,7 +33,7 @@ The vault is also a **worked example of a GDD that both people and AI tools can 
 | [[Loading]] | W05 Lab B | done | One persistent SceneLoader for every scene change: a loading bar on real progress, no second load or back mid-load, the allowSceneActivation trap shown live, and `[perf]` load-time lines. |
 | [[Economy]] | W06 Lab A and B | done | Tap targets in a timed round to earn coins, spend them on an upgrade that doubles the earn rate, a fake store behind `IPurchaseProvider`, a wallet that survives a force-stop, and the five telemetry events in logcat and a file. |
 | [[Adaptive]] | W07 Lab A and B | done | Adaptive Performance `[AP]` thermal and bottleneck lines, a Balanced / High FPS toggle on every pause card that sets the frame target and render scale, an allocation-free thermal overlay, and a soak clock with a GPU heat load. |
-| [[About]] | W08 Lab A | done | The About / Build Info screen: a build stamp whose eight-character build ID is also in `session_start` and the release manifest, and the closed-test feedback-form link. |
+| [[About]] | W08 Lab A, W12 Lab A | done | The About / Build Info screen: a build stamp whose eight-character build ID is also in `session_start` and the release manifest, the closed-test feedback-form link, and the build date and commit stamped into a `BuildInfo` asset before every build; the release checklist with `dumpsys` values as a worked example. |
 | [[QA]] | W08 Lab B | done | Buttons that make a managed exception, an ANR and a native crash on purpose (two taps each) so their logcat signatures are known, a low-memory counter, and the six-scenario test plan and Known Issues as worked examples. |
 | [[Tiers]] | W09 Lab A and B | done | Three quality levels with a URP asset each, a device tier picked at start-up from RAM and cores with an override, High FPS only on the High tier, and an asset-budget audit menu. |
 | [[Store]] | W10 Lab A and B | done | A StoreShot capture button in Development Builds, and a worked store kit: icon pair, feature graphic, five 9:16 phone screenshots, descriptions and the critique file. |
@@ -65,6 +65,7 @@ Planned samples follow the lab schedule in the curriculum README (Dropbox, `SETU
 | 2026-11-08 | [[2026-11-08 Quality tier assets live in Assets _Game Settings]] |
 | 2026-11-08 | [[2026-11-08 StoreShot is persistent and its button exists in Development Builds only]] |
 | 2026-11-08 | [[2026-11-08 Timers restart on the game's resume, not on OnApplicationPause(false)]] |
+| 2026-11-08 | [[2026-11-08 The build date and commit are stamped into a tracked BuildInfo asset before every build]] |
 
 ## Reference
 

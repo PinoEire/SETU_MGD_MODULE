@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
 using UnityEditor;
@@ -122,24 +121,7 @@ namespace MGD.Samples.Editor
         // includes uncommitted changes: commit first if the row is to be evidence.
         static string GitDescribe()
         {
-            try
-            {
-                var git = new ProcessStartInfo("git", "describe --always --dirty")
-                {
-                    WorkingDirectory = Path.GetDirectoryName(UnityEngine.Application.dataPath),
-                    RedirectStandardOutput = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                };
-                using Process process = Process.Start(git);
-                string hash = process.StandardOutput.ReadToEnd().Trim();
-                process.WaitForExit();
-                return string.IsNullOrEmpty(hash) ? "unknown" : hash;
-            }
-            catch (Exception)
-            {
-                return "unknown";
-            }
+            return GitInfo.Run("describe --always --dirty");
         }
     }
 }

@@ -46,16 +46,25 @@ namespace MGD.Samples.Editor
             var buildStamp = root.gameObject.AddComponent<BuildStamp>();
             SetField(buildStamp, "label", stamp);
 
+            // Week 12: build date and commit from the BuildInfo asset, which the
+            // build step stamps before every build.
+            TextMeshProUGUI built = CreateLabel(root, "BuildInfo", "", 32f);
+            built.color = new Color(0.75f, 0.78f, 0.85f);
+            Place(built.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, 50f), stretchWidth: true, offset: new Vector2(0f, -405f));
+            var buildInfo = root.gameObject.AddComponent<BuildInfoLabel>();
+            SetField(buildInfo, "info", LoadOrCreateBuildInfo());
+            SetField(buildInfo, "label", built);
+
             TextMeshProUGUI hint = CreateLabel(root, "Hint",
                 "Quote the build ID in your feedback:\nit names exactly one build.", 30f);
             hint.color = new Color(0.75f, 0.78f, 0.85f);
-            Place(hint.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, 110f), stretchWidth: true, offset: new Vector2(0f, -430f));
+            Place(hint.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, 110f), stretchWidth: true, offset: new Vector2(0f, -470f));
 
             TextMeshProUGUI feedback = CreateLabel(root, "Feedback", "", 32f);
-            Place(feedback.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, 110f), stretchWidth: true, offset: new Vector2(0f, -580f));
+            Place(feedback.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, 110f), stretchWidth: true, offset: new Vector2(0f, -610f));
 
             Button open = CreateButton(root, "Button Feedback", "Open feedback form", ButtonSize, 40f);
-            Place(open.GetComponent<RectTransform>(), new Vector2(0.5f, 1f), ButtonSize, offset: new Vector2(0f, -710f));
+            Place(open.GetComponent<RectTransform>(), new Vector2(0.5f, 1f), ButtonSize, offset: new Vector2(0f, -740f));
 
             var link = root.gameObject.AddComponent<FeedbackLink>();
             SetField(link, "label", feedback);
@@ -75,6 +84,19 @@ namespace MGD.Samples.Editor
             AddPauseMenu(canvas, backTogglesPause: false, addSamplesButton: false);
 
             FinishScene(scene.Value, ScenePath, BuilderName);
+        }
+
+        // The asset lives in Settings, not Resources: the scene references it, so
+        // it is in the build without being loaded by name.
+        static BuildInfo LoadOrCreateBuildInfo()
+        {
+            var info = AssetDatabase.LoadAssetAtPath<BuildInfo>(BuildInfoStamper.AssetPath);
+            if (info == null)
+            {
+                info = ScriptableObject.CreateInstance<BuildInfo>();
+                AssetDatabase.CreateAsset(info, BuildInfoStamper.AssetPath);
+            }
+            return info;
         }
     }
 }
