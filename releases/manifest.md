@@ -21,3 +21,4 @@ One row per build made with *MGD Samples > Build Release APK*, released or not; 
 | 0.7.0 | 21 | 2026-11-08 | v0.6.0-3-g68cc304-dirty | 44.2 MB | fca04aad747267290c75ad75a7f2db5eca60da8209147954e89e3ad10d462dec | | c6adf791 |
 | 0.7.0 | 22 | 2026-11-08 | v0.6.0-4-g7efd525 | 44.2 MB | b0842ea82381d2ff0be8747e6220970c12a57b15a871998e33c4f749e12643cc | [v0.7.0](https://github.com/PinoEire/SETU_MGD_MODULE/releases/download/v0.7.0/SETU_MGD_MODULE-0.7.0-22-arm64.apk) | 731918cb |
 | 0.8.0 | 23 | 2026-11-08 | v0.7.0-3-g2d212c0 | 44.3 MB | 5589025a9d6047b6e6ce02a881dd72b584db628efd4a3edbbc70c7559e784366 | [v0.8.0](https://github.com/PinoEire/SETU_MGD_MODULE/releases/download/v0.8.0/SETU_MGD_MODULE-0.8.0-23-arm64.apk) | 74ce07b5 |
+| 0.9.0 | 24 | 2026-11-08 | v0.8.0-3-g23fc396 | 44.3 MB | d470b618cccea829ed43fcecae6b3c5293b57d10beadd99cedfbd1966a9988b3 | | a09c978b |

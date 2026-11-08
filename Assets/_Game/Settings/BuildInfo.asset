@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: BuildInfo
   m_EditorClassIdentifier: Assembly-CSharp::MGD.Samples.BuildInfo
   buildDate: 2026-11-08
-  gitHash: 3669742
+  gitHash: 23fc396
