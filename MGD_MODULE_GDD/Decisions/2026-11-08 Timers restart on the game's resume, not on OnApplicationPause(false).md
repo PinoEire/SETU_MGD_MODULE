@@ -21,5 +21,5 @@ Timed Awaitables in this project stop when `LifecycleGuard.PausedChanged` report
 
 - Timers stay in step with what the player sees: frozen behind the pause panel, running after Resume, never twice.
 - The launch-time `OnApplicationPause(false)` does nothing to the timers, and a timer that has fired is never re-armed by a resume.
-- The corrected lab snippet still restarts in `OnApplicationPause(false)`, as a bare script to test the shape. Step 3 of Part C then moves the cancel and the restart to the pause menu's pause and resume, as here (the project also keeps a one-shot's remaining time; the sheet restarts it from full); [[Resume]] explains why, and `docs/qa/resume-tests.md` records the snippet's double spawn on the phone.
+- The corrected lab snippet still restarts in `OnApplicationPause(false)`, as a bare script to test the shape. Step 3 of Part C then moves the cancel and the restart to the pause menu's pause and resume, as here, except that the project also keeps a one-shot's remaining time where the sheet restarts it from full. [[Resume]] explains why, and `docs/qa/resume-tests.md` records the original snippet's repeated spawns on the phone.
 - A timer that must keep running in the background (none in this project) would need a different design, such as wall-clock deadlines.
