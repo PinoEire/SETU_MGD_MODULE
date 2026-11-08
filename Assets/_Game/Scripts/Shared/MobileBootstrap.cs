@@ -6,8 +6,9 @@ namespace MGD.Samples
     /// App-wide settings applied once, in the first scene. Put it on a Bootstrap
     /// object there. Android runs a Unity game at 30 fps until
     /// <c>targetFrameRate</c> says otherwise; that target comes from
-    /// <see cref="PerformanceMode"/> (60, or 120 in High FPS), applied before the
-    /// first scene loads, so this only reports it. <c>vSyncCount</c> is ignored on
+    /// <see cref="DeviceTier"/> and <see cref="PerformanceMode"/> (the tier's cap,
+    /// 30 or 60, or 120 in High FPS on the High tier), applied before the first
+    /// scene loads, so this only reports it. <c>vSyncCount</c> is ignored on
     /// Android and stays 0 so the editor paces the same way. The <c>[Boot]</c>
     /// line is the first thing to look for in Logcat: it names the device, OS,
     /// graphics API and resolution the numbers that follow came from.
