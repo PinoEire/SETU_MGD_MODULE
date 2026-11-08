@@ -39,16 +39,15 @@ None directly. The footer is a short build stamp; the full About / Build Info sc
 | `Assets/_Game/Scripts/Shared/AdaptiveBootstrap.cs` | Shared, on the persistent `Adaptive Performance` object this scene creates (a later copy destroys itself): logs `[AP]` thermal and bottleneck lines whichever scene is open. Belongs to [[Adaptive]]. |
 | `Assets/_Game/Scripts/Shared/MobileBootstrap.cs` | Shared, on the `Bootstrap` object. Sets vSync 0 and no screen sleep (the frame target is `PerformanceMode`'s, see [[Adaptive]]); logs the `[Boot]` line and the `session_start` telemetry event once per app run, although the Launcher is loaded again on every return. Belongs to [[Performance]]. |
 | `Assets/_Game/Scripts/Shared/Telemetry.cs` | Shared static class: one line per event to the console and to `telemetry.log`. Belongs to [[Economy]]; see [[2026-10-05 Telemetry is shared and session_start fires once per run]]. |
-| `Assets/_Game/Scripts/Shared/LifecycleGuard.cs` | Shared, on the `Lifecycle Guard` object every scene gets through `SampleSceneBuild.AddPauseMenu`: pauses on focus loss and Home. Belongs to [[Lifecycle]]. |
+| `Assets/_Game/Scripts/Shared/LifecycleGuard.cs` | Shared, on the `Lifecycle Guard` object every scene carries: pauses on focus loss and Home. Belongs to [[Lifecycle]]. |
 | `Assets/_Game/Scripts/Shared/PauseMenu.cs` | Shared, on the Canvas with the hidden `Pause Panel`: shows the panel, handles Resume and the High FPS toggle. Here back toggles the panel, because there is no launcher to return to. Belongs to [[Lifecycle]]. |
-| `Assets/_Game/Editor/Launcher/LauncherSceneBuilder.cs` | Menu item *MGD Samples > Build Launcher Scene*. Builds the scene and moves it to index 0 in Build Settings. The sample list is a vertical `ScrollRect` (clipped viewport, content with a `ContentSizeFitter`, auto-hiding scrollbar) between the subtitle and the footer. |
-| `Assets/_Game/Scenes/Launcher/Launcher.unity` | Title, subtitle, a scrolling vertical list with an inactive button template (150 units tall, about 57 dp, 24 apart), footer, the hidden pause panel, the `Lifecycle Guard`, `Menu Ready`, `Adaptive Performance`, `Store Shot` (see [[Store]]) and `Scene Loader` objects. Generated; not hand-edited. |
+| `Assets/_Game/Scenes/Launcher/Launcher.unity` | Build index 0. Title, subtitle, a scrolling vertical list between the subtitle and the footer (a `ScrollRect` with a clipped viewport, content with a `ContentSizeFitter` and an auto-hiding scrollbar) holding an inactive button template (150 units tall, about 57 dp, 24 apart), footer, the hidden pause panel, the `Lifecycle Guard`, `Menu Ready`, `Adaptive Performance`, `Store Shot` (see [[Store]]) and `Scene Loader` objects. Changed in place. |
 
 ## How to test
 
 1. **Editor:** open the Launcher scene and Play. The console shows one `[Boot]` line. One button per other scene appears; the footer shows the version and this PC. Tap SafeArea: it loads; press Escape: the launcher returns. Tap Lifecycle, press Escape to pause, tap *Back to samples*: the launcher returns with the game unpaused (the guard resets timeScale on destroy).
 2. **Phone:** the same with the back gesture. Back on the launcher opens the pause panel and back again closes it; the app never exits from back. Pull the shade: the panel opens too.
-3. **Adding a sample:** run its builder, then Play the launcher: the new button is there without touching the launcher.
+3. **Adding a sample:** add its scene to the Scene List in File > Build Profiles, then Play the launcher: the new button is there without touching the launcher.
 4. **Scrolling:** Play at 480 x 800 in the Game view: the scrollbar shows on the right, because the scenes do not all fit; drag the list to the bottom: the last button sits whole above the footer and loads on a tap. On the phone, a tap that wobbles slightly still loads its scene instead of scrolling.
 
 ## Known limits
@@ -59,7 +58,7 @@ None directly. The footer is a short build stamp; the full About / Build Info sc
 - The drag threshold is scaled in the Launcher only; other scenes have no scrolling lists and keep uGUI's default.
 - Verified 2026-10-05 in the editor (480 x 800 Game view): eight scenes give 1368 units of content in a 1207-unit viewport, the scrollbar shows with its handle at the top, scrolled to the bottom the last button sits fully above the footer, and tapping it loads the scene. At 96 dpi the drag threshold stays at uGUI's 10 px; on a 420 dpi phone it becomes 26 px.
 - Back on the launcher toggles the pause panel rather than minimising the app.
-- Verified 2026-09-15: editor Play mode (list, load, both return paths) and on an Android device. Builder moved to the shared preamble and the scene regenerated 2026-10-04; Play mode re-checked (list, `[Boot]` line, load).
+- Verified 2026-09-15: editor Play mode (list, load, both return paths) and on an Android device. Re-checked in Play mode 2026-10-04 (list, `[Boot]` line, load).
 
 ## Cuts list
 
@@ -73,6 +72,7 @@ None directly. The footer is a short build stamp; the full About / Build Info sc
 - [[2026-10-04 Cancellation tokens where the awaited API takes one]]
 - [[2026-10-04 Shared scripts are the ones every scene needs]]
 - [[2026-10-04 Every scene pauses on focus loss]]
+- [[2026-11-08 Scenes are changed in place, never rebuilt from scratch]]
 
 ## References
 

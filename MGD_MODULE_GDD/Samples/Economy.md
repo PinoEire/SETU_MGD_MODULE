@@ -4,7 +4,7 @@ status: done
 lab: [W06-A, W06-B]
 unity: 6000.6.0f1
 scene: Assets/_Game/Scenes/Economy/Economy.unity
-updated: 2026-10-05
+updated: 2026-11-08
 tags: [sample, economy, telemetry, iap, persistence, w06]
 ---
 
@@ -41,9 +41,8 @@ Week 6 Lab A, *Economy loop: earn, spend, upgrade and IAP awareness*: Parts A to
 | `Assets/_Game/Scripts/Economy/IPurchaseProvider.cs`, `FakePurchaseProvider.cs`, `CoinShop.cs` | The lab's store stub, with one change: `PurchaseAsync(string productId, CancellationToken ct)` takes a token because its wait accepts one. `CoinShop.OnBuyPack` is the one `async void`, a Button handler; it grants 500 coins when the purchase returns true. What students copy. |
 | `Assets/_Game/Scripts/Economy/TapRound.cs` | Demo scaffolding for the round: Start shows three target buttons that jump to a new random spot in their own column of the play area when tapped (repositioned, never instantiated, never overlapping); each tap earns `Wallet.CoinsPerTap(level)` and adds to the score; a 20 s timer runs on `Awaitable.WaitForSecondsAsync` with a token and stops while paused. 15 taps before time runs out is `level_complete`, time running out is `level_fail` with `cause=timeout` (and leaving the scene mid-round is `level_fail` with `cause=quit`); `level_start` carries `level_id`, `attempt` (counted across the whole app run, as the lab's "attempts this session") and `coins`; `coins_earned` counts the coins the taps earned, so an upgrade bought mid-round does not distort it. The pure `Outcome(score, goal, secondsLeft)` decides it. Shows the shop and Start only between rounds; a Reset wallet button appears in development builds only, for the pacing pass. |
 | `Assets/_Game/Scripts/Economy/README.md` | Two-paragraph summary for students who open the folder without this vault. |
-| `Assets/_Game/Editor/Economy/EconomySceneBuilder.cs` | Menu item *MGD Samples > Build Economy Scene*: title, coins label, Upgrade button and status line at the top, the play area with three targets below them, and the Start round, Buy 500 coins and Reset wallet buttons at the bottom; `BackToLauncher` with its listener on, the pause menu; adds the scene to Build Settings after LoadingHeavy. |
 | `Assets/_Game/Editor/Tests/WalletTests.cs`, `WalletSaveTests.cs`, `TelemetryTests.cs`, `TapRoundTests.cs` | EditMode: the cost sequence, `Earn`, `TryUpgrade` refused and accepted (with the logged cost checked), `Restore`, `Changed`, `CoinsPerTap`; a save and load round trip that backs up and restores the real keys; the telemetry line layout; the round outcome rule. |
-| `Assets/_Game/Scenes/Economy/Economy.unity` | Generated; not hand-edited. |
+| `Assets/_Game/Scenes/Economy/Economy.unity` | Title, coins label, Upgrade button and status line at the top, the play area with three targets below them, and the Start round, Buy 500 coins and Reset wallet buttons at the bottom; `BackToLauncher` with its listener on, the pause menu. In Build Settings after LoadingHeavy. Changed in place. |
 | `docs/economy-telemetry-map.md` | The Lab B Part C event map for this sample, as a worked example of the CA2 deliverable. |
 | `docs/privacy-statement.md` | Changed: the PlayerPrefs keys `wallet.coins` and `wallet.level` and the `telemetry.log` file under data stored on the device. |
 
@@ -86,6 +85,7 @@ Week 6 Lab A, *Economy loop: earn, spend, upgrade and IAP awareness*: Parts A to
 - [[2026-10-04 Shared scripts are the ones every scene needs]]
 - [[2026-09-15 Back navigation returns to the launcher]]
 - [[2026-10-04 Every scene pauses on focus loss]]
+- [[2026-11-08 Scenes are changed in place, never rebuilt from scratch]]
 
 ## References
 

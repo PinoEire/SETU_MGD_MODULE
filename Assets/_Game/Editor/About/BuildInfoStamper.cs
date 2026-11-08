@@ -27,7 +27,7 @@ namespace MGD.Samples.Editor
             var info = AssetDatabase.LoadAssetAtPath<BuildInfo>(AssetPath);
             if (info == null)
             {
-                Debug.LogWarning($"[BuildInfo] No asset at {AssetPath}; the About screen will say it was not built. Run MGD Samples > Build About Scene to create it.");
+                Debug.LogWarning($"[BuildInfo] No asset at {AssetPath}; the About screen will say it was not built. Restore it from git (the About scene still references it), or create one at this path with Assets > Create > MGD Samples > Build Info and assign it to BuildInfoLabel in the About scene.");
                 return;
             }
 

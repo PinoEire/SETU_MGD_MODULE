@@ -4,7 +4,7 @@ status: done
 lab: W02-A
 unity: 6000.6.0f1
 scene: Assets/_Game/Scenes/TouchDrag/TouchDrag.unity
-updated: 2026-10-04
+updated: 2026-11-08
 tags: [sample, touch, input-system, w02]
 ---
 
@@ -38,10 +38,9 @@ Week 2 Lab A, *Release signing, touch input and safe areas*, Part D (*Drive your
 | `Assets/_Game/Scripts/TouchDrag/Draggable.cs` | Marker on each sprite with a `Collider2D` and a kinematic `Rigidbody2D`; grows and brightens while held. What students copy. |
 | `Assets/_Game/Scripts/TouchDrag/TouchDragHud.cs` | Demo only. "2 fingers, holding Red and Blue" in a reused StringBuilder, rebuilt only on change; the wording is a tested static. |
 | `Assets/_Game/Scripts/TouchDrag/README.md` | Two-paragraph summary for students who open the folder without this vault. |
-| `Assets/_Game/Editor/TouchDrag/TouchDragSceneBuilder.cs` | Menu item *MGD Samples > Build TouchDrag Scene*: camera, three Knob sprites at scale 5 (about 73 dp on the reference phone, 90 dp on a 20:9 one) with circle colliders sized to the sprite and kinematic bodies, controller, HUD, Build Settings entry. |
 | `Assets/_Game/Editor/Tests/DragTrackerTests.cs` | Fourteen EditMode tests: offset kept, second finger on a held sprite refused, same touch twice refused, null target refused, unknown touch ignored, forget then re-grab, bounds clamp and bounds cleared, prune drops vanished touches and reports them, one grab attempt per touch until pruned, and forgetting a touch so a reused id starts fresh. |
 | `Assets/_Game/Editor/Tests/TouchDragViewTests.cs` | Five EditMode tests: the status wording for zero, one and two fingers, and the visible world rectangle of an orthographic camera. |
-| `Assets/_Game/Scenes/TouchDrag/TouchDrag.unity` | Generated; not hand-edited. |
+| `Assets/_Game/Scenes/TouchDrag/TouchDrag.unity` | Camera, three Knob sprites at scale 5 (about 73 dp on the reference phone, 90 dp on a 20:9 one) with circle colliders sized to the sprite and kinematic bodies, the controller and the HUD. Changed in place. |
 | `Assets/_Game/Scripts/Shared/BackToLauncher.cs` | On the Canvas with the listener on. Not part of what students copy. |
 
 ## How to test
@@ -68,6 +67,7 @@ Week 2 Lab A, *Release signing, touch input and safe areas*, Part D (*Drive your
 
 - [[2026-09-15 Back navigation returns to the launcher]]
 - [[2026-10-04 Every scene pauses on focus loss]]
+- [[2026-11-08 Scenes are changed in place, never rebuilt from scratch]]
 
 ## References
 

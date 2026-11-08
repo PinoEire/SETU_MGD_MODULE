@@ -39,13 +39,11 @@ Week 3 Lab A, *Rendering budgets and profiling on device*: Parts B to F (the wor
 | `Assets/_Game/Scripts/Performance/LoadGenerator.cs` | Owns the sprite field. Creates `worstCount` SpriteRenderers once in `Awake` (built-in Knob sprite, URP `Sprite-Unlit-Default` material, random translucent colour), keeps positions and velocities in arrays, moves the active ones in one loop and bounces them off the camera edges, re-read when the screen size changes. `SetLoad(LoadState)` activates 0, `steadyCount` (200) or `worstCount` (1500) of them; the worst state also scales them up so they overlap. Counts and scales are serialised fields. Demo scaffolding students may borrow as a stress test. `Update` does nothing while `LifecycleGuard.IsPaused`. |
 | `Assets/_Game/Scripts/Performance/PerformanceDemoHud.cs` | Demo only. Wires the Idle, Steady, Worst and Probe buttons; keeps the status label current (load state and active sprite count, target fps, panel refresh rate from `Screen.currentResolution.refreshRateRatio`, render scale); hides the Probe button unless `Debug.isDebugBuild`. |
 | `Assets/_Game/Scripts/Performance/README.md` | Two-paragraph summary for students who open the folder without this vault. |
-| `Assets/_Game/Editor/Performance/PerformanceSceneBuilder.cs` | Menu item *MGD Samples > Build Performance Scene*. Camera, event system, the `Load Generator` object with its sprite and material assigned, a dark translucent HUD card in the bottom third with title, status line, sampler line, the three load buttons in a row and the Probe button, then adds the scene to Build Settings. |
-| `Assets/_Game/Editor/Launcher/LauncherSceneBuilder.cs` | Creates the `Bootstrap` object carrying `MobileBootstrap`. |
 | `Assets/_Game/Editor/Tests/FrameStatsTests.cs` | Twelve EditMode tests for `FrameStats`: average and p99 of a known buffer, samples left unsorted, all-equal input, five spikes in 600 frames leaving p99 alone and seven moving it, the index at 600, 100, 2 and 1 samples, percentile clamped to 0..1, empty buffer and short scratch buffer throw. Lives in an `Editor` folder so it compiles into the editor assembly without an assembly definition. |
-| `Assets/_Game/Scenes/Performance/Performance.unity` | Generated; not hand-edited. |
-| `Assets/_Game/Scenes/Launcher/Launcher.unity` | Regenerated for the `Bootstrap` object. |
+| `Assets/_Game/Scenes/Performance/Performance.unity` | Camera, event system, the `Load Generator` object with its sprite and material assigned, a dark translucent HUD card in the bottom third with title, status line, sampler line, the three load buttons in a row and the Probe button. Changed in place. |
+| `Assets/_Game/Scenes/Launcher/Launcher.unity` | Carries the `Bootstrap` object with `MobileBootstrap`. Belongs to [[Launcher]]. |
 | `Assets/_Game/Scripts/Shared/BackToLauncher.cs` | On the Canvas with the listener on. Not part of what students copy. |
-| `Assets/_Game/Scripts/Shared/LifecycleGuard.cs` | Shared, on the `Lifecycle Guard` object every scene gets through `SampleSceneBuild.AddPauseMenu`: pauses on focus loss and Home. Belongs to [[Lifecycle]]. |
+| `Assets/_Game/Scripts/Shared/LifecycleGuard.cs` | Shared, on the `Lifecycle Guard` object every scene carries: pauses on focus loss and Home. Belongs to [[Lifecycle]]. |
 | `Assets/_Game/Scripts/Shared/PauseMenu.cs` | Shared, on the Canvas with the hidden `Pause Panel`: shows the panel and handles Resume. Its back toggle is off here because `BackToLauncher` owns the gesture. Belongs to [[Lifecycle]]. |
 | `ProjectSettings/ProjectSettings.asset` | *Optimized Frame Pacing* (Player > Resolution and Presentation, serialised as `androidUseSwappy: 1`) was already on; noted so the Lab B Part A check has an answer. *Run In Background* turned on so Play mode keeps ticking while the editor is driven from outside; it has no effect on Android. |
 | `docs/bottleneck-01.md` | The Lab A note (What, Where, Numbers, Verdict, Fix to try) written for the Worst state of this scene. Editor numbers are marked as editor; phone numbers are filled in after the device run. |
@@ -85,6 +83,7 @@ Week 3 Lab A, *Rendering budgets and profiling on device*: Parts B to F (the wor
 - [[2026-09-15 Back navigation returns to the launcher]]
 - [[2026-10-04 Every scene pauses on focus loss]]
 - [[2026-10-04 Shared scripts are the ones every scene needs]]
+- [[2026-11-08 Scenes are changed in place, never rebuilt from scratch]]
 
 ## References
 

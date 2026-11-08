@@ -28,7 +28,7 @@ namespace MGD.Samples
 
             // Wired in code rather than in the scene, so the wiring travels with
             // this script when it is copied; demo buttons use persistent
-            // listeners set by the builder, which is what the Inspector does.
+            // listeners set in the Inspector.
             hapticsToggle.onValueChanged.AddListener(value => Haptics.Enabled = value);
             reduceMotionToggle.onValueChanged.AddListener(value => MotionSetting.ReduceMotion = value);
 

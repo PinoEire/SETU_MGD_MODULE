@@ -80,7 +80,7 @@ namespace MGD.Samples.Editor
         public void HeavyScene_StaysUnderTheFileBudget()
         {
             var file = new System.IO.FileInfo("Assets/_Game/Scenes/Loading/LoadingHeavy.unity");
-            Assert.IsTrue(file.Exists, "build the Loading scene first");
+            Assert.IsTrue(file.Exists, "LoadingHeavy.unity is missing; restore it from git");
             Assert.Less(file.Length, 5L * 1024 * 1024);
         }
     }

@@ -9,10 +9,10 @@ namespace MGD.Samples
 {
     /// <summary>
     /// First scene of the build. Lists every other scene in Build Settings as a
-    /// button, so a new sample appears here as soon as its builder registers the
-    /// scene, and loads the chosen one asynchronously. The footer shows the app
-    /// version and build ID, Unity version and device: a short build stamp; the
-    /// About scene has the full one.
+    /// button, so a new sample appears here as soon as its scene is in the list,
+    /// and loads the chosen one asynchronously. The footer shows the app version
+    /// and build ID, Unity version and device: a short build stamp; the About
+    /// scene has the full one.
     /// </summary>
     public sealed class LauncherMenu : MonoBehaviour
     {

@@ -4,7 +4,7 @@ status: done
 lab: W02-B
 unity: 6000.6.0f1
 scene: Assets/_Game/Scenes/Accessibility/Accessibility.unity
-updated: 2026-10-04
+updated: 2026-11-08
 tags: [sample, accessibility, haptics, ui, w02]
 ---
 
@@ -39,12 +39,10 @@ Week 2 Lab B, Parts B (haptics), C (text size) and D (accessibility pass): *Life
 | `Assets/_Game/Scripts/Accessibility/SettingsPanel.cs` | Binds two toggles and three buttons to the settings, loads saved values on Start, disables the current size button. What students copy. |
 | `Assets/_Game/Scripts/Accessibility/AccessibilityDemoHud.cs` | Demo only. Hit button reporting in words, shaking square, 48 dp reference square sized from `Screen.dpi` through the tested `DpToPixels`, current text-size label. |
 | `Assets/_Game/Scripts/Accessibility/README.md` | Two-paragraph summary for students who open the folder without this vault. |
-| `Assets/_Game/Editor/Accessibility/AccessibilitySceneBuilder.cs` | Menu item *MGD Samples > Build Accessibility Scene*. Builds the scene, attaches `TextScale` to every text with Auto Size off, sets labels to no-wrap with an ellipsis and the body paragraph to wrap, adds the scene to Build Settings. |
-| `Assets/_Game/Editor/Shared/SampleSceneBuild.cs` | Shared builder helpers; `CreateToggle` is a TextMeshPro toggle resized so the whole row is a 48 dp tap target. |
 | `Assets/_Game/Editor/Tests/AccessibilitySettingsTests.cs` | Six EditMode tests: the two toggles raise `Changed` once and write through to PlayerPrefs, `TextScale` clamps and stays quiet when unchanged, and the dp-to-pixel maths with its 160 dpi fallback. |
-| `Assets/_Game/Scenes/Accessibility/Accessibility.unity` | Demo area (status, Hit, motion and 48 dp squares, body paragraph, size label) above a Settings card (Haptics, Reduce motion, Small / Normal / Large). Generated; not hand-edited. |
+| `Assets/_Game/Scenes/Accessibility/Accessibility.unity` | Demo area (status, Hit, motion and 48 dp squares, body paragraph, size label) above a Settings card (Haptics, Reduce motion, Small / Normal / Large). Every readable text carries `TextScale` with Auto Size off; labels are single-line with an ellipsis and the body paragraph wraps. Each toggle is a TextMeshPro toggle sized so the whole row is a 48 dp tap target. Changed in place. |
 | `Assets/_Game/Scripts/Shared/BackToLauncher.cs` | On the Canvas with the listener on. Not part of what students copy. |
-| `Assets/_Game/Scripts/Shared/LifecycleGuard.cs` | Shared, on the `Lifecycle Guard` object every scene gets through `SampleSceneBuild.AddPauseMenu`: pauses on focus loss and Home. Belongs to [[Lifecycle]]. |
+| `Assets/_Game/Scripts/Shared/LifecycleGuard.cs` | Shared, on the `Lifecycle Guard` object every scene carries: pauses on focus loss and Home. Belongs to [[Lifecycle]]. |
 | `Assets/_Game/Scripts/Shared/PauseMenu.cs` | Shared, on the Canvas with the hidden `Pause Panel`: shows the panel and handles Resume. Its back toggle is off here because `BackToLauncher` owns the gesture. Belongs to [[Lifecycle]]. |
 | `docs/accessibility-pass.md` | The ten-check pass run on this scene, in the two-column format students submit for CA1. |
 
@@ -72,6 +70,7 @@ Week 2 Lab B, Parts B (haptics), C (text size) and D (accessibility pass): *Life
 
 - [[2026-09-15 Back navigation returns to the launcher]]
 - [[2026-10-04 Every scene pauses on focus loss]]
+- [[2026-11-08 Scenes are changed in place, never rebuilt from scratch]]
 
 ## References
 

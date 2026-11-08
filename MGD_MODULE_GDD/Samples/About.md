@@ -37,7 +37,7 @@ Week 12 Lab A, *Release rehearsal*: Part B (the `BuildInfo` asset, the screen's 
 | `Assets/_Game/Scripts/Shared/BuildStamp.cs` | Shared. On the About screen, writes four lines once in `Start` (`v<version> (<build ID>)`, device model, OS, `<RAM> MB RAM  <w>x<h> @ <Hz> Hz`) and logs `build=<version>/<id>`. Static `BuildId` (`ShortId(Application.buildGUID)`: first eight characters, `editor` for an empty or all-zero GUID, which is what Play mode reports), pure `Format` with invariant number formatting. Differs from the deck's version in three ways (static and tested, the `editor` case, invariant formatting); it lives in `Scripts/Shared/` because the bootstrap and the Launcher use the ID too. What students copy. |
 | `Assets/_Game/Scripts/About/FeedbackLink.cs` | A serialised `url`: with a link, the screen shows `Feedback: <link>` and an *Open feedback form* button (`Application.OpenURL`), and warns in the console if the link has no `https://`, because Android finds no app for a link without a scheme; with none, a build hides both and the editor shows a reminder. Demo, but small enough to copy. |
 | `Assets/_Game/Scripts/About/BuildInfo.cs` | The Week 12 ScriptableObject: `buildDate` (UTC, yyyy-MM-dd) and `gitHash`. What students copy. |
-| `Assets/_Game/Settings/BuildInfo.asset` | The one `BuildInfo` asset, created by the scene builder if missing; tracked, so every build leaves it modified and it is committed with the release. |
+| `Assets/_Game/Settings/BuildInfo.asset` | The one `BuildInfo` asset, referenced by the scene's BuildInfo line; tracked, so every build leaves it modified and it is committed with the release. |
 | `Assets/_Game/Scripts/About/BuildInfoLabel.cs` | The `Built <date> from <hash>` line under the stamp; pure `Format`, with a "Not built yet" text for an asset that was never stamped. What students copy. |
 | `Assets/_Game/Editor/About/BuildInfoStamper.cs` | `IPreprocessBuildWithReport`: before every player build, writes today's UTC date and `git rev-parse --short HEAD` into the asset and saves it; logs `[BuildInfo] Stamped ...`. Pure `Stamp`. What students copy. |
 | `Assets/_Game/Editor/Shared/GitInfo.cs` | Runs one git command in the project root and returns its output, or `unknown` (no git, not a repository, or no answer within 5 s to exit and 5 s to finish its output); used by the stamper and by `ReleaseBuild`. Students copy it with the stamper. |
@@ -45,10 +45,9 @@ Week 12 Lab A, *Release rehearsal*: Part B (the `BuildInfo` asset, the screen's 
 | `Assets/_Game/Scripts/Shared/MobileBootstrap.cs` | `session_start` gains `build`, the same ID. Belongs to [[Performance]]. |
 | `Assets/_Game/Scripts/Launcher/LauncherMenu.cs` | The footer shows the build ID after the version. Belongs to [[Launcher]]. |
 | `Assets/_Game/Editor/Release/ReleaseBuild.cs`, `ReleaseChecklist.cs` | The manifest row gains a last column, Build ID, from the build report's GUID, which is the built player's `Application.buildGUID`. Belongs to [[ReleasePipeline]]. |
-| `Assets/_Game/Editor/About/AboutSceneBuilder.cs` | Menu item *MGD Samples > Build About Scene*: title, the `BuildLabel` stamp, a hint to quote the build ID, the feedback line and button (the link from its `FeedbackFormUrl` constant), a footer, and the BuildInfo line (creating `Settings/BuildInfo.asset` if it is missing); `BackToLauncher` listening and the shared pause card. |
 | `Assets/_Game/Editor/Tests/BuildInfoTests.cs` | Four EditMode tests: the line with a date and hash, with no hash, never stamped, and an ISO date under the Thai culture. |
 | `Assets/_Game/Editor/Tests/BuildStampTests.cs` | Eight EditMode tests: eight-character IDs, a short GUID, empty, null and all-zero GUIDs as `editor`, a real GUID that starts with zeros, the stamp layout, and the refresh rate rounded under a comma-decimal locale. `ReleaseChecklistTests` checks the manifest row's new column. |
-| `Assets/_Game/Scenes/About/About.unity` | Generated; not hand-edited. |
+| `Assets/_Game/Scenes/About/About.unity` | Title, the `BuildLabel` stamp, a hint to quote the build ID, the feedback line and button (the link is the `url` field on `FeedbackLink`), a footer and the BuildInfo line; `BackToLauncher` listening and the shared pause card. Changed in place. |
 | `releases/manifest.md` | Header gains the Build ID column; earlier rows end at Download. |
 | `docs/qa/feedback-form.md`, `docs/device-matrix.md` | The Part C field list and the Part E tier table as worked examples. |
 | `docs/qa/release-checklist.md` | Week 12 Part A and D as a worked example: the seven points, the `dumpsys` values, cold start and APK size of release 0.8.0 on a Pixel 7a. |
@@ -64,7 +63,7 @@ Week 12 Lab A, *Release rehearsal*: Part B (the `BuildInfo` asset, the screen's 
 
 ## Known limits
 
-- The form link is set in `AboutSceneBuilder` (`FeedbackFormUrl`, the class demo form); a new form means changing it there and rebuilding the scene, because the builder rewrites the scene.
+- The form link is the class demo form, set in the scene: for a new form, open the About scene, paste the link into `url` on `FeedbackLink` in the Inspector and save the scene.
 - The stamp is written once in `Start`, so after a rotation the resolution line shows the orientation the screen opened in.
 - `SystemInfo.systemMemorySize` reports what the OS gives the app, which on some phones is a little below the advertised RAM.
 - The build info asset is tracked, so every build, including a test build and a failed one, leaves it modified. Commit it with the release; between releases, discard the change or commit it.
@@ -83,6 +82,7 @@ Week 12 Lab A, *Release rehearsal*: Part B (the `BuildInfo` asset, the screen's 
 - [[2026-09-15 Back navigation returns to the launcher]]
 - [[2026-10-04 Every scene pauses on focus loss]]
 - [[2026-11-08 The build date and commit are stamped into a tracked BuildInfo asset before every build]]
+- [[2026-11-08 Scenes are changed in place, never rebuilt from scratch]]
 
 ## References
 

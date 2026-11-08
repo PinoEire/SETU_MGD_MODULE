@@ -10,7 +10,7 @@ namespace MGD.Samples
     /// out; anything else (a tap, a hit) can return it sooner with <see cref="Release"/>.
     /// Its collider needs a kinematic <see cref="Rigidbody2D"/> beside it: a collider
     /// moved by its transform without a body is "static" to Physics2D, which then
-    /// rebuilds the static world every time it moves. The scene builder adds both.
+    /// rebuilds the static world every time it moves. The Pooled prefab carries both.
     /// </summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(SpriteRenderer))]

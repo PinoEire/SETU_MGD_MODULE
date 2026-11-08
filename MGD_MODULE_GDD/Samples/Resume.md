@@ -39,9 +39,8 @@ Week 11 Lab A, Part C (*Apply the ResumeGuard pattern*) and Part D (*Run the six
 | `Assets/_Game/Scripts/Resume/OfflineProgress.cs` | What idle-game students copy. Saves the UTC time on `OnApplicationPause(true)`, collects on `OnApplicationPause(false)` or, after a process kill, on `Start`; `SecondsAway` clamps the gap. |
 | `Assets/_Game/Scripts/Resume/ResumeDemoHud.cs` | Demo only. Boss countdown, wave count, last offline reward and an eight-line log of the boss spawn, pause and resume, the offline reward, and lifecycle callbacks with wall-clock times. It watches the guard, so the guard has no hooks of its own. |
 | `Assets/_Game/Scripts/Resume/README.md` | Two-paragraph summary for students who open the folder without this vault. |
-| `Assets/_Game/Editor/Resume/ResumeSceneBuilder.cs` | Menu item *MGD Samples > Build Resume Scene*. Builds and saves the scene, wires the Restart button, adds the scene to Build Settings. |
 | `Assets/_Game/Editor/Tests/ResumeTests.cs` | Seven EditMode tests: the countdown keeps its time left across a stop, never goes negative, does not start again once fired, and starts from the full duration after Reset; time away is the wall-clock gap, 0 when the clock moved back, and capped. |
-| `Assets/_Game/Scenes/Resume/Resume.unity` | A `Resume Guard` object with both scripts; the Canvas with the HUD, a Restart button, the shared pause menu and `BackToLauncher` (back returns to the list). Generated; not hand-edited. |
+| `Assets/_Game/Scenes/Resume/Resume.unity` | A `Resume Guard` object with both scripts; the Canvas with the HUD, a Restart button, the shared pause menu and `BackToLauncher` (back returns to the list). Changed in place. |
 | `docs/qa/resume-tests.md` | The six-case matrix as a worked example, run on a Pixel 7a. |
 
 ## How to test
@@ -70,6 +69,7 @@ Week 11 Lab A, Part C (*Apply the ResumeGuard pattern*) and Part D (*Run the six
 - [[2026-10-04 Cancellation tokens where the awaited API takes one]]
 - [[2026-10-04 Every scene pauses on focus loss]]
 - [[2026-11-08 Timers restart on the game's resume, not on OnApplicationPause(false)]]
+- [[2026-11-08 Scenes are changed in place, never rebuilt from scratch]]
 
 ## References
 

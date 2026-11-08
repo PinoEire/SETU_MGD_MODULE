@@ -35,14 +35,12 @@ Week 2 Lab B, Part A: *Lifecycle, back, accessibility and scope lock*. The lab s
 
 | Path | Purpose |
 |------|---------|
-| `Assets/_Game/Scripts/Shared/LifecycleGuard.cs` | Shared since 2026-10-04: on the `Lifecycle Guard` object in every scene, added by `SampleSceneBuild.AddPauseMenu`. Saves and pauses on `OnApplicationPause(true)`, pauses on focus loss, exposes the static `IsPaused`, `SetPaused` and `PausedChanged`, sets `timeScale` and `AudioListener.pause`. What students copy. |
+| `Assets/_Game/Scripts/Shared/LifecycleGuard.cs` | Shared since 2026-10-04: on the `Lifecycle Guard` object in every scene. Saves and pauses on `OnApplicationPause(true)`, pauses on focus loss, exposes the static `IsPaused`, `SetPaused` and `PausedChanged`, sets `timeScale` and `AudioListener.pause`. What students copy. |
 | `Assets/_Game/Scripts/Shared/PauseMenu.cs` | Shared, on every Canvas. Shows the panel from the event, handles Resume, and toggles pause on Escape (Android back) only where `backTogglesPause` is on: here, in the Launcher and in [[Adaptive]], the scenes that do not hand back to `BackToLauncher`. The card also carries the High FPS toggle ([[Adaptive]]), set with `SetIsOnWithoutNotify` when the panel opens, and greyed out as *High FPS (High tier only)* below the High device tier ([[Tiers]]). What students copy. |
 | `Assets/_Game/Scripts/Lifecycle/LifecycleDemoHud.cs` | Demo only. Spinner, game-time and real-time clocks, a generated looping tone, a tap counter kept in PlayerPrefs, and a six-line log of pause and focus callbacks with wall-clock times. |
 | `Assets/_Game/Scripts/Lifecycle/README.md` | Two-paragraph summary for students who open the folder without this vault. |
-| `Assets/_Game/Editor/Lifecycle/LifecycleSceneBuilder.cs` | Menu item *MGD Samples > Build Lifecycle Scene*. Builds and saves the scene, wires the buttons, adds the scene to Build Settings. |
-| `Assets/_Game/Editor/Shared/SampleSceneBuild.cs` | Scene preamble and epilogue, camera, event system, canvas and uGUI helpers shared by every scene builder. Editor-only. |
 | `Assets/_Game/Editor/Tests/LifecycleGuardTests.cs` | Three EditMode tests: pausing twice acts once and stops time and audio; resuming restores the time scale the game ran at; a game already frozen at time scale 0 by its own code resumes to the last running scale, not to 0. |
-| `Assets/_Game/Scenes/Lifecycle/Lifecycle.unity` | A `Lifecycle Guard` object with the guard; Canvas with the demo HUD and Tap button, plus a pause panel: a half-transparent full-screen dim that blocks taps, and an opaque card (title, Resume, Back to samples, hint) placed below the HUD readouts so the clocks stay readable while paused. Generated; not hand-edited. |
+| `Assets/_Game/Scenes/Lifecycle/Lifecycle.unity` | A `Lifecycle Guard` object with the guard; Canvas with the demo HUD and Tap button, plus a pause panel: a half-transparent full-screen dim that blocks taps, and an opaque card (title, Resume, Back to samples, hint) placed below the HUD readouts so the clocks stay readable while paused. Changed in place. |
 | `Assets/_Game/Scripts/Shared/BackToLauncher.cs` | On the Canvas with the back listener off, since back pauses here; the card's *Back to samples* button calls `Go()`. Not part of what students copy. |
 
 ## How to test
@@ -83,6 +81,7 @@ Week 2 Lab B, Part A: *Lifecycle, back, accessibility and scope lock*. The lab s
 - [[2026-09-15 Back navigation returns to the launcher]]
 - [[2026-10-04 Shared scripts are the ones every scene needs]]
 - [[2026-10-04 Every scene pauses on focus loss]]
+- [[2026-11-08 Scenes are changed in place, never rebuilt from scratch]]
 
 ## References
 

@@ -4,7 +4,7 @@ status: done
 lab: W08-B
 unity: 6000.6.6f1
 scene: Assets/_Game/Scenes/QA/QA.unity
-updated: 2026-10-27
+updated: 2026-11-08
 tags: [sample, qa, logcat, anr, w08]
 ---
 
@@ -34,9 +34,8 @@ Week 8 Lab B, *QA evidence: logcat, ANRs and a test plan*: Part B.3 (the three s
 | `Assets/_Game/Scripts/QA/QaTriggers.cs` | Three buttons, each behind an `ArmedTrigger` with a 3 s window: throws `InvalidOperationException`; blocks the Android UI thread for 10 s through `AndroidApplication.InvokeOnUIThread`; `Utils.ForceCrash(ForcedCrashCategory.AccessViolation)`. In the editor the last two only log. Labels read *Tap again to confirm* while armed (swapped only on a change, no per-frame allocation). Presses of the ANR button during the freeze, delivered when the UI thread wakes, are ignored. Counts `Application.lowMemory` and logs `[QA] lowMemory #n`. Teaching scaffolding: a student's own game should not ship these buttons. |
 | `Assets/_Game/Scripts/QA/ArmedTrigger.cs` | Pure: `Press(now)` arms, a second press inside the window fires, firing disarms; `IsArmed(now)`. What students copy for any irreversible button. |
 | `Assets/_Game/Scripts/QA/README.md` | The three signatures and how to make them, for students who open the folder without this vault. |
-| `Assets/_Game/Editor/QA/QaSceneBuilder.cs` | Menu item *MGD Samples > Build QA Scene*: title, intro, the three 140-unit buttons, a status line, the trim-memory command as a hint; `BackToLauncher` listening and the shared pause card. Laid out for portrait (see Known limits). |
 | `Assets/_Game/Editor/Tests/ArmedTriggerTests.cs` | Six EditMode tests: first press arms only, second inside the window fires, a press exactly at the end of the window still fires, after the window it re-arms, firing disarms, arming runs out. |
-| `Assets/_Game/Scenes/QA/QA.unity` | Generated; not hand-edited. |
+| `Assets/_Game/Scenes/QA/QA.unity` | Title, intro, the three 140-unit buttons, a status line, the trim-memory command as a hint; `BackToLauncher` listening and the shared pause card. Laid out for portrait (see Known limits). Changed in place. |
 | `docs/qa/test-plan.md` | The six scenarios for this app with what the code is written to do and which script does it, the signature table and the live filter; Pass/Fail and Evidence are filled on the phone. |
 | `KnownIssues.md` | Four real open issues from code review, in the lab's format. |
 | `docs/baseline-sheet.md` | Gains the Week 8 row (warm start, PSS after five minutes). |
@@ -69,6 +68,7 @@ Week 8 Lab B, *QA evidence: logcat, ANRs and a test plan*: Part B.3 (the three s
 - [[2026-10-27 The QA crash buttons work in release builds behind a two-tap guard]]
 - [[2026-09-15 Back navigation returns to the launcher]]
 - [[2026-10-04 Every scene pauses on focus loss]]
+- [[2026-11-08 Scenes are changed in place, never rebuilt from scratch]]
 
 ## References
 

@@ -35,7 +35,7 @@ Week 10 Lab A, *Store presence that converts*: Part C (`StoreShot` and a capture
 |------|---------|
 | `Assets/_Game/Scripts/Store/StoreShot.cs` | Hides `hideWhileCapturing`, waits a frame, deletes an older file of the same name, captures `Scene_NN_WxH.png` into `persistentDataPath` (a full path in the editor, a bare name on the phone, where Unity adds the folder), waits up to 3 s in real time until the file's size stops changing, shows them again, logs `[Shot] Saved`. A DontDestroyOnLoad singleton; its Shot button is active only when `Debug.isDebugBuild`. `FileName` is the pure part. What students copy. |
 | `Assets/_Game/Scripts/Store/README.md` | Two-paragraph summary for students who open the folder without this vault. |
-| `Assets/_Game/Editor/Launcher/LauncherSceneBuilder.cs` | Creates the `Store Shot` object: its own canvas (sorting order 90, above every sample, below the loading screen) with a 140-unit Shot button on the right edge a quarter of the way down. Belongs to [[Launcher]]. |
+| `Assets/_Game/Scenes/Launcher/Launcher.unity` | Carries the `Store Shot` object: its own canvas (sorting order 90, above every sample, below the loading screen) with a 140-unit Shot button on the right edge a quarter of the way down. Belongs to [[Launcher]]. |
 | `Assets/_Game/Editor/Tests/StoreShotTests.cs` | Two EditMode tests for the file name. |
 | `docs/store/asset-checklist.md` | Every file against the spec checked on 8 Nov 2026, and how the watermark and the 20:9 screen were dealt with. |
 | `docs/store/icon-512.png`, `icon-512-A.png`, `icon-512-B.png`, `icon-48-A.png`, `icon-48-B.png` | Flat stand-in icons drawn by a script: one silhouette, A and B differing only in background colour, `icon-512.png` being A under the Lab A name. |
@@ -67,6 +67,7 @@ Week 10 Lab A, *Store presence that converts*: Part C (`StoreShot` and a capture
 
 - [[2026-11-08 StoreShot is persistent and its button exists in Development Builds only]]
 - [[2026-10-04 Shared scripts are the ones every scene needs]]
+- [[2026-11-08 Scenes are changed in place, never rebuilt from scratch]]
 
 ## References
 

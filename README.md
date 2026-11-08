@@ -56,4 +56,4 @@ Batch-mode builds are not supported, because the keystore passwords exist only i
 
 ## AI assistance
 
-The samples, scene builders, tests and documentation in this project are written with Claude Code, reviewed and tested on device by the lecturer. Students must declare their own AI use in their README, as the CA handouts ask.
+The samples, tests and documentation in this project are written with Claude Code, reviewed and tested on device by the lecturer. Students must declare their own AI use in their README, as the CA handouts ask.
